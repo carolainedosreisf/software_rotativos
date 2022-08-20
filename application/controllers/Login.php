@@ -15,11 +15,4 @@ class Login extends CI_Controller {
 		$this->load->view('login');
 		$this->load->view('footer');
 	}
-
-	public function getValidaNomeLogin()
-    {
-        $nome_usuario = $_GET['nome_usuario'];
-        $qtd = $this->Login_model->getValidaNomeLogin($nome_usuario);
-        echo $qtd;
-    }
 }

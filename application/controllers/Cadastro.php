@@ -8,6 +8,7 @@ class Cadastro extends CI_Controller {
         parent::__construct();
         $this->load->model('Cadastro_model');
         $this->load->model('Login_model');
+        $this->load->model('Empresa_model');
     }
 
 	public function index()
@@ -25,35 +26,70 @@ class Cadastro extends CI_Controller {
         echo json_encode($lista);
     }
 
+    public function getValidaDados()
+    {
+        $nome_usuario = $_GET['nome_usuario'];
+        $CpfCnpj = $_GET['CpfCnpj'];
+        $TipoEmpresa = $_GET['TipoEmpresa'];
+        $lista_erros = [];
+
+        $erro_1 = $this->Login_model->getValidaNomeLogin($nome_usuario);
+        $erro_2 = $this->Empresa_model->getValidaCpfCnpj($CpfCnpj);
+
+        if($erro_1>0){
+            $lista_erros[] = "Este Nome Usuário já esta sendo utilizado, favor digitar outro.";
+        }
+
+        if($erro_2>0){
+            $lista_erros[] = "Este ".($TipoEmpresa=='J'?'CNPJ':'CPF')." já esta cadastrado em nossa base de dados.";
+        }
+
+        echo json_encode($lista_erros);
+    }
+
     public function setCadastro()
     {
         $post = $this->funcoes->getPostAngular();
-        $CadastroId = $this->Cadastro_model->getUltimoCadastro();
 
         $data_cadastro = [
-            'CadastroId'=>$CadastroId,
             'Nome' => $post['Nome'],
             'RazaoSocial' => $post['RazaoSocial'],
-            'TipoCadastro' => $post['TipoCadastro'],
-            'CpfCnpj' => $post['TipoCadastro']=='J'?$post['Cnpj']:$post['Cpf'],
-            'NumeroTelefone' => isset($post['NumeroTelefone'])?$post['NumeroTelefone']:null,
-            'NumeroCelular' => $post['NumeroCelular'],
+            'TipoCadastro' => 'E',
+            'CpfCnpj' => $post['TipoEmpresa']=='J'?$post['Cnpj']:$post['Cpf'],
+            'NumeroCelular' => $post['NumeroTelefone1'],
+            'NumeroTelefone' => isset($post['NumeroTelefone2'])?$post['NumeroTelefone2']:null,
             'NumeroCep' => $post['NumeroCep'],
             'CidadeId' =>$post['CidadeId'],
             'NumeroEndereco' => $post['NumeroEndereco'],
             'BairroEndereco' => $post['BairroEndereco'],
-            'PermissaoId' => 2
+            'Endereco' => $post['Endereco'],
         ];
 
+        $CadastroId = $this->Cadastro_model->setCadastro($data_cadastro);
+
         $data_login = [
-            'LoginId' => $this->Login_model->getUltimoLogin(),
             'Email' => $post['Email'],
             'NomeUsuario' => $post['NomeUsuario'],
             'Senha' => md5($post['Senha']),
-            'CadastroId' => $CadastroId
+            'CadastroId' => $CadastroId,
+            'PermissaoId' => 2
         ];
 
-        $this->Cadastro_model->setCadastro($data_cadastro);
+        $data_empresa = [
+            'Nome' => $post['Nome'],
+            'RazaoSocial' => $post['RazaoSocial'],
+            'TipoEmpresa' => $post['TipoEmpresa'],
+            'CpfCnpj' => $post['TipoEmpresa']=='J'?$post['Cnpj']:$post['Cpf'],
+            'Endereco' => $post['Endereco'],
+            'NumeroEndereco' => $post['NumeroEndereco'],
+            'NumeroCep' => $post['NumeroCep'],
+            'CidadeId' =>$post['CidadeId'],
+            'BairroEndereco' => $post['BairroEndereco'],
+            'NumeroTelefone1' => $post['NumeroTelefone1'],
+            'NumeroTelefone2' => isset($post['NumeroTelefone2'])?$post['NumeroTelefone2']:null,
+        ];
+        
         $this->Login_model->setLogin($data_login);
+        $this->Empresa_model->setEmpresa($data_empresa);
     }
 }

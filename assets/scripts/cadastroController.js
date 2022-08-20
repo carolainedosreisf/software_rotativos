@@ -3,7 +3,7 @@ app.controller('cadastroController', ['$scope', '$http','$filter','$timeout','$l
     $scope.lista_cidades = [];
     $scope.erro_cep = false;
     $scope.cad = {
-        TipoCadastro : 'J'
+        TipoEmpresa : 'J'
     };
 
     $scope.changeTipo = function(){
@@ -72,13 +72,17 @@ app.controller('cadastroController', ['$scope', '$http','$filter','$timeout','$l
     $scope.setCadastro = function(){
         if($scope.form_cadastro.$valid && $scope.cad.Senha == $scope.cad.confirm_senha && !($scope.erro_cep)){
             $http({
-                url: base_url+'index.php/Login/getValidaNomeLogin',
+                url: base_url+'index.php/Cadastro/getValidaDados',
                 method: 'GET',
-                params: {nome_usuario:$scope.cad.NomeUsuario}
+                params: {
+                    nome_usuario:$scope.cad.NomeUsuario
+                    ,CpfCnpj: ($scope.cad.TipoEmpresa=='J'?$scope.cad.Cnpj:$scope.cad.Cpf)
+                    ,TipoEmpresa:$scope.cad.TipoEmpresa
+                }
             }).then(function (retorno) {
-                if(retorno.data==0){
+                if((retorno.data).length==0){
                     $scope.carregando = true;
-                    $scope.erro_nome_login = false;
+                    $scope.lista_erros = [];
                     $http({
                         url: base_url+'index.php/Cadastro/setCadastro',
                         method: 'POST',
@@ -99,7 +103,7 @@ app.controller('cadastroController', ['$scope', '$http','$filter','$timeout','$l
                         console.log('Error: '+retorno.status);
                     });
                 }else{
-                    $scope.erro_nome_login = true;
+                    $scope.lista_erros = retorno.data;;
                     $location.hash("mensagens");
                     $anchorScroll();
                 }
