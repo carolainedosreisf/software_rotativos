@@ -78,6 +78,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Login` (
   `PermissaoId` INT NOT NULL,
   PRIMARY KEY (`LoginId`),
   INDEX `FK10_idx` (`CadastroId` ASC),
+  UNIQUE INDEX `Email_UNIQUE` (`Email` ASC),
+  UNIQUE INDEX `NomeUsuario_UNIQUE` (`NomeUsuario` ASC),
   UNIQUE INDEX `CadastroId_UNIQUE` (`CadastroId` ASC),
   INDEX `FK21_idx` (`PermissaoId` ASC),
   CONSTRAINT `FK10`

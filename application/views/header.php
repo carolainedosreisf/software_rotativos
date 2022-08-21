@@ -33,35 +33,36 @@
 	
 </head>
 <body ng-app="app" ng-controller="<?php echo $controller; ?>">
-<div class="loading ng-hide" ng-show="carregando">
-	<img class="loading-img" src="<?php echo base_url('assets/images/load.gif'); ?>">
-</div>
-<header class="margin-top-0">
-	<div class="barra-topo">
-		<div class="text-homeimage text-center">
-			<div class="maintext-image" data-scrollreveal="enter top over 1.5s after 0.1s">
-				[NOME DA EMPRESA]
+	<script> var base_url = "<?php echo base_url();?>";</script>
+	<div class="loading ng-hide" ng-show="carregando">
+		<img class="loading-img" src="<?php echo base_url('assets/images/load.gif'); ?>">
+	</div>
+	<header class="margin-top-0">
+		<div class="barra-topo">
+			<div class="text-homeimage text-center">
+				<div class="maintext-image" data-scrollreveal="enter top over 1.5s after 0.1s">
+					[NOME DA EMPRESA]
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="wrapper">
-		<nav role="navigation" class="navbar navbar-white navbar-embossed navbar-lg bg-light">
-		<div class="">
-			<div class="navbar-header">
-				<button data-target="#navbar-collapse-02" data-toggle="collapse" class="navbar-toggle" type="button">
-					<i class="fa fa-bars"></i>
-					<span class="sr-only"></span>
-				</button>
+		<div class="wrapper">
+			<nav role="navigation" class="navbar navbar-white navbar-embossed navbar-lg bg-light">
+			<div class="">
+				<div class="navbar-header">
+					<button data-target="#navbar-collapse-02" data-toggle="collapse" class="navbar-toggle" type="button">
+						<i class="fa fa-bars"></i>
+						<span class="sr-only"></span>
+					</button>
+				</div>
+				<div id="navbar-collapse-02" class="collapse navbar-collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li class="propClone"><a href="<?php echo base_url('index.php');?>">Sobre</a></li>
+						<li class="propClone"><a href="<?php echo base_url('index.php/Contato'); ?>">Contato</a></li>
+						<li class="propClone"><a href="<?php echo base_url('index.php/Login'); ?>">Login</a></li>
+						<li class="propClone"><a href="<?php echo base_url('index.php/Cadastro');?>">Cadastro</a></li>
+					</ul>
+				</div>
 			</div>
-			<div id="navbar-collapse-02" class="collapse navbar-collapse">
-				<ul class="nav navbar-nav navbar-right">
-					<li class="propClone"><a href="<?php echo base_url('index.php');?>">Sobre</a></li>
-					<li class="propClone"><a href="<?php echo base_url('index.php/Contato'); ?>">Contato</a></li>
-					<li class="propClone"><a href="<?php echo base_url('index.php/Login'); ?>">Login</a></li>
-					<li class="propClone"><a href="<?php echo base_url('index.php/Cadastro');?>">Cadastro</a></li>
-				</ul>
-			</div>
+			</nav>
 		</div>
-		</nav>
-	</div>
-</header>
+	</header>

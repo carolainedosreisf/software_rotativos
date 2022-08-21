@@ -7,7 +7,8 @@ app.controller('cadastroController', ['$scope', '$http','$filter','$timeout','$l
     };
 
     $scope.changeTipo = function(){
-        $scope.cad.CpfCnpj = '';
+        $scope.cad.Cpf = '';
+        $scope.cad.Cnpj = '';
     }
 
     $scope.buscaCep = function(){
@@ -70,12 +71,13 @@ app.controller('cadastroController', ['$scope', '$http','$filter','$timeout','$l
     }
     
     $scope.setCadastro = function(){
-        if($scope.form_cadastro.$valid && $scope.cad.Senha == $scope.cad.confirm_senha && !($scope.erro_cep)){
+        if($scope.form_cadastro.$valid && $scope.cad.Senha == $scope.cad.confirm_senha  && ($scope.cad.Senha).length >=8 && !($scope.erro_cep)){
             $http({
                 url: base_url+'index.php/Cadastro/getValidaDados',
                 method: 'GET',
                 params: {
-                    nome_usuario:$scope.cad.NomeUsuario
+                    NomeUsuario:$scope.cad.NomeUsuario
+                    ,Email:$scope.cad.Email
                     ,CpfCnpj: ($scope.cad.TipoEmpresa=='J'?$scope.cad.Cnpj:$scope.cad.Cpf)
                     ,TipoEmpresa:$scope.cad.TipoEmpresa
                 }

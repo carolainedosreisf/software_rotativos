@@ -28,19 +28,25 @@ class Cadastro extends CI_Controller {
 
     public function getValidaDados()
     {
-        $nome_usuario = $_GET['nome_usuario'];
+        $NomeUsuario = $_GET['NomeUsuario'];
+        $Email = $_GET['Email'];
         $CpfCnpj = $_GET['CpfCnpj'];
         $TipoEmpresa = $_GET['TipoEmpresa'];
         $lista_erros = [];
 
-        $erro_1 = $this->Login_model->getValidaNomeLogin($nome_usuario);
-        $erro_2 = $this->Empresa_model->getValidaCpfCnpj($CpfCnpj);
+        $erro_1 = $this->Login_model->getValidaNomeLogin($NomeUsuario);
+        $erro_2 = $this->Login_model->getValidaEmail($Email);
+        $erro_3 = $this->Empresa_model->getValidaCpfCnpj($CpfCnpj);
 
         if($erro_1>0){
-            $lista_erros[] = "Este Nome Usuário já esta sendo utilizado, favor digitar outro.";
+            $lista_erros[] = "Este Nome Usuário já esta sendo utilizado, favor digite outro.";
         }
 
         if($erro_2>0){
+            $lista_erros[] = "Este e-mail já esta cadastrado em nossa base de dados.";
+        }
+
+        if($erro_3>0){
             $lista_erros[] = "Este ".($TipoEmpresa=='J'?'CNPJ':'CPF')." já esta cadastrado em nossa base de dados.";
         }
 

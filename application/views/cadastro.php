@@ -1,5 +1,4 @@
 <section class="item content" style="margin-top:50px;margin-bottom:50px;">
-    <script> var base_url = "<?php echo base_url();?>";</script>
     <div class="container toparea">
         <div class="underlined-title">
             <div class="editContent">
@@ -24,6 +23,9 @@
                     </div>
                     <div class="alert alert-danger" role="alert" ng-show="form_cadastro.Email.$invalid && !(form_cadastro.Email.$error.required) && (form_cadastro.$submitted || form_cadastro.nr_cpf.$dirty)">
                         E-mail Inválido!
+                    </div>
+                    <div class="alert alert-danger" role="alert" ng-show="cad.Senha.length < 8 && !(form_cadastro.Senha.$error.required) && !(form_cadastro.confirm_senha.$error.required) && (form_cadastro.$submitted || form_cadastro.nr_cpf.$dirty)">
+                        A senha deve conter no mínimo 8 caracteres!
                     </div>
                     <div class="alert alert-danger" role="alert" ng-show="cad.Senha != cad.confirm_senha && !(form_cadastro.Senha.$error.required) && !(form_cadastro.confirm_senha.$error.required) && (form_cadastro.$submitted || form_cadastro.nr_cpf.$dirty)">
                         As senhas não correspondem!
