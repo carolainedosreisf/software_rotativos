@@ -2,6 +2,14 @@
 
 class Login_model extends CI_Model {
 
+    public function verificaSessao()
+	{
+		if(!($this->session->userdata('login_empresa'))){
+			$link = base_url('index.php/Login');
+			echo "<script>window.location.href = '$link'</script>";
+		}
+	}
+    
     public function setLogin($data)
     {
         $this->db->insert('Login',$data);

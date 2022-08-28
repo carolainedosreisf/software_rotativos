@@ -4,23 +4,24 @@ app.controller('loginController', ['$scope', '$http','$filter','$location','$anc
     $scope.mensagem = "";
     
     $scope.getValidaAcesso = function(){ 
-        $scope.mensagem = "";
-        $scope.carregando = true;
-        $http({
-            url: base_url+'index.php/Login/getValidaAcesso',
-            method: 'POST',
-            data: $scope.login
-        }).then(function (retorno) {
-            if(retorno.data==1){
-                console.log("logou");
-                //window.location = "../restrita/index.php";
-            }else{
-                $scope.mensagem = "Usuário ou senha inválida.";
-            }
-            $scope.carregando = false;
-        },
-        function (retorno) {
-            console.log('Error: '+retorno.status);
-        });
+        if($scope.form_login.$valid){
+            $scope.mensagem = "";
+            $scope.carregando = true;
+            $http({
+                url: base_url+'index.php/Login/getValidaAcesso',
+                method: 'POST',
+                data: $scope.login
+            }).then(function (retorno) {
+                if(retorno.data==1){
+                    window.location = base_url+"index.php/restrita/FormaPagamento";
+                }else{
+                    $scope.mensagem = "Usuário ou senha inválida.";
+                }
+                $scope.carregando = false;
+            },
+            function (retorno) {
+                console.log('Error: '+retorno.status);
+            });
+        }
     }
 }]);

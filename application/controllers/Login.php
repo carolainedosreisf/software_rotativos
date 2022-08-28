@@ -31,10 +31,18 @@ class Login extends CI_Controller {
 		}
 
 		$cadastro = $this->Cadastro_model->getCadastro($CadastroId);
-		session_start();
-		$_SESSION['login_empresa'] = $cadastro;
-        $_SESSION['login_empresa']['tempo_inatividade'] = strtotime(date("Y-m-d H:i:s")."+30 minutes");
+		$data['login_empresa'] = $cadastro;
+		$data['login_empresa']['tempo_inatividade'] = strtotime(date("Y-m-d H:i:s")."+30 minutes");
+
+		$this->session->set_userdata($data);
 
 		echo 1;
+	}
+
+	public function sair()
+	{
+		$this->session->sess_destroy();
+		$link = base_url('index.php/Login');
+		echo "<script>window.location.href = '$link'</script>";
 	}
 }
