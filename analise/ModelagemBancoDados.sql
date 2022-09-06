@@ -34,21 +34,20 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `mydb`.`Cadastro` (
   `CadastroId` INT NOT NULL AUTO_INCREMENT,
   `Nome` VARCHAR(80) NOT NULL,
-  `RazaoSocial` VARCHAR(100) NULL,
   `TipoCadastro` CHAR(1) NULL,
-  `CpfCnpj` VARCHAR(18) NULL,
+  `Cpf` VARCHAR(18) NULL,
   `NumeroTelefone` VARCHAR(15) NULL,
   `NumeroCelular` VARCHAR(15) NULL,
   `NumeroCep` VARCHAR(9) NULL,
   `CidadeId` INT NULL,
   `NumeroEndereco` DECIMAL(5,0) NULL,
+  `Endereco` VARCHAR(80) NULL,
   `BairroEndereco` VARCHAR(50) NULL,
   `Complemento` VARCHAR(80) NULL,
   `Mensalista` CHAR(1) NULL,
-  `Endereco` VARCHAR(80) NULL,
   PRIMARY KEY (`CadastroId`),
   INDEX `FK20_idx` (`CidadeId` ASC),
-  UNIQUE INDEX `CpfCnpj_UNIQUE` (`CpfCnpj`,`TipoCadastro` ASC),
+  UNIQUE INDEX `Cpf_UNIQUE` (`Cpf` ASC),
   CONSTRAINT `FK20`
     FOREIGN KEY (`CidadeId`)
     REFERENCES `mydb`.`Cidade` (`CidadeId`)
@@ -64,36 +63,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Permissao` (
   `Descricao` VARCHAR(80) NULL,
   PRIMARY KEY (`PermissaoId`))
 ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`Login`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Login` (
-  `LoginId` INT NOT NULL AUTO_INCREMENT,
-  `Email` VARCHAR(80) NULL,
-  `NomeUsuario` VARCHAR(50) NULL,
-  `Senha` VARCHAR(255) NULL,
-  `CadastroId` INT NOT NULL,
-  `PermissaoId` INT NOT NULL,
-  PRIMARY KEY (`LoginId`),
-  INDEX `FK10_idx` (`CadastroId` ASC),
-  UNIQUE INDEX `Email_UNIQUE` (`Email` ASC),
-  UNIQUE INDEX `NomeUsuario_UNIQUE` (`NomeUsuario` ASC),
-  UNIQUE INDEX `CadastroId_UNIQUE` (`CadastroId` ASC),
-  INDEX `FK21_idx` (`PermissaoId` ASC),
-  CONSTRAINT `FK10`
-    FOREIGN KEY (`CadastroId`)
-    REFERENCES `mydb`.`Cadastro` (`CadastroId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `FK21`
-    FOREIGN KEY (`PermissaoId`)
-    REFERENCES `mydb`.`Permissao` (`PermissaoId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `mydb`.`Empresa`
@@ -128,17 +97,106 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`FotoEmpresa`
+-- Table `mydb`.`DiasAtendimento`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`FotoEmpresa` (
-  `FotoEmpresaId` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `mydb`.`DiasAtendimento` (
+  `DiasAtendimentoId` INT NOT NULL AUTO_INCREMENT,
+  `DescricaoDiasAtendimento` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`DiasAtendimentoId`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Estacionamento`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`Estacionamento` (
+  `EstacionamentoId` INT NOT NULL AUTO_INCREMENT,
+  `RazaoSocial` VARCHAR(100) NULL,
+  `CpfCnpj` VARCHAR(18) NULL,
+  `Endereco` VARCHAR(80) NULL,
+  `NumeroEndereco` DECIMAL(5,0) NULL,
+  `Complemento` VARCHAR(45) NULL,
+  `NumeroCep` VARCHAR(9) NULL,
+  `CidadeId` INT NULL,
+  `BairroEndereco` VARCHAR(80) NULL,
+  `NumeroVagas` DECIMAL(5,0) NOT NULL,
+  `Sobre` VARCHAR(255) NULL,
+  `NumeroTelefone1` VARCHAR(15) NULL,
+  `NumeroTelefone2` VARCHAR(15) NULL,
+  `Email` VARCHAR(80) NULL,
+  `DiasAtendimentoId` INT NOT NULL,
+  `preco_livre` DECIMAL(18,2) NULL,
+  `Preco_hora` DECIMAL(18,2) NULL,
   `EmpresaId` INT NOT NULL,
-  `UrlFoto` VARCHAR(255) NULL,
-  PRIMARY KEY (`FotoEmpresaId`),
-  INDEX `FK12_idx` (`EmpresaId` ASC),
-  CONSTRAINT `FK12`
+  PRIMARY KEY (`EstacionamentoId`),
+  INDEX `FK14_idx` (`DiasAtendimentoId` ASC),
+  INDEX `FK23_idx` (`EmpresaId` ASC),
+  INDEX `FK30_idx` (`CidadeId` ASC),
+  CONSTRAINT `FK14`
+    FOREIGN KEY (`DiasAtendimentoId`)
+    REFERENCES `mydb`.`DiasAtendimento` (`DiasAtendimentoId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK23`
     FOREIGN KEY (`EmpresaId`)
     REFERENCES `mydb`.`Empresa` (`EmpresaId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK30`
+    FOREIGN KEY (`CidadeId`)
+    REFERENCES `mydb`.`Cidade` (`CidadeId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Login`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`Login` (
+  `LoginId` INT NOT NULL AUTO_INCREMENT,
+  `Email` VARCHAR(80) NULL,
+  `NomeUsuario` VARCHAR(50) NULL,
+  `Senha` VARCHAR(255) NULL,
+  `CadastroId` INT NULL,
+  `EstacionamentoId` INT NULL,
+  `PermissaoId` INT NOT NULL,
+  PRIMARY KEY (`LoginId`),
+  INDEX `FK10_idx` (`CadastroId` ASC),
+  INDEX `FK16_idx` (`EstacionamentoId` ASC),
+  UNIQUE INDEX `Email_UNIQUE` (`Email` ASC),
+  UNIQUE INDEX `NomeUsuario_UNIQUE` (`NomeUsuario` ASC),
+  UNIQUE INDEX `CadastroId_UNIQUE` (`CadastroId` ASC),
+  INDEX `FK21_idx` (`PermissaoId` ASC),
+  CONSTRAINT `FK10`
+    FOREIGN KEY (`CadastroId`)
+    REFERENCES `mydb`.`Cadastro` (`CadastroId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK16`
+    FOREIGN KEY (`EstacionamentoId`)
+    REFERENCES `mydb`.`Estacionamento` (`EstacionamentoId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK21`
+    FOREIGN KEY (`PermissaoId`)
+    REFERENCES `mydb`.`Permissao` (`PermissaoId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`FotoEstacionamento`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`FotoEstacionamento` (
+  `FotoEstacionamentoId` INT NOT NULL AUTO_INCREMENT,
+  `EstacionamentoId` INT NOT NULL,
+  `UrlFoto` VARCHAR(255) NULL,
+  PRIMARY KEY (`FotoEstacionamentoId`),
+  INDEX `FK12_idx` (`EstacionamentoId` ASC),
+  CONSTRAINT `FK12`
+    FOREIGN KEY (`EstacionamentoId`)
+    REFERENCES `mydb`.`Estacionamento` (`EstacionamentoId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -180,49 +238,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`DiasAtendimento`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`DiasAtendimento` (
-  `DiasAtendimentoId` INT NOT NULL AUTO_INCREMENT,
-  `DescricaoDiasAtendimento` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`DiasAtendimentoId`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`Estacionamento`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Estacionamento` (
-  `EstacionamentoId` INT NOT NULL AUTO_INCREMENT,
-  `Nome` VARCHAR(80) NULL,
-  `DiasAtendimentoId` INT NOT NULL,
-  `NumeroVagas` DECIMAL(5,0) NULL,
-  `Preco` DECIMAL(18,2) NULL,
-  `EmpresaId` INT NOT NULL,
-  `CidadeId` INT NOT NULL,
-  PRIMARY KEY (`EstacionamentoId`),
-  INDEX `FK14_idx` (`DiasAtendimentoId` ASC),
-  INDEX `FK23_idx` (`EmpresaId` ASC),
-  INDEX `FK30_idx` (`CidadeId` ASC),
-  CONSTRAINT `FK14`
-    FOREIGN KEY (`DiasAtendimentoId`)
-    REFERENCES `mydb`.`DiasAtendimento` (`DiasAtendimentoId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `FK23`
-    FOREIGN KEY (`EmpresaId`)
-    REFERENCES `mydb`.`Empresa` (`EmpresaId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `FK30`
-    FOREIGN KEY (`CidadeId`)
-    REFERENCES `mydb`.`Cidade` (`CidadeId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `mydb`.`FluxoVaga`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`FluxoVaga` (
@@ -252,7 +267,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`FluxoVaga` (
 ENGINE = InnoDB;
 
 
-INSERT INTO `Cidade` (`CidadeId`, `NomeCidade`, `Estado`) VALUES
+INSERT INTO `mydb`.`Cidade` (`CidadeId`, `NomeCidade`, `Estado`) VALUES
         (1, 'Águas de Chapecó', 'SC'),
         (2, 'Águas Frias', 'SC'),
         (3, 'Águas Mornas', 'SC'),
@@ -542,7 +557,8 @@ INSERT INTO `Cidade` (`CidadeId`, `NomeCidade`, `Estado`) VALUES
         (287, 'Xaxim', 'SC'),
         (288, 'Zortéa', 'SC');
 
-INSERT INTO `Permissao` (`PermissaoId`, `Descricao`) VALUES
+INSERT INTO `mydb`.`Permissao` (`PermissaoId`, `Descricao`) VALUES
         (1, 'Administrador do Software'),
-        (2, 'Empresas de Rotativos'),
-        (3, 'Clientes de Empresas de Rotativos');
+        (2, 'Empresas de Rotativos (Acesso Total)'),
+        (3, 'Empresas de Rotativos (Acesso Restringido)'),
+        (4, 'Clientes de Empresas de Rotativos');
