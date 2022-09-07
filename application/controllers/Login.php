@@ -6,7 +6,8 @@ class Login extends CI_Controller {
     {
         parent::__construct();
         $this->load->model('Login_model');
-        $this->load->model('Cadastro_model');
+        $this->load->model('Empresa_model');
+        $this->load->model('Estacionamento_model');
     }
 
 	public function index()
@@ -23,19 +24,27 @@ class Login extends CI_Controller {
 		$NomeUsuario = $post['NomeUsuario'];
 		$Senha = MD5($post['Senha']);
 
-        $CadastroId = $this->Login_model->getValidaAcesso($NomeUsuario,$Senha);
+        $login = $this->Login_model->getValidaAcesso($NomeUsuario,$Senha);
 
-		if($CadastroId==0){
+		if(!$login){
 			echo 0;
 			exit;
 		}
 
-		$cadastro = $this->Cadastro_model->getCadastro($CadastroId);
-		$data['login_empresa'] = $cadastro;
-		$data['login_empresa']['tempo_inatividade'] = strtotime(date("Y-m-d H:i:s")."+30 minutes");
-
-		$this->session->set_userdata($data);
-
+		$estacionamento = $this->Estacionamento_model->getEstacionamento($login['EstacionamentoId']);
+		
+		$sessao= [
+			'EstacionamentoId' => $login['EstacionamentoId'],
+			'PermissaoId' => $login['PermissaoId'],
+			'nome' => $estacionamento['Nome'],
+			'CpfCnpj' => $estacionamento['CpfCnpj'],
+			'TipoEmpresa' => $estacionamento['TipoEmpresa'],
+			'EmpresaId' => $estacionamento['EmpresaId'],
+			'DataCadastro' => $estacionamento['DataCadastro'],
+			'TempoInatividadeSessao' => strtotime(date("Y-m-d H:i:s")."+30 minutes")
+		];
+		
+		$this->session->set_userdata($sessao);
 		echo 1;
 	}
 

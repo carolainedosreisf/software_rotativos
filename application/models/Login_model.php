@@ -4,7 +4,7 @@ class Login_model extends CI_Model {
 
     public function verificaSessao()
 	{
-		if(!($this->session->userdata('login_empresa'))){
+		if(!($this->session->userdata('EstacionamentoId'))){
 			$link = base_url('index.php/Login');
 			echo "<script>window.location.href = '$link'</script>";
 		}
@@ -33,13 +33,13 @@ class Login_model extends CI_Model {
 
     public function getValidaAcesso($NomeUsuario,$Senha)
     {
-        $sql = "SELECT CadastroId
+        $sql = "SELECT EstacionamentoId,PermissaoId
                     FROM Login 
                     WHERE NomeUsuario = '{$NomeUsuario}' 
                     AND Senha = '{$Senha}' 
-                    AND PermissaoId = 2";
+                    AND PermissaoId IN(2,3)";
         $query = $this->db->query($sql);
-        $result = $query->num_rows()>0?$query->row('CadastroId'):0;
+        $result = $query->row_array();
         return $result;
     }
 }

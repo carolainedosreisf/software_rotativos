@@ -281,3 +281,34 @@ th,td{
     -webkit-overflow-scrolling: touch;
 }
 
+.callout {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 4px;
+    border-radius: 3px;
+}
+
+.callout-primary {
+    border-left-color: #428bca;
+}
+
+.callout-primary h4 {
+    color: #428bca;
+}
+
+.callout-success {
+    border-left-color: #5cb85c;
+}
+
+.callout-success h4 {
+    color: #5cb85c;
+}
+
+.callout-default {
+    border-left-color: #777;
+}
+
+.callout-default h4 {
+    color: #777;
+}

@@ -59,7 +59,7 @@
 						<li class="propClone"><a href="<?php echo base_url('index.php');?>">Sobre</a></li>
 						<li class="propClone"><a href="<?php echo base_url('index.php/Contato'); ?>">Contato</a></li>
 						<li class="propClone"><a href="<?php echo base_url('index.php/Login'); ?>">Login</a></li>
-						<li class="propClone"><a href="<?php echo base_url('index.php/Cadastro');?>">Cadastro</a></li>
+						<li class="propClone"><a href="<?php echo base_url('index.php/Empresa');?>">Cadastro</a></li>
 					</ul>
 				</div>
 			</div>

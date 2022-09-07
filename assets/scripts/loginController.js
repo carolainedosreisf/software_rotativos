@@ -13,7 +13,7 @@ app.controller('loginController', ['$scope', '$http','$filter','$location','$anc
                 data: $scope.login
             }).then(function (retorno) {
                 if(retorno.data==1){
-                    window.location = base_url+"index.php/restrita/FormaPagamento";
+                    window.location = base_url+"index.php/restrita/Estacionamento";
                 }else{
                     $scope.mensagem = "Usuário ou senha inválida.";
                 }

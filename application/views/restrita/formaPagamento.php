@@ -35,7 +35,7 @@
                     <tr ng-show="(lista_formas_pagamento | filter:filtrar ).length <=0">
                         <td class="text-center" colspan="3">Nenhum resgistro encontrado.</td>
                     </tr>
-                    <tr pagination-id="pg_formas_pagamento" dir-paginate="l in lista_formas_pagamento| filter:filtrar | itemsPerPage:20">
+                    <tr pagination-id="pg_lista" dir-paginate="l in lista_formas_pagamento| filter:filtrar | itemsPerPage:20">
                         <td class="text-center">{{l.FormaPagamentoId}}</td>
                         <td>{{l.Descricao}}</td>
                         <td class="text-center">
@@ -51,7 +51,7 @@
                     max-size="7" 
                     direction-links="true" 
                     boundary-links="true" 
-                    pagination-id="pg_formas_pagamento">  
+                    pagination-id="pg_lista">  
                 </dir-pagination-controls>  
             </div>
         </div>

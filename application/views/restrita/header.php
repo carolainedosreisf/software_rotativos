@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-        <title>Administração - Blablabla</title>
+        <title>Administração</title>
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
         <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.css'); ?>">
         
@@ -27,8 +27,8 @@
 
         <script src="<?php echo base_url('assets/js/dirPagination.js'); ?>" language="javascript" type="text/javascript"></script>
         
-        <script src="<?php echo base_url("assets/scripts/restrita/{$controller}"); ?>"></script>
 	    <script src="<?php echo base_url('assets/js/angular-input-masks-standalone.min.js'); ?>"></script>
+        <script src="<?php echo base_url("assets/scripts/restrita/{$controller}"); ?>"></script>
 
     </head>
     <body ng-app="app" ng-controller="<?php echo $controller; ?>">
@@ -46,7 +46,7 @@
 
                 <ul class="list-unstyled components">
                     <li><a href="">Home</a></li>
-                    <li><a href="">Perfil Empresa</a></li>
+                    <li><a href="<?php echo base_url('index.php/restrita/Estacionamento'); ?>">Perfil Empresa</a></li>
                     <li><a href="<?php echo base_url('index.php/restrita/FormaPagamento'); ?>">Formas de Pagamento</a></li>
                     <li><a href="">Históricos</a></li>
                     <li><a href="">Reservas</a></li>

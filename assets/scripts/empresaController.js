@@ -1,5 +1,5 @@
 var app = angular.module('app', ['ngSanitize','idf.br-filters','ui.utils.masks','ui.mask']);
-app.controller('cadastroController', ['$scope', '$http','$filter','$timeout','$location','$anchorScroll', function($scope,$http,$filter,$timeout,$location,$anchorScroll) {
+app.controller('empresaController', ['$scope', '$http','$filter','$timeout','$location','$anchorScroll', function($scope,$http,$filter,$timeout,$location,$anchorScroll) {
     $scope.lista_cidades = [];
     $scope.erro_cep = false;
     $scope.cad = {
@@ -52,7 +52,7 @@ app.controller('cadastroController', ['$scope', '$http','$filter','$timeout','$l
     $scope.getCidades = function(desc=''){
         $scope.carregando = true;
         $http({
-            url: base_url+'index.php/Cadastro/getCidades',
+            url: base_url+'index.php/Empresa/getCidades',
             method: 'GET',
             params:{desc}
         }).then(function (retorno) {
@@ -73,7 +73,7 @@ app.controller('cadastroController', ['$scope', '$http','$filter','$timeout','$l
     $scope.setCadastro = function(){
         if($scope.form_cadastro.$valid && $scope.cad.Senha == $scope.cad.confirm_senha  && ($scope.cad.Senha).length >=8 && !($scope.erro_cep)){
             $http({
-                url: base_url+'index.php/Cadastro/getValidaDados',
+                url: base_url+'index.php/Empresa/getValidaDados',
                 method: 'GET',
                 params: {
                     NomeUsuario:$scope.cad.NomeUsuario
@@ -86,7 +86,7 @@ app.controller('cadastroController', ['$scope', '$http','$filter','$timeout','$l
                     $scope.carregando = true;
                     $scope.lista_erros = [];
                     $http({
-                        url: base_url+'index.php/Cadastro/setCadastro',
+                        url: base_url+'index.php/Empresa/setCadastro',
                         method: 'POST',
                         data: $scope.cad
                     }).then(function (retorno) {
@@ -125,3 +125,24 @@ app.controller('cadastroController', ['$scope', '$http','$filter','$timeout','$l
     $scope.getCidades();
 
 }]);
+
+app.directive('somentenumeros', function () {
+    return {
+      require: 'ngModel',
+      restrict: 'A',
+      link: function (scope, element, attr, ctrl) {
+        function inputValue(val) {
+          if (val) {
+            var numeros = val.replace(/[^0-9]/g, '');
+            if (numeros !== val) {
+              ctrl.$setViewValue(numeros);
+              ctrl.$render();
+            }
+            return parseInt(numeros,10);
+          }
+          return '';
+        }
+        ctrl.$parsers.push(inputValue);
+      }
+    };
+});

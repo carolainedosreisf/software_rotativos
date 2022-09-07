@@ -15,6 +15,11 @@ class Funcoes {
         return json_decode(file_get_contents('php://input'),true);
     }
 
+    function get($campo)
+    {
+        return isset($_GET[$campo])?$_GET[$campo]:'';
+    }
+
     function formatar_cpf_cnpj($doc) 
     {
  
@@ -42,6 +47,49 @@ class Funcoes {
         } else {
             return $doc;
         }
+    }
+
+    function formatar_telefone($doc) 
+    {
+        $qtd = strlen($doc);
+        switch ($qtd) {
+            case 8:
+                $docFormatado = substr($doc, 0, 4) . '-' .
+                                substr($doc, 4, 4);
+                break;
+            case 9:
+                $docFormatado = substr($doc, 0, 5) . '-' .
+                                substr($doc, 5, 4);
+                break;
+            case 10:
+                $docFormatado = '('.substr($doc, 0, 2) . ') ' .
+                                substr($doc, 2, 4) . '-' .
+                                substr($doc, 6, 4);
+                break;
+            case 11:
+                $docFormatado = '('.substr($doc, 0, 2) . ') ' .
+                                substr($doc, 2, 5) . '-' .
+                                substr($doc, 7, 4);
+                    break;
+            case 12:
+                $docFormatado = '+'.substr($doc, 0, 2) .' ' .
+                                '('.substr($doc, 2, 2) . ') ' .
+                                substr($doc, 4, 4) . '-' .
+                                substr($doc, 8, 4);
+                break;
+            case 13:
+                $docFormatado = '+'.substr($doc, 0, 2) .' ' .
+                                '('.substr($doc, 2, 2) . ') ' .
+                                substr($doc, 4, 5) . '-' .
+                                substr($doc, 9, 4);
+                    break;
+            
+            default:
+                $docFormatado =  $doc;
+                break;
+        }
+
+        return $docFormatado;
     }
     
 }

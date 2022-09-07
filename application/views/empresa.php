@@ -107,7 +107,7 @@
                                 <div class="row">
                                     <div class="col-sm-3" ng-class="form_cadastro.NumeroEndereco.$invalid && (form_cadastro.$submitted || form_cadastro.NumeroEndereco.$dirty)?'has-error':''">
                                         <label for="NumeroEndereco">Número:</label>
-                                        <input type="text" name="NumeroEndereco" id="NumeroEndereco" autocomplete="off" ng-model="cad.NumeroEndereco" required="required" maxlength="5">
+                                        <input type="text" name="NumeroEndereco" id="NumeroEndereco" autocomplete="off" ng-model="cad.NumeroEndereco" required="required" maxlength="5" somentenumeros>
                                     </div>
                                     <div class="col-sm-9" ng-class="form_cadastro.Endereco.$invalid && (form_cadastro.$submitted || form_cadastro.Endereco.$dirty)?'has-error':''">
                                         <label for="Endereco">Endereço:</label>
