@@ -20,7 +20,7 @@
             <input type="text" class="form-control" placeholder="Pesquisar..." ng-model="filtrar">
         </div>
     </div>
-
+    <br>
     <div class="row">
         <div class="col-sm-12">
             <table class="table table-striped table-bordered">
@@ -38,7 +38,7 @@
                 <tbody>
                     <tr pagination-id="pg_lista" dir-paginate="l in lista_estacionamentos| filter:filtrar | itemsPerPage:20">
                         <td >
-                            {{l.RazaoSocial}} - {{l.CpfCnpjFormatado}}
+                            {{l.NomeEstacionamento}} - {{l.CpfCnpjFormatado}}
                         </td>
                         <td >
                             {{l.Endereco}}, N° {{l.NumeroEndereco}} - {{l.BairroEndereco}},<br>{{l.NomeCidade}} - {{l.Estado}}, {{l.NumeroCep}}
@@ -53,12 +53,12 @@
                             <span ng-show="l.PrecoHora>0">{{l.PrecoHora|currency:'R$ '}} (Hora)</span>
                         </td>
                         <td class="text-center">
-                            <button ng-click="openModalCad(l)" class="btn btn-default btn-sm">
+                            <button ng-click="listaFotos(l.EstacionamentoId)" class="btn btn-default btn-sm">
                                 <i class="glyphicon glyphicon-file"></i> {{l.QtdFotos}}
                             </button>
                         </td>
                         <td class="text-center">
-                            <button ng-click="openModalCad(l)" class="btn btn-default btn-sm">
+                            <button ng-click="listaAtendentes(l.EstacionamentoId)" class="btn btn-default btn-sm">
                                 <i class="glyphicon glyphicon-user"></i> {{l.QtdAtendentes}}
                             </button>
                         </td>

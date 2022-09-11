@@ -697,7 +697,16 @@ ul,ol {
 .formas-pagamento img{
 	width:50px;
 }
-
+.main_btn{
+	font-size: 16px;
+    border: #282e40 solid 1px;
+    background-color: #282e40;
+    color: #fff;
+    padding: 6px 12px;
+    display: inline-block;
+    text-align: center;
+	width: 150px;
+}
 button.main_bt {
     font-size: 16px;
     border: #282e40 solid 1px;

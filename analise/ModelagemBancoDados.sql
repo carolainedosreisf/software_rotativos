@@ -111,7 +111,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Estacionamento` (
   `EstacionamentoId` INT NOT NULL AUTO_INCREMENT,
-  `RazaoSocial` VARCHAR(100) NULL,
+  `NomeEstacionamento` VARCHAR(100) NULL,
   `CpfCnpj` VARCHAR(18) NULL,
   `Endereco` VARCHAR(80) NULL,
   `NumeroEndereco` DECIMAL(5,0) NULL,
@@ -161,6 +161,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Login` (
   `CadastroId` INT NULL,
   `EstacionamentoId` INT NULL,
   `PermissaoId` INT NOT NULL,
+  `TokenEmail` VARCHAR(255) NULL,
   PRIMARY KEY (`LoginId`),
   INDEX `FK10_idx` (`CadastroId` ASC),
   INDEX `FK16_idx` (`EstacionamentoId` ASC),

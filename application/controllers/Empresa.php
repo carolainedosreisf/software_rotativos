@@ -75,7 +75,6 @@ class Empresa extends CI_Controller {
         $EmpresaId = $this->Empresa_model->setEmpresa($data_empresa);
 
         $data_estacionamento = [
-            'RazaoSocial' => $post['RazaoSocial'],
             'CpfCnpj' => $post['TipoEmpresa']=='J'?$post['Cnpj']:$post['Cpf'],
             'Endereco' => $post['Endereco'],
             'NumeroEndereco' => $post['NumeroEndereco'],

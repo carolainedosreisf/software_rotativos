@@ -50,12 +50,12 @@
             </div>
             <div class="row form-group">
                 <div class="col-sm-6">
-                    <label for="Nome">Nome:</label>
+                    <label for="Nome">Nome Empresa:</label>
                     <input type="text" name="Nome" id="Nome" class="form-control" ng-value="objEstacionamento.Nome" ng-disabled="true">
                 </div>
-                <div class="col-sm-6" ng-class="form_estacionamento.RazaoSocial.$invalid && (form_estacionamento.$submitted || form_estacionamento.RazaoSocial.$dirty)?'has-error':''">
-                    <label for="RazaoSocial">Razão Social:</label>
-                    <input type="text" name="RazaoSocial" id="RazaoSocial" class="form-control" ng-model="objEstacionamento.RazaoSocial" maxlength="100" ng-required="true">
+                <div class="col-sm-6" ng-class="form_estacionamento.NomeEstacionamento.$invalid && (form_estacionamento.$submitted || form_estacionamento.NomeEstacionamento.$dirty)?'has-error':''">
+                    <label for="NomeEstacionamento">Nome Estacionamento:</label>
+                    <input type="text" name="NomeEstacionamento" id="NomeEstacionamento" class="form-control" ng-model="objEstacionamento.NomeEstacionamento" maxlength="100" ng-required="true">
                 </div>
                 
             </div>

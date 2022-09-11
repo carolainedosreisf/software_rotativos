@@ -37,7 +37,7 @@ class Estacionamento_model extends CI_Model {
         $sql = "SELECT 
                         a.EstacionamentoId
                         ,b.Nome
-                        ,a.RazaoSocial 
+                        ,a.NomeEstacionamento
                         ,a.CpfCnpj
                         ,IF((a.CpfCnpj = b.CpfCnpj),'S','N') AS Matriz
                         ,b.TipoEmpresa
@@ -69,6 +69,47 @@ class Estacionamento_model extends CI_Model {
                 {$filtro}";
         $query = $this->db->query($sql);
         $result = $query->$result();
+        return $result;
+    }
+
+    public function getFotos($EstacionamentoId)
+    {
+        $sql = "SELECT 
+                        FotoEstacionamentoId
+                        ,EstacionamentoId
+                        ,UrlFoto 
+                    FROM FotoEstacionamento 
+                    WHERE EstacionamentoId = {$EstacionamentoId}
+                    ORDER BY FotoEstacionamentoId ASC";
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
+        return $result;
+    }
+
+    public function setFoto($data)
+    {
+        $this->db->insert('FotoEstacionamento',$data);
+    }
+
+    public function excluirFoto($FotoEstacionamentoId)
+    {
+        $this->db->where('FotoEstacionamentoId',$FotoEstacionamentoId);
+        $this->db->delete('FotoEstacionamento');
+    }
+
+    public function getAtendentes($EstacionamentoId)
+    {
+        $sql = "SELECT 
+                        LoginId
+                        ,Email
+                        ,NomeUsuario 
+                        ,IF(Senha IS NULL,'Não','Sim') AS SenhaCadastrada
+                    FROM Login 
+                    WHERE EstacionamentoId = {$EstacionamentoId}
+                    AND PermissaoId = 3
+                    ORDER BY LoginId ASC";
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
         return $result;
     }
 }

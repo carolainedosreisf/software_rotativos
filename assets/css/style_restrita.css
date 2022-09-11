@@ -312,3 +312,9 @@ th,td{
 .callout-default h4 {
     color: #777;
 }
+
+.confirm {
+    color: #fff;
+    background-color: #5cb85c !important;
+    border-color: #4cae4c !important;
+}

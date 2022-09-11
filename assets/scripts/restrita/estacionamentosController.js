@@ -20,5 +20,13 @@ app.controller('estacionamentosController', ['$scope', '$http','$filter', functi
         window.location = base_url+"/Estacionamento/novoEstacionamento?i="+btoa(EstacionamentoId);
     }
 
+    $scope.listaFotos = function(EstacionamentoId){
+        window.location = base_url+"/Estacionamento/listaFotos?i="+btoa(EstacionamentoId);
+    }
+
+    $scope.listaAtendentes = function(EstacionamentoId){
+        window.location = base_url+"/Estacionamento/listaAtendentes?i="+btoa(EstacionamentoId);
+    }
+
     $scope.getEstacionamentos();
 }]);

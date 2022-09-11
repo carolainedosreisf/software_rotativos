@@ -22,8 +22,8 @@
                     <label for="Senha">Senha:</label><br>
                     <input type="password" name="Senha" id="Senha" ng-model="login.Senha" ng-required="true">
                 </div>
-                <div class="text-center">
-                    <button type="submit" class="main_bt">Entrar</button>
+                <div class="row text-center">
+                    <button type="submit" style="width:100%" class="main_btn">Entrar</button>
                 </div>
             </form>
         </div>

@@ -54,4 +54,51 @@ class Login extends CI_Controller {
 		$link = base_url('index.php/Login');
 		echo "<script>window.location.href = '$link'</script>";
 	}
+
+	public function novaSenha()
+	{
+		$data['LoginId'] = base64_decode($this->funcoes->get('i'));
+		$data['token'] = base64_decode($this->funcoes->get('t'));
+
+		$LoginId = $data['LoginId'];
+		$token = $data['token'];
+		$data_ = isset(explode('_',$token)[1])?explode('_',$token)[1]:'';
+		$data['retorno'] = 3;
+
+		if($LoginId && $token && $data){
+			$login = $this->Login_model->getLogin($LoginId);
+			if(isset($login['TokenEmail'])){
+				if($token==$login['TokenEmail']){
+					$data_ = explode('-',$data_);
+					if(count($data_) == 5){
+						$data_format = $data_[0].'-'.$data_[1].'-'.$data_[2].' '.$data_[3].':'.$data_[4];
+						$data_hoje = Date('Y-m-d H:i');
+						$data_limite = date("Y-m-d H:i",strtotime($data_format."+1 hour"));
+
+						if($data_hoje>$data_limite){
+							$data['retorno'] = 2;
+						}else{
+							$data['retorno'] = 1;
+						}
+					}
+				}
+			}
+		}
+
+		$data['controller'] = "novaSenhaController";
+		$this->load->view('novaSenha',$data);
+		$this->load->view('footer');
+	}
+
+	public function setNovaSenha()
+	{
+		$post = $this->funcoes->getPostAngular();
+
+		$data = [
+			'Senha'=>md5($post['Senha'])
+			,'TokenEmail'=>NULL
+		];
+
+		$this->Login_model->setLogin($data,$post['LoginId']);
+	}
 }
