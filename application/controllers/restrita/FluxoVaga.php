@@ -20,4 +20,13 @@ class FluxoVaga extends CI_Controller {
 		$this->load->view('restrita/fluxoVaga');
 		$this->load->view('restrita/footer');
 	}
+
+    public function novoFluxoVaga()
+    {
+		$data['controller'] = "novoFluxoVagaController";
+        $data['FluxoVagaId'] = base64_decode($this->funcoes->get('i'));
+		$this->load->view('restrita/header',$data);
+		$this->load->view('restrita/novoFluxoVaga');
+		$this->load->view('restrita/footer');
+	}
 }
