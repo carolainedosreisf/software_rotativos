@@ -311,10 +311,39 @@ th,td{
 
 .callout-default h4 {
     color: #777;
+    margin-bottom: 30px;
 }
 
-.confirm {
-    color: #fff;
-    background-color: #5cb85c !important;
-    border-color: #4cae4c !important;
+.tooltipnew {
+    position: relative;
+}
+
+.tooltipnew:before {
+    content: attr(data-title);
+    background-color: #000;
+    color: #FFF;
+    font-size: 13px;
+    padding:  5px 10px;
+    box-sizing: border-box;
+    position: absolute;
+    right: 0;
+    bottom: -42px;
+    opacity: 0;
+}
+.tooltipnew:after {
+    content: "";
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    left: 5px;
+    bottom: -16px;
+    border-style: solid;
+    border-width: 0 10px 10px 10px;
+    border-color: transparent transparent #000 transparent;
+}
+
+.tooltipnew:hover:after,
+.tooltipnew:hover:before {
+    opacity: 1;
 }

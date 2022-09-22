@@ -1,6 +1,5 @@
 var app = angular.module('app', ['ngSanitize']);
 app.controller('novaSenhaController', ['$scope', '$http','$location','$window', function($scope,$http,$location,$window) {
-    $scope.retorno = retorno;
     $scope.cadSenha = {
         LoginId
     };

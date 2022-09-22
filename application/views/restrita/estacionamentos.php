@@ -5,7 +5,7 @@
             <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
                 <i class="glyphicon glyphicon-align-left"></i>
             </button>
-            <button type="button" ng-click="openModalCad()" class="btn btn-success">
+            <button type="button" ng-click="novoEstacionamento()" class="btn btn-success">
                 <i class="glyphicon glyphicon-plus"></i>
                 Novo
             </button>
@@ -30,15 +30,16 @@
                         <th>Endereço</th>
                         <th>Contato</th>
                         <th>Preço</th>
-                        <th class="text-center" width="8%">Fotos</th>
-                        <th class="text-center" width="8%">Atendentes</th>
-                        <th class="text-center" width="8%">Editar</th>
+                        <th class="text-center" width="5%">Fotos</th>
+                        <th class="text-center" width="5%">Atendentes</th>
+                        <th class="text-center" width="5%">Editar</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr pagination-id="pg_lista" dir-paginate="l in lista_estacionamentos| filter:filtrar | itemsPerPage:20">
                         <td >
-                            {{l.NomeEstacionamento}} - {{l.CpfCnpjFormatado}}
+                            {{l.NomeEstacionamento}}<br>
+                            {{l.CpfCnpjFormatado}}
                         </td>
                         <td >
                             {{l.Endereco}}, N° {{l.NumeroEndereco}} - {{l.BairroEndereco}},<br>{{l.NomeCidade}} - {{l.Estado}}, {{l.NumeroCep}}

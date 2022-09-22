@@ -97,16 +97,22 @@ class Estacionamento_model extends CI_Model {
         $this->db->delete('FotoEstacionamento');
     }
 
-    public function getAtendentes($EstacionamentoId)
+    public function getAtendentes($EstacionamentoId,$Status)
     {
+        $filtro = "";
+        if($Status){
+            $filtro .= " AND Status = '{$Status}'";
+        }
         $sql = "SELECT 
                         LoginId
                         ,Email
                         ,NomeUsuario 
                         ,IF(Senha IS NULL,'Não','Sim') AS SenhaCadastrada
+                        ,Status
                     FROM Login 
                     WHERE EstacionamentoId = {$EstacionamentoId}
                     AND PermissaoId = 3
+                    {$filtro}
                     ORDER BY LoginId ASC";
         $query = $this->db->query($sql);
         $result = $query->result_array();

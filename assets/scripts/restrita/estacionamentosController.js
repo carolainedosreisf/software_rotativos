@@ -16,8 +16,8 @@ app.controller('estacionamentosController', ['$scope', '$http','$filter', functi
         });
     }
     
-    $scope.novoEstacionamento = function(EstacionamentoId){
-        window.location = base_url+"/Estacionamento/novoEstacionamento?i="+btoa(EstacionamentoId);
+    $scope.novoEstacionamento = function(EstacionamentoId=0){
+        window.location = base_url+"/Estacionamento/novoEstacionamento"+(EstacionamentoId?"?i="+btoa(EstacionamentoId):"");
     }
 
     $scope.listaFotos = function(EstacionamentoId){

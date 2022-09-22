@@ -60,10 +60,10 @@
                 
             </div>
             <div class="row form-group">
-                <div class="col-sm-4">
+                <div class="col-sm-4" ng-class="form_estacionamento.CpfCnpj.$invalid && (form_estacionamento.$submitted || form_estacionamento.CpfCnpj.$dirty)?'has-error':''">
                     <label for="CpfCnpj">{{objEstacionamento.TipoEmpresa=='J'?'CNPJ':'CPF'}}:</label>
-                    <input type="text" name="CpfCnpj" id="CpfCnpj" class="form-control" ng-model="objEstacionamento.CpfCnpj" ui-br-cnpj-mask ng-disabled="true" ng-if="objEstacionamento.TipoEmpresa=='J'">
-                    <input type="text" name="CpfCnpj" id="CpfCnpj" class="form-control" ng-model="objEstacionamento.CpfCnpj" ui-br-cpf-mask ng-disabled="true" ng-if="objEstacionamento.TipoEmpresa=='F'">
+                    <input type="text" name="CpfCnpj" id="CpfCnpj" class="form-control" ng-model="objEstacionamento.CpfCnpj" ui-br-cnpj-mask ng-disabled="EstacionamentoId" ng-if="objEstacionamento.TipoEmpresa=='J'" ng-required="true">
+                    <input type="text" name="CpfCnpj" id="CpfCnpj" class="form-control" ng-model="objEstacionamento.CpfCnpj" ui-br-cpf-mask ng-disabled="EstacionamentoId" ng-if="objEstacionamento.TipoEmpresa=='F'" ng-required="true">
                 </div>
                 <div class="col-sm-3" ng-class="form_estacionamento.PrecoLivre.$error.required && (form_estacionamento.$submitted || form_estacionamento.PrecoLivre.$dirty)?'has-error':''">
                     <label for="PrecoLivre">Preço Livre</label>

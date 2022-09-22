@@ -50,6 +50,19 @@ class Estacionamento extends CI_Controller {
         echo json_encode($obj);
     }
 
+    public function getEmpresa()
+    {
+        $EmpresaId = $this->session->userdata('EmpresaId');
+        $obj = $this->Empresa_model->getEmpresa($EmpresaId);
+        $data = [
+            'Nome'=>$obj['Nome'],
+            'TipoEmpresa'=>$obj['TipoEmpresa'],
+            'UrlLogo'=>$obj['UrlLogo'],
+            'NomeEstacionamento'=>$obj['Nome']
+        ];
+        echo json_encode($data);
+    }
+
     public function setEstacionamento()
     {
 		$post = $this->funcoes->getPostAngular();
@@ -67,18 +80,17 @@ class Estacionamento extends CI_Controller {
             'Email' => $post['Email'],
             'NumeroVagas' => $post['NumeroVagas'],
             'Sobre' => isset($post['Sobre'])?$post['Sobre']:null,
-        ];
-
-        if($post['Matriz']=='S'){
-            $EmpresaId = $post['EmpresaId'];
-            $this->Empresa_model->setEmpresa($data,$EmpresaId);
-        }
-
-        $data += [
             'NomeEstacionamento' => $post['NomeEstacionamento'],
             'PrecoLivre' => $post['PrecoLivre'],
             'PrecoHora' => $post['PrecoHora']
         ];
+
+        if(!$EstacionamentoId){
+            $data += [
+                'CpfCnpj'=>$post['CpfCnpj'],
+                'EmpresaId'=>$this->session->userdata('EmpresaId'),
+            ];
+        }
 
         $this->Estacionamento_model->setEstacionamento($data,$EstacionamentoId);
 
@@ -149,13 +161,40 @@ class Estacionamento extends CI_Controller {
     public function getAtendentes()
     {
         $EstacionamentoId = $this->funcoes->get('EstacionamentoId');
-        $lista = $this->Estacionamento_model->getAtendentes($EstacionamentoId);
+        $Status = $this->funcoes->get('Status');
+        $lista = $this->Estacionamento_model->getAtendentes($EstacionamentoId,$Status);
         echo json_encode($lista);
+    }
+
+    public function acaoUsuario()
+    {
+        $dados = $this->funcoes->getPostAngular();
+        $data = ['Status'=>($dados['Status']=='A'?'I':'A')];
+        $this->Login_model->setLogin($data,$dados['LoginId']);
     }
 
     public function setAtendente()
     {
+
         $dados = $this->funcoes->getPostAngular();
+
+        $erro_1 = $this->Login_model->getValidaNomeLogin($dados['NomeUsuario']);
+        $erro_2 = $this->Login_model->getValidaEmail($dados['Email']);
+        $lista_erros = [];
+
+        if($erro_1>0){
+            $lista_erros[] = "Este Nome Usuário já esta sendo utilizado, favor digite outro.";
+        }
+
+        if($erro_2>0){
+            $lista_erros[] = "Este e-mail já esta cadastrado em nossa base de dados.";
+        }
+
+        if(count($lista_erros)>0){
+            echo json_encode(['lista_erros'=>$lista_erros]);
+            exit;
+        }
+
         $insert = [
             'NomeUsuario' => $dados['NomeUsuario'],
             'Email' => $dados['Email'],
@@ -178,6 +217,7 @@ class Estacionamento extends CI_Controller {
         echo json_encode([
             'token_code'=>$token_code
             ,'LoginId'=>$LoginId
+            ,'lista_erros'=>[]
         ]);
 
     }

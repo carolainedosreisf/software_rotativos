@@ -50,7 +50,6 @@ class Empresa_model extends CI_Model {
                         ,b.Estado
                         ,a.BairroEndereco
                         ,a.UrlLogo
-                        ,a.NumeroVagas
                         ,a.Sobre
                         ,a.NumeroTelefone1
                         ,a.NumeroTelefone2

@@ -48,7 +48,7 @@
                     <li><a href="">Home</a></li>
                     <li><a href="<?php echo base_url('index.php/restrita/Estacionamento'); ?>">Perfil Empresa</a></li>
                     <li><a href="<?php echo base_url('index.php/restrita/FormaPagamento'); ?>">Formas de Pagamento</a></li>
-                    <li><a href="">Históricos</a></li>
+                    <li><a href="<?php echo base_url('index.php/restrita/FluxoVaga'); ?>">Fluxo de Vagas</a></li>
                     <li><a href="">Reservas</a></li>
                     <li><a href="<?php echo base_url('index.php/Login/sair'); ?>">Sair</a></li>
                 </ul>

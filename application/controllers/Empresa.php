@@ -61,21 +61,14 @@ class Empresa extends CI_Controller {
             'Nome' => $post['Nome'],
             'RazaoSocial' => $post['RazaoSocial'],
             'TipoEmpresa' => $post['TipoEmpresa'],
-            'CpfCnpj' => $post['TipoEmpresa']=='J'?$post['Cnpj']:$post['Cpf'],
-            'Endereco' => $post['Endereco'],
-            'NumeroEndereco' => $post['NumeroEndereco'],
-            'NumeroCep' => $post['NumeroCep'],
-            'CidadeId' =>$post['CidadeId'],
-            'BairroEndereco' => $post['BairroEndereco'],
-            'NumeroTelefone1' => $post['NumeroTelefone1'],
-            'NumeroTelefone2' => isset($post['NumeroTelefone2'])?$post['NumeroTelefone2']:null,
-            'Email' => $post['Email'],
+            'CpfCnpj' => $post['TipoEmpresa']=='J'?$post['Cnpj']:$post['Cpf']
         ];
 
         $EmpresaId = $this->Empresa_model->setEmpresa($data_empresa);
 
         $data_estacionamento = [
             'CpfCnpj' => $post['TipoEmpresa']=='J'?$post['Cnpj']:$post['Cpf'],
+            'NomeEstacionamento' => $post['Nome'],
             'Endereco' => $post['Endereco'],
             'NumeroEndereco' => $post['NumeroEndereco'],
             'NumeroCep' => $post['NumeroCep'],

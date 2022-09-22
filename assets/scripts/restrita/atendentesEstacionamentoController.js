@@ -3,6 +3,7 @@ app.controller('atendentesEstacionamentoController', ['$scope', '$http','$filter
     $scope.objEstacionamento = {};
     $scope.objAtendente = {};
     $scope.lista_atendentes = [];
+    $scope.filtro = {Status:""};
 
     $scope.getEstacionamento = function(){
         $scope.carregando = true;
@@ -24,7 +25,10 @@ app.controller('atendentesEstacionamentoController', ['$scope', '$http','$filter
         $http({
             url: base_url+'/Estacionamento/getAtendentes',
             method: 'GET',
-            params:{EstacionamentoId}
+            params:{
+                EstacionamentoId
+                ,Status:$scope.filtro.Status
+            }
         }).then(function (retorno) {
             $scope.lista_atendentes = retorno.data;
             $scope.carregando = false;
@@ -36,6 +40,7 @@ app.controller('atendentesEstacionamentoController', ['$scope', '$http','$filter
 
     $scope.setAtendente = function(){
         if($scope.form_atendente.$valid){
+            $scope.lista_erros = [];
             $scope.objAtendente.EstacionamentoId = EstacionamentoId;
             $scope.carregando = true;
             $http({
@@ -44,12 +49,17 @@ app.controller('atendentesEstacionamentoController', ['$scope', '$http','$filter
                 data: $scope.objAtendente
             }).then(function (retorno) {
                 $scope.carregando = false;
-                var data = {
-                    i:retorno.data.LoginId,
-                    e:$scope.objAtendente.Email,
-                    t:retorno.data.token_code
-                };
-                $scope.enviaToken(data,1);
+                if((retorno.data.lista_erros).length>0){
+                    $scope.lista_erros = retorno.data.lista_erros;
+                }else{
+                    var data = {
+                        i:retorno.data.LoginId,
+                        e:$scope.objAtendente.Email,
+                        t:retorno.data.token_code
+                    };
+                    $scope.enviaToken(data,1);
+                }
+                
             },
             function (retorno) {
                 console.log('Error: '+retorno.status);
@@ -121,6 +131,32 @@ app.controller('atendentesEstacionamentoController', ['$scope', '$http','$filter
                 swal('Token enviado com sucesso!','','success')
            }
             console.log('Error: '+retorno.status);
+        });
+    }
+
+    $scope.acaoUsuario = function(dados){
+        swal({
+            title: "",
+            text: `Deseja realmente ${dados.Status=='A'?'desativar':'ativar'} o atendente ${dados.NomeUsuario}?`,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-warning",
+            confirmButtonText: "Sim",
+            cancelButtonText: "Não"
+          },
+          function(){
+            $scope.carregando = true;
+            $http({
+                url: base_url+'/Estacionamento/acaoUsuario',
+                method: 'POST',
+                data: dados
+            }).then(function (retorno) {
+                $scope.carregando = false;
+                $scope.getAtendentes();
+            },
+            function (retorno) {
+                console.log('Error: '+retorno.status);
+            });
         });
     }
 

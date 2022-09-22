@@ -564,3 +564,8 @@ INSERT INTO `mydb`.`Permissao` (`PermissaoId`, `Descricao`) VALUES
         (2, 'Empresas de Rotativos (Acesso Total)'),
         (3, 'Empresas de Rotativos (Acesso Restringido)'),
         (4, 'Clientes de Empresas de Rotativos');
+
+------------------------------------------------ 22/09  ---------------------------------------------
+
+ALTER TABLE `mydb`.`Empresa` DROP COLUMN NumeroVagas;
+ALTER TABLE `mydb`.`Login` ADD Status CHAR(1) DEFAULT 'A' NOT NULL;

@@ -19,7 +19,14 @@
     <h2>Atendentes >> {{objEstacionamento.NomeEstacionamento}}</h2><br>
 
     <div class="row form-group">
-        <div class="col-sm-8"></div>
+        <div class="col-sm-6"></div>
+        <div class="col-sm-2">
+            <select name="Status" id="Status" class="form-control" ng-model="filtro.Status" ng-change="getAtendentes()">
+                <option value="">Status: Todos</option>
+                <option value="A">Status: Ativos</option>
+                <option value="I">Status: Desativados</option>
+            </select>
+        </div>
         <div class="col-sm-4">
             <input type="text" class="form-control" placeholder="Pesquisar..." ng-model="filtrar">
         </div>
@@ -34,12 +41,13 @@
                         <th class="text-center">Nome Usuário</th>
                         <th class="text-center">E-mail</th>
                         <th class="text-center">Senha já cadastrada?</th>
-                        <th class="text-center">Renviar Token Senha</th>
+                        <th class="text-center" width="10%">Status</th>
+                        <th class="text-center" width="10%">Renviar Token Senha</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-show="(lista_atendentes|filter:filtrar).length<=0">
-                        <td colspan="5" class="text-center">Nenhum atendentes  cadastrado ainda.</td>
+                        <td colspan="6" class="text-center">Nenhum registro encontrado.</td>
                     </tr>
                     <tr ng-repeat="l in lista_atendentes|filter:filtrar">
                          <td class="text-center">
@@ -55,7 +63,14 @@
                             {{l.SenhaCadastrada}}
                         </td>
                         <td class="text-center">
-                            <button class="btn btn-success btn-sm" ng-click="gerarToken(l)">
+                            <button class="btn btn-sm" ng-class="l.Status=='A'?'btn-success':'btn-warning'" ng-click="acaoUsuario(l)">
+                                <div class="tooltipnew" data-title="Clique aqui para {{l.Status=='A'?'desativar':'ativar'}} o atendente.">
+                                    {{l.Status=='A'?'Ativo':'Desativado'}}
+                                </div>
+                            </button>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-success btn-sm" ng-click="gerarToken(l)" ng-disabled="l.Status=='I'">
                                 <span class="glyphicon glyphicon-envelope"></span>
                             </button>
                         </td>
@@ -87,6 +102,13 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row" ng-repeat="erro in lista_erros">
+                            <div class="col-sm-12">
+                                <div class="alert alert-danger" role="alert">
+                                    {{erro}}
+                                </div>
+                            </div>
+                        </div>
                         <div class="row form-group">
                             <div class="col-sm-12" ng-class="form_atendente.NomeUsuario.$error.required && (form_atendente.$submitted || form_atendente.NomeUsuario.$dirty)?'has-error':''">
                                 <label for="NomeUsuario">Nome Usuário:</label>
@@ -94,7 +116,7 @@
                             </div>
                         </div>
                         <div class="row form-group">
-                            <div class="col-sm-12" ng-class="form_atendente.Email.$error && (form_atendente.$submitted || form_atendente.email.$dirty)?'has-error':''">
+                            <div class="col-sm-12" ng-class="form_atendente.Email.$invalid && (form_atendente.$submitted || form_atendente.email.$dirty)?'has-error':''">
                                 <label for="Email">E-mail:</label>
                                 <input type="email" class="form-control" name="Email" id="Email" ng-model="objAtendente.Email" ng-required="true">
                             </div>

@@ -41,6 +41,20 @@ app.controller('novoEstacionamentoController', ['$scope', '$http','$filter','$lo
         });
     }
 
+    $scope.getEmpresa = function(){
+        $scope.carregando = true;
+        $http({
+            url: 'getEmpresa',
+            method: 'GET'
+        }).then(function (retorno) {
+            $scope.objEstacionamento = retorno.data;
+            $scope.carregando = false;
+        },
+        function (retorno) {
+            console.log('Error: '+retorno.status);
+        });
+    }
+
     $scope.buscaCep = function(){
         if ($scope.objEstacionamento.NumeroCep != undefined) {
             if ($scope.objEstacionamento.NumeroCep.length==8) {
@@ -103,6 +117,8 @@ app.controller('novoEstacionamentoController', ['$scope', '$http','$filter','$lo
     $scope.getCidades();
     if(EstacionamentoId){
         $scope.getEstacionamento();
+    }else{
+        $scope.getEmpresa();
     }
 }]);
 

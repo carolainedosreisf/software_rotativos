@@ -44,7 +44,8 @@ class Login_model extends CI_Model {
                     FROM Login 
                     WHERE NomeUsuario = '{$NomeUsuario}' 
                     AND Senha = '{$Senha}' 
-                    AND PermissaoId IN(2,3)";
+                    AND PermissaoId IN(2,3) 
+                    AND Status = 'A'";
         $query = $this->db->query($sql);
         $result = $query->row_array();
         return $result;
@@ -54,7 +55,8 @@ class Login_model extends CI_Model {
     {
         $sql = "SELECT EstacionamentoId,PermissaoId,TokenEmail
                     FROM Login 
-                    WHERE LoginId = {$LoginId}";
+                    WHERE LoginId = {$LoginId}
+                    AND Status = 'A'";
         $query = $this->db->query($sql);
         $result = $query->row_array();
         return $result;
