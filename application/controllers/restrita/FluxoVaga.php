@@ -10,7 +10,7 @@ class FluxoVaga extends CI_Controller {
 		$this->Login_model->verificaSessao();
         $this->load->model('FluxoVaga_model');
         //$this->load->model('Empresa_model');
-        //$this->load->model('Estacionamento_model');
+        $this->load->model('Estacionamento_model');
     }
     
     public function index()
@@ -33,11 +33,27 @@ class FluxoVaga extends CI_Controller {
 
     public function calclulaValor()
     {
-        $EstacionamentoId = $this->funcoes->get('EstacionamentoId');
-        $DataEntrada = $this->funcoes->get('DataEntrada');
-        $HoraEntrada = $this->funcoes->get('HoraEntrada');
-        $DataSaida = $this->funcoes->get('DataSaida');
-        $HoraSaida = $this->funcoes->get('HoraSaida');
+        $id = $this->funcoes->get('EstacionamentoId');
+        $Entrada = $this->funcoes->formataData($this->funcoes->get('DataEntrada')).' '.$this->funcoes->get('HoraEntrada').':00';
+        $Saida = $this->funcoes->formataData($this->funcoes->get('DataSaida')).' '.$this->funcoes->formataHora($this->funcoes->get('HoraSaida')).':00';
+
+        $objEstacionamento = $this->Estacionamento_model->getEstacionamento($id,null,$Entrada,$Saida);
+        $horas_totais = $objEstacionamento['minutos']/60;
+        $horas = (int) ($objEstacionamento['minutos']/60);
+        $minutos = $objEstacionamento['minutos']%60;
+
+        $ValorHora =  $objEstacionamento['PrecoHora']>0?($horas_totais*$objEstacionamento['PrecoHora']):0;
+        $ValorLivre =  $objEstacionamento['PrecoLivre']>0?$objEstacionamento['PrecoLivre']:0;
+
+        $valor = $ValorLivre;
+        if(($ValorHora>0 && $ValorLivre>0 && $ValorLivre > $ValorHora) || $ValorLivre<=0){
+            $valor = $ValorHora;
+        }
+
+        echo json_encode([
+            'valor'=>number_format(floatval($valor), 2, '.', '')
+            ,'tempo'=>$horas.'Hrs'. ' e '.$minutos.'Min'
+        ]);
     }
 
     public function novoFluxoVaga()

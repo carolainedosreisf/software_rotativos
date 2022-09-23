@@ -141,7 +141,7 @@
             </div>
         </div>
     </div>
-    <div id="finalizarLocacao" class="modal fade" role="dialog">
+    <div id="finalizarLocacao" class="modal fade" role="dialog" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -156,6 +156,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class="callout callout-default">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <span><b>Estacionamento: </b> {{objFinalizaLocacao.NomeEstacionamento}}</span>
+                                <span ng-show="objFinalizaLocacao.NomeCliente"><b>Cliente: </b> {{objFinalizaLocacao.NomeCliente}}</span>
+                                <span><b>Placa Veículo: </b> {{objFinalizaLocacao.PlacaVeiculoFormatada}}</span>
+                                <span><b>Entrada: </b> {{objFinalizaLocacao.DataEntradaBr}} às {{objFinalizaLocacao.HoraEntradaBr}}</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <form name="form_finaliza" id="form_finaliza" ng-submit="setFinalizaLocacao()" autocomplete="off" novalidate >
                         <div class="row form-group">
                             <div class="col-sm-6">
@@ -179,11 +190,11 @@
                         <div class="row form-group">
                             <div class="col-sm-6">
                                 <label for="Valor">Valor:</label>
-                                <input type="text" class="form-control" id="Valor" name="Valor" ng-model="objFinalizaLocacao.Valor" disabled>
+                                <input type="text" class="form-control" id="Valor" name="Valor" ng-model="objFinalizaLocacao.Valor|currency:'R$ '" disabled>
                             </div>
                             <div class="col-sm-6">
-                                <label for="Valor">Tempo(horas):</label>
-                                <input type="text" class="form-control" id="Horas" name="Horas" ng-model="objFinalizaLocacao.Horas" disabled>
+                                <label for="Tempo">Tempo:</label>
+                                <input type="text" class="form-control" id="Tempo" name="Tempo" ng-model="objFinalizaLocacao.Tempo" disabled>
                             </div>
                         </div>
                     </form>

@@ -23,16 +23,20 @@ class Estacionamento_model extends CI_Model {
         return $result;
     }
 
-    public function getEstacionamento($EstacionamentoId=null,$EmpresaId=null)
+    public function getEstacionamento($EstacionamentoId=null,$EmpresaId=null,$Entrada = null,$Saida = null)
     {
         $result = 'result_array';
         $filtro = "";
+        $coluna = "";
         if($EstacionamentoId){
             $filtro .= " AND a.EstacionamentoId = {$EstacionamentoId}";
             $result = 'row_array';
         }
         if($EmpresaId){
             $filtro .= " AND a.EmpresaId = {$EmpresaId}";
+        }
+        if($Entrada && $Saida){
+            $coluna .= ",timestampdiff(MINUTE, '{$Entrada}', '{$Saida}') as minutos";
         }
         $sql = "SELECT 
                         a.EstacionamentoId
@@ -62,6 +66,7 @@ class Estacionamento_model extends CI_Model {
                         ,a.DataCadastro
                         ,(SELECT COUNT(*) FROM FotoEstacionamento AS d WHERE a.EstacionamentoId = d.EstacionamentoId) AS QtdFotos
                         ,(SELECT COUNT(*) FROM Login AS d WHERE a.EstacionamentoId = d.EstacionamentoId AND d.PermissaoId = 3) AS QtdAtendentes
+                        {$coluna}
                 FROM Estacionamento AS a
                 LEFT JOIN Empresa AS b ON a.EmpresaId = b.EmpresaId
                 LEFT JOIN Cidade AS c ON a.CidadeId = c.CidadeId
