@@ -63,10 +63,16 @@
                             {{l.SenhaCadastrada}}
                         </td>
                         <td class="text-center">
-                            <button class="btn btn-sm" ng-class="l.Status=='A'?'btn-success':'btn-warning'" ng-click="acaoUsuario(l)">
-                                <div class="tooltipnew" data-title="Clique aqui para {{l.Status=='A'?'desativar':'ativar'}} o atendente.">
+                            <button 
+                                class="btn btn-sm" 
+                                ng-class="l.Status=='A'?'btn-success':'btn-warning'"
+                                ng-click="acaoUsuario(l)"
+                                data-html="true" 
+                                data-toggle="tooltip" 
+                                data-placement="left"
+                                data-original-title="Clique aqui para {{l.Status=='A'?'desativar':'ativar'}} o atendente."
+                                tooltip>
                                     {{l.Status=='A'?'Ativo':'Desativado'}}
-                                </div>
                             </button>
                         </td>
                         <td class="text-center">

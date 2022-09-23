@@ -314,36 +314,7 @@ th,td{
     margin-bottom: 30px;
 }
 
-.tooltipnew {
-    position: relative;
-}
-
-.tooltipnew:before {
-    content: attr(data-title);
-    background-color: #000;
-    color: #FFF;
+.tooltip-inner{
     font-size: 13px;
-    padding:  5px 10px;
-    box-sizing: border-box;
-    position: absolute;
-    right: 0;
-    bottom: -42px;
-    opacity: 0;
-}
-.tooltipnew:after {
-    content: "";
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-    left: 5px;
-    bottom: -16px;
-    border-style: solid;
-    border-width: 0 10px 10px 10px;
-    border-color: transparent transparent #000 transparent;
-}
-
-.tooltipnew:hover:after,
-.tooltipnew:hover:before {
-    opacity: 1;
+    padding:12px !important;
 }

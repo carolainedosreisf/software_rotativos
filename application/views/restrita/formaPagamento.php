@@ -81,7 +81,7 @@
                         <div class="row form-group">
                             <div class="col-sm-12" ng-class="form_forma_pagamento.Descricao.$invalid && (form_forma_pagamento.$submitted || form_forma_pagamento.Descricao.$dirty)?'has-error':''">
                                 <label for="Descricao">Descrição:</label>
-                                <input type="text" name="Descricao" autocomplete="of" class="form-control" maxlength="50" ng-model="cad.Descricao" ng-required="true">
+                                <input type="text" name="Descricao" autocomplete="off" class="form-control" maxlength="50" ng-model="cad.Descricao" ng-required="true">
                             </div>
                             
                         </div>
@@ -89,7 +89,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                    <button type="submit" form="form_forma_pagamento" class="btn btn-success" ng-disabled="form_promocao.$invalid">Salvar</button>
+                    <button type="submit" form="form_forma_pagamento" class="btn btn-success">Salvar</button>
                 </div>
             </div>
         </div>

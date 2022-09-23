@@ -78,12 +78,13 @@
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th class="text-center">Período</th>
+                        <th>Estacionamento</th>
+                        <th class="text-center">Entrada</th>
+                        <th class="text-center">Saída</th>
                         <th>Cliente/Placa</th>
-                        <th class="text-center">Status</th>
-                        <th class="text-center">Tipo de Pagamento</th>
-                        <th class="text-center">Forma de Pagamento</th>
                         <th class="text-center">Valor</th>
+                        <th>Forma de Pagamento</th>
+                        <th class="text-center">Status</th>
                         <th class="text-center" width="10%">Detalhes</th>
                     </tr>
                 </thead>
@@ -92,15 +93,39 @@
                         <td colspan="7" class="text-center">Nenhum registro encontrado.</td>
                     </tr>
                     <tr pagination-id="pg_lista" dir-paginate="l in lista_fluxo|filter:filtrar | itemsPerPage:100">
-                        <td class="text-center"></td>
-                        <td></td>
-                        <td class="text-center"></td>
-                        <td class="text-center"></td>
-                        <td class="text-center"></td>
-                        <td class="text-center"></td>
+                        <td>
+                            {{l.NomeEstacionamento}} <br>
+                            {{l.CpfCnpjFormatado}}
+                        </td>
+                        <td class="text-center">{{l.DataEntradaBr}} às {{l.HoraEntradaBr}}</td>
+                        <td class="text-center">{{l.DataSaidaBr?(l.DataSaidaBr+' às '+l.HoraSaidaBr):'-'}}</td>
+                        <td>
+                            <span ng-show="l.NomeCliente">{{l.NomeCliente}}<br></span>
+                            {{l.PlacaVeiculoFormatada}}
+                        </td>
+                        <td class="text-center">
+                            {{l.Valor?(l.valor|currency:''):'-'}}
+                        </td>
+                        <td>
+                            {{l.FormaPagamentoDesc?l.FormaPagamentoDesc:'-'}}
+                        </td>
+                        <td class="text-center">
+                        <button  
+                            class="btn btn-sm"
+                            ng-class="l.Status=='A'?'btn-warning':'btn-success'"
+                            ng-click="openFinalizarLocacao(l)"
+                            data-html="true" 
+                            data-toggle="tooltip" 
+                            data-placement="left"
+                            data-original-title="{{l.Status=='A'?'Clique aqui para finalizar o periódo da locação.':''}}"
+                            tooltip>
+                            {{l.Status=='A'?'Aberto':'Fechado'}}
+                        </button>
+                            
+                        </td>
                         <td class="text-center">
                             <button ng-click="" class="btn btn-default btn-sm">
-                                <i class="glyphicon glyphicon-seacrh"></i>
+                                <i class="glyphicon glyphicon-search"></i>
                             </button>
                         </td>
                     </tr>
@@ -116,5 +141,58 @@
             </div>
         </div>
     </div>
-    
+    <div id="finalizarLocacao" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Finalizar o periódo da locação</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row form-group" ng-show="form_finaliza.$invalid && form_finaliza.$submitted">
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger" role="alert">
+                                Preencha os campos destacados!
+                            </div>
+                        </div>
+                    </div>
+                    <form name="form_finaliza" id="form_finaliza" ng-submit="setFinalizaLocacao()" autocomplete="off" novalidate >
+                        <div class="row form-group">
+                            <div class="col-sm-6">
+                                <label for="DataSaida">Data Saída:</label>
+                                <input type="text" class="form-control" id="DataSaida" name="DataSaida" ng-model="objFinalizaLocacao.DataSaida" data-provide="datepicker" data-date-format="dd/mm/yyyy">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="HoraSaida">Hora Saída:</label>
+                                <input type="text" class="form-control" id="HoraSaida" name="HoraSaida" ng-model="objFinalizaLocacao.HoraSaida" ui-mask="99:99" placeholder="__:__" ng-change="validaHora('HoraSaida')">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-12">
+                                <label for="FormaPagamentoId">Forma de Pagamento:</label>
+                                <select class="form-control" name="FormaPagamentoId" id="FormaPagamentoId" ng-model="objFinalizaLocacao.FormaPagamentoId">
+                                    <option value="">Selecione</option>
+                                    <option value="{{l.FormaPagamentoId}}" ng-repeat="l in lista_formas_pagamento">{{l.Descricao}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-6">
+                                <label for="Valor">Valor:</label>
+                                <input type="text" class="form-control" id="Valor" name="Valor" ng-model="objFinalizaLocacao.Valor" disabled>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="Valor">Tempo(horas):</label>
+                                <input type="text" class="form-control" id="Horas" name="Horas" ng-model="objFinalizaLocacao.Horas" disabled>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    <button type="submit" form="form_finaliza" class="btn btn-success">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

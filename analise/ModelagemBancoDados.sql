@@ -569,3 +569,8 @@ INSERT INTO `mydb`.`Permissao` (`PermissaoId`, `Descricao`) VALUES
 
 ALTER TABLE `mydb`.`Empresa` DROP COLUMN NumeroVagas;
 ALTER TABLE `mydb`.`Login` ADD Status CHAR(1) DEFAULT 'A' NOT NULL;
+
+------------------------------------------------ 23/09  ---------------------------------------------
+
+ALTER TABLE `mydb`.`Fluxovaga` CHANGE `CadastroId` `CadastroId` INT(11) NULL;
+ALTER TABLE `mydb`.`Receber` CHANGE `CadastroId` `CadastroId` INT(11) NULL;

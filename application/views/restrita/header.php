@@ -26,7 +26,7 @@
 	    <script src="<?php echo base_url('assets/js/sweetalert.min.js'); ?>"></script>
 
         <script src="<?php echo base_url('assets/js/dirPagination.js'); ?>" language="javascript" type="text/javascript"></script>
-        
+	    <!-- <script src="<?php //echo base_url('assets/js/jquery.mask.js'); ?>"></script> -->
 	    <script src="<?php echo base_url('assets/js/angular-input-masks-standalone.min.js'); ?>"></script>
         <script src="<?php echo base_url("assets/scripts/restrita/{$controller}"); ?>"></script>
 

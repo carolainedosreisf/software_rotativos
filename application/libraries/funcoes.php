@@ -91,6 +91,28 @@ class Funcoes {
 
         return $docFormatado;
     }
+
+    function formataData($data)
+    {
+        $formato = 'd/m/Y';
+        $DataEspecifica = DateTime::createFromFormat($formato, $data);
+        $retorno = $DataEspecifica->format('Y-m-d');
+        return $retorno;
+    }
+
+    public function formataHora($desc)
+    {
+        $desc = trim(str_replace(":","",$desc));
+        $hr = substr($desc,0,2);
+        $min = substr($desc,2,2);
+        return $hr.":".$min;
+    }
+
+    public function formataPlacaVeiculo($placa)
+    {
+        $definidor = substr($placa, 4, 1);
+        return is_numeric($definidor) ?(substr($placa, 0, 3).'-'.substr($placa, 3, 4)):$placa;
+    }
     
 }
 
