@@ -32,6 +32,9 @@
             <div class="alert alert-danger" role="alert" ng-show="form_estacionamento.$error.required && form_estacionamento.$submitted">
                 Preencha os campos destacados!
             </div>
+            <div class="alert alert-danger" role="alert" ng-show="objEstacionamento.PrecoHora<=0 && objEstacionamento.PrecoLivre <=0 && form_estacionamento.$submitted">
+                Preencha pelo menos um dos dois campos de preço (Preço Hora,Preço Livre).
+            </div>
             <div class="alert alert-danger" role="alert" ng-show="erro_cep">
                 CEP Inválido!
             </div>

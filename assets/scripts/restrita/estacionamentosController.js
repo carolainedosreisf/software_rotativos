@@ -8,7 +8,8 @@ app.controller('estacionamentosController', ['$scope', '$http','$filter', functi
             url: base_url+'/Estacionamento/getEstacionamentos',
             method: 'GET'
         }).then(function (retorno) {
-            $scope.lista_estacionamentos = retorno.data;
+            $scope.lista_estacionamentos = retorno.data.lista;
+            $scope.tem_sem_preco = retorno.data.tem_sem_preco;
             $scope.carregando = false;
         },
         function (retorno) {
@@ -30,3 +31,18 @@ app.controller('estacionamentosController', ['$scope', '$http','$filter', functi
 
     $scope.getEstacionamentos();
 }]);
+
+app.directive('tooltip', function(){
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs){
+            element.hover(function(){
+                // on mouseenter
+                element.tooltip('show');
+            }, function(){
+                // on mouseleave
+                element.tooltip('hide');
+            });
+        }
+    };
+});

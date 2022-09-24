@@ -322,3 +322,20 @@ th,td{
 #finalizarLocacao span{
     display: block;
 }
+
+.sem-preco{
+    background: #f8d7da;
+}
+
+.sem-preco .icone{
+    color: #721c24;
+}
+
+.legenda-sem-preco{
+    padding: 4px 8px 4px 10px;
+    background: #f8d7da;
+}
+
+.legenda-sem-preco .icone{
+    color: #721c24;
+}

@@ -23,7 +23,7 @@ class Estacionamento_model extends CI_Model {
         return $result;
     }
 
-    public function getEstacionamento($EstacionamentoId=null,$EmpresaId=null,$Entrada = null,$Saida = null)
+    public function getEstacionamento($EstacionamentoId=null,$EmpresaId=null,$Entrada = null,$Saida = null,$ComPreco=0)
     {
         $result = 'result_array';
         $filtro = "";
@@ -34,6 +34,9 @@ class Estacionamento_model extends CI_Model {
         }
         if($EmpresaId){
             $filtro .= " AND a.EmpresaId = {$EmpresaId}";
+        }
+        if($ComPreco){
+            $filtro .= " AND (IFNULL(a.PrecoHora,0) > 0 OR IFNULL(a.PrecoLivre,0) > 0)";
         }
         if($Entrada && $Saida){
             $coluna .= ",timestampdiff(MINUTE, '{$Entrada}', '{$Saida}') as minutos";

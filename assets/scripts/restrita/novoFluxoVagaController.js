@@ -5,16 +5,45 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
     $scope.lista_estacionamentos = [];
     $scope.lista_clientes = [];
     $scope.FluxoVagaId = FluxoVagaId;
-    $scope.data_atual = now.getDate()+"/"+((now.getMonth()+1)<10?'0':'')+(now.getMonth()+1)+ "/" + now.getFullYear();
+    $scope.disabled_ = 0;
+
+    var dataAtual = function(hora=0) {
+        var now = new Date;
+        if(hora){
+            var retorno = (((now.getHours() )<10?'0':'') +now.getHours())+''+(((now.getMinutes())<10?'0':'')+now.getMinutes());
+        }else{
+            var retorno = (now.getDate()+"/"+((now.getMonth()+1)<10?'0':'')+(now.getMonth()+1)+ "/" + now.getFullYear());
+        }
+        return retorno;
+    }
 
     $scope.getEstacionamentos = function(){
         $scope.carregando = true;
         $http({
             url: base_url+'/Estacionamento/getEstacionamentos',
-            method: 'GET'
+            method: 'GET',
+            params:{ComPreco:1}
         }).then(function (retorno) {
-            $scope.lista_estacionamentos = retorno.data;
+            $scope.lista_estacionamentos = retorno.data.lista;
             $scope.carregando = false;
+        },
+        function (retorno) {
+            console.log('Error: '+retorno.status);
+        });
+    }
+
+    $scope.getFluxoVaga = function(){
+        $scope.carregando = true;
+        $http({
+            url: base_url+'/FluxoVaga/getFluxoVaga',
+            method: 'GET',
+            params:{FluxoVagaId}
+        }).then(function (retorno) {
+            $scope.FluxoVaga = retorno.data;
+            $scope.carregando = false;
+            if($scope.FluxoVaga.Status=='F'){
+                $scope.disabled_ = 1;
+            }
         },
         function (retorno) {
             console.log('Error: '+retorno.status);
@@ -41,8 +70,8 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
                 method: 'POST',
                 data: $scope.FluxoVaga
             }).then(function (retorno) {
-               
                 $scope.carregando = false;
+                window.location = base_url+"/FluxoVaga/";
             },
             function (retorno) {
                 console.log('Error: '+retorno.status);
@@ -53,9 +82,10 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
     $scope.getEstacionamentos();
 
     if(FluxoVagaId){
-
+        $scope.getFluxoVaga();
     }else{
-        $scope.FluxoVaga.DataEntrada = $scope.data_atual;
+        $scope.FluxoVaga.DataEntrada = dataAtual();
+        $scope.FluxoVaga.HoraEntrada = dataAtual(1);
     }
 }]);
 

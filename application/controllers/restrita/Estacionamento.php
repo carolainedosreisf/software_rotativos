@@ -23,15 +23,20 @@ class Estacionamento extends CI_Controller {
     public function getEstacionamentos()
     {
         $EmpresaId = $this->session->userdata('EmpresaId');
-        $lista = $this->Estacionamento_model->getEstacionamento(null,$EmpresaId);
+        $ComPreco = $this->funcoes->get('ComPreco');
+        $data['lista'] = $this->Estacionamento_model->getEstacionamento(null,$EmpresaId,null,null,$ComPreco);
+        $data['tem_sem_preco'] = 0;
 
-        foreach ($lista as $i => $a) {
-            $lista[$i]['CpfCnpjFormatado'] = $this->funcoes->formatar_cpf_cnpj($a['CpfCnpj']);
-            $lista[$i]['NumeroTelefone1Formatado'] = $this->funcoes->formatar_telefone($a['NumeroTelefone1']);
-            $lista[$i]['NumeroTelefone2Formatado'] = $this->funcoes->formatar_telefone($a['NumeroTelefone2']);
+        foreach ($data['lista'] as $i => $a) {
+            if($a['PrecoHora']<=0 && $a['PrecoLivre']<=0){
+                $data['tem_sem_preco'] = 1;
+            }
+            $data['lista'][$i]['CpfCnpjFormatado'] = $this->funcoes->formatar_cpf_cnpj($a['CpfCnpj']);
+            $data['lista'][$i]['NumeroTelefone1Formatado'] = $this->funcoes->formatar_telefone($a['NumeroTelefone1']);
+            $data['lista'][$i]['NumeroTelefone2Formatado'] = $this->funcoes->formatar_telefone($a['NumeroTelefone2']);
         }
 
-        echo json_encode($lista);
+        echo json_encode($data);
     }
 
     public function novoEstacionamento()

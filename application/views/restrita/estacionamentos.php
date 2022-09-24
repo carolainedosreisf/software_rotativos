@@ -15,8 +15,21 @@
     <h2>Estacionamentos >> <?php echo $this->session->userdata('nome'); ?></h2><br>
 
     <div class="row form-group">
-        <div class="col-sm-8"></div>
-        <div class="col-sm-4">
+        <div class="col-sm-8" ng-show="tem_sem_preco">
+            <span class="legenda-sem-preco">
+                <span class="glyphicon glyphicon-exclamation-sign icone"></span>
+            </span>
+            <span 
+                data-html="true" 
+                data-toggle="tooltip" 
+                data-placement="right"
+                data-original-title="Favor preencher o preço para que o estacionamento possa ser usado nos demais processos do sistema, como Fluxo de Vagas e Reservas"
+                tooltip>
+                &nbsp;- Estacionamento sem preço.
+            </span>
+            
+        </div>
+        <div class="col-sm-4 pull-right">
             <input type="text" class="form-control" placeholder="Pesquisar..." ng-model="filtrar">
         </div>
     </div>
@@ -49,7 +62,8 @@
                             {{l.NumeroTelefone2Formatado}} <br ng-show="l.NumeroTelefone2">
                             {{l.Email}}
                         </td>
-                        <td >
+                        <td ng-class="l.PrecoLivre<=0 && l.PrecoHora<=0?'sem-preco text-center':''">
+                            <span ng-show="l.PrecoLivre<=0 && l.PrecoHora<=0" class="glyphicon glyphicon-exclamation-sign icone"></span>
                             <span ng-show="l.PrecoLivre>0">{{l.PrecoLivre|currency:'R$ '}} (Livre)<br></span>
                             <span ng-show="l.PrecoHora>0">{{l.PrecoHora|currency:'R$ '}} (Hora)</span>
                         </td>

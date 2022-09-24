@@ -8,7 +8,7 @@
                 <i class="glyphicon glyphicon-plus"></i>
                 Novo
             </button>
-            <button type="button" ng-click="" class="btn btn-primary">
+            <button type="button" ng-click="openRelatorio()" class="btn btn-primary">
                 <i class="glyphicon glyphicon-print"></i>
                 Imprimir
             </button>
@@ -22,17 +22,17 @@
             <div class="col-sm-6">
                 <label for="EstacionamentoId">Estacionamento:</label>
                 <select class="form-control" name="EstacionamentoId" id="EstacionamentoId" ng-model="filtros.EstacionamentoId">
-                    <option value="" style="display:none;"></option>
-                    <option value="{{l.EstacionamentoId}}" ng-repeat="l in  lista_estacionamentos" selected="{{$index==0}}">{{l.NomeEstacionamento}} - {{l.CpfCnpjFormatado}}</option>
+                    <option value="">Todos</option>
+                    <option value="{{l.EstacionamentoId}}" ng-repeat="l in  lista_estacionamentos">{{l.NomeEstacionamento}} - {{l.CpfCnpjFormatado}}</option>
                 </select>
             </div>
             <div class="col-sm-2">
-                <label for="Data">Data:</label>
-                <input type="text" class="form-control" name="Data" id="Data" ng-model="filtros.Data" data-provide="datepicker" data-date-format="dd/mm/yyyy">
+                <label for="DataInicio">A partir De:</label>
+                <input type="text" class="form-control" name="DataInicio" id="DataInicio" ng-model="filtros.DataInicio" data-provide="datepicker" data-date-format="dd/mm/yyyy">
             </div>
             <div class="col-sm-2">
-                <label for="Hora">Hora:</label>
-                <input type="text" class="form-control" name="Hora" id="Hora" ng-model="filtros.Hora" ui-mask="99:99" placeholder="__:__" ng-change="validaHora()">
+                <label for="DataFim">Até:</label>
+                <input type="text" class="form-control" name="DataFim" id="DataFim" ng-model="filtros.DataFim" data-provide="datepicker" data-date-format="dd/mm/yyyy">
             </div>
             <div class="col-sm-2">
                 <label for="Status">Status:</label>
@@ -61,7 +61,7 @@
             </div>
             <div class="col-sm-2">
                 <label for="">&nbsp;</label>
-                <button type="button" ng-click="" class="btn btn-primary form-control">
+                <button type="button" ng-click="getFluxoVagas()" class="btn btn-primary form-control">
                     <i class="glyphicon glyphicon-search"></i>
                     Filtrar
                 </button>
@@ -85,12 +85,12 @@
                         <th class="text-center">Valor</th>
                         <th>Forma de Pagamento</th>
                         <th class="text-center">Status</th>
-                        <th class="text-center" width="10%">Detalhes</th>
+                        <th class="text-center" width="10%">Ação</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-show="(lista_fluxo|filter:filtrar).length<=0">
-                        <td colspan="7" class="text-center">Nenhum registro encontrado.</td>
+                        <td colspan="8" class="text-center">Nenhum registro encontrado.</td>
                     </tr>
                     <tr pagination-id="pg_lista" dir-paginate="l in lista_fluxo|filter:filtrar | itemsPerPage:100">
                         <td>
@@ -104,7 +104,7 @@
                             {{l.PlacaVeiculoFormatada}}
                         </td>
                         <td class="text-center">
-                            {{l.Valor?(l.valor|currency:''):'-'}}
+                            {{l.Valor?(l.Valor|currency:''):'-'}}
                         </td>
                         <td>
                             {{l.FormaPagamentoDesc?l.FormaPagamentoDesc:'-'}}
@@ -124,8 +124,8 @@
                             
                         </td>
                         <td class="text-center">
-                            <button ng-click="" class="btn btn-default btn-sm">
-                                <i class="glyphicon glyphicon-search"></i>
+                            <button ng-click="novoFluxoVaga(l.FluxoVagaId)" class="btn btn-primary btn-sm">
+                                <i class="glyphicon" ng-class="l.Status=='A'?'glyphicon-pencil':'glyphicon-search'"></i>
                             </button>
                         </td>
                     </tr>
@@ -149,10 +149,17 @@
                         <h4 class="modal-title">Finalizar o periódo da locação</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="row form-group" ng-show="form_finaliza.$invalid && form_finaliza.$submitted">
+                    <div class="row" ng-show="form_finaliza.$invalid && form_finaliza.$submitted">
                         <div class="col-sm-12">
                             <div class="alert alert-danger" role="alert">
                                 Preencha os campos destacados!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ng-show="erro_saida">
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger" role="alert">
+                                A saída não pode ser menor que a entrada, preencha a Data e Hora de saída maior que a Data e Hora de entrada.
                             </div>
                         </div>
                     </div>
@@ -167,21 +174,21 @@
                         </div>
                     </div>
 
-                    <form name="form_finaliza" id="form_finaliza" ng-submit="setFinalizaLocacao()" autocomplete="off" novalidate >
+                    <form name="form_finaliza" id="form_finaliza" autocomplete="off" novalidate ng-submit="setFinalizarLocacao()">
                         <div class="row form-group">
-                            <div class="col-sm-6">
+                            <div class="col-sm-6" ng-class="form_finaliza.DataSaida.$invalid && (form_finaliza.$submitted || form_estacionamento.DataSaida.$dirty)?'has-error':''">
                                 <label for="DataSaida">Data Saída:</label>
-                                <input type="text" class="form-control" id="DataSaida" name="DataSaida" ng-model="objFinalizaLocacao.DataSaida" data-provide="datepicker" data-date-format="dd/mm/yyyy">
+                                <input type="text" class="form-control" id="DataSaida" name="DataSaida" ng-model="objFinalizaLocacao.DataSaida" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-change="calclulaValor()" ng-required="true">
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6"  ng-class="form_finaliza.HoraSaida.$invalid && (form_finaliza.$submitted || form_estacionamento.HoraSaida.$dirty)?'has-error':''">
                                 <label for="HoraSaida">Hora Saída:</label>
-                                <input type="text" class="form-control" id="HoraSaida" name="HoraSaida" ng-model="objFinalizaLocacao.HoraSaida" ui-mask="99:99" placeholder="__:__" ng-change="validaHora('HoraSaida')">
+                                <input type="text" class="form-control" id="HoraSaida" name="HoraSaida" ng-model="objFinalizaLocacao.HoraSaida" ui-mask="99:99" placeholder="__:__" ng-change="calclulaValor()" ng-required="true">
                             </div>
                         </div>
                         <div class="row form-group">
-                            <div class="col-sm-12">
+                            <div class="col-sm-12"  ng-class="form_finaliza.FormaPagamentoId.$invalid && (form_finaliza.$submitted || form_estacionamento.FormaPagamentoId.$dirty)?'has-error':''">
                                 <label for="FormaPagamentoId">Forma de Pagamento:</label>
-                                <select class="form-control" name="FormaPagamentoId" id="FormaPagamentoId" ng-model="objFinalizaLocacao.FormaPagamentoId">
+                                <select class="form-control" name="FormaPagamentoId" id="FormaPagamentoId" ng-model="objFinalizaLocacao.FormaPagamentoId" ng-required="true">
                                     <option value="">Selecione</option>
                                     <option value="{{l.FormaPagamentoId}}" ng-repeat="l in lista_formas_pagamento">{{l.Descricao}}</option>
                                 </select>
@@ -190,7 +197,7 @@
                         <div class="row form-group">
                             <div class="col-sm-6">
                                 <label for="Valor">Valor:</label>
-                                <input type="text" class="form-control" id="Valor" name="Valor" ng-model="objFinalizaLocacao.Valor|currency:'R$ '" disabled>
+                                <input type="text" class="form-control" id="Valor" name="Valor" ng-value="objFinalizaLocacao.Valor|currency:'R$ '" disabled>
                             </div>
                             <div class="col-sm-6">
                                 <label for="Tempo">Tempo:</label>

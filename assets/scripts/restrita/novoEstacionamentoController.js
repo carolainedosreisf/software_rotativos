@@ -94,8 +94,7 @@ app.controller('novoEstacionamentoController', ['$scope', '$http','$filter','$lo
     }
 
     $scope.setEstacionamento = function(){
-        console.log($scope.form_estacionamento.$error)
-        if($scope.form_estacionamento.$valid && $scope.erro_cep==false){
+        if($scope.form_estacionamento.$valid && $scope.erro_cep==false && ($scope.objEstacionamento.PrecoHora>0 || $scope.objEstacionamento.PrecoLivre>0)){
             $scope.carregando = true;
             $http({
                 url: 'setEstacionamento',
