@@ -2,7 +2,7 @@ composer install
 composer require phpmailer/phpmailer
 composer require mpdf/mpdf
 
-
-id19549778_mydb
-id19549778_root
-yab<lsP(@#7iV!]y
+Nome banco: id19550161_mydb
+Usuário: id19550161_root
+Host: localhost
+Senha: EC]Dj3!UA>GQbpem

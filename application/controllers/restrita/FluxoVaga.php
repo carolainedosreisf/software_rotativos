@@ -139,16 +139,79 @@ class FluxoVaga extends CI_Controller {
             $data['lista'][$a['EstacionamentoId']][] = $a;
         }
 
-        $mpdf = new \Mpdf\Mpdf();
         $html = $this->load->view('restrita/relatorioFluxoVagas',$data,true);
-        $mpdf->SetHTMLFooter('
-                <table width="100%">
-                    <tr>
-                        <td width="50%">'.Date('Y/m/d H:i').'</td>
-                        <td width="50%" class="text-right">{PAGENO}/{nbpg}</td>
-                    </tr>
-                </table>');
-        $mpdf->WriteHTML($html);
-        $mpdf->Output();
+
+        $this->funcoes->gerarPdf($html);
+    }
+
+    public function gerarFluxos()
+    {
+        $alfabeto = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+        $EstacionamentoId = 8;
+        $data = "2022-09-22";
+        $gerar = 50;
+        $fechar = 1;
+
+        for ($i=0; $i <$gerar ; $i++) { 
+            $modelo = rand(1,2);
+            $placa = "";
+            for ($x=1; $x <=7 ; $x++) { 
+                if($x<=3){
+                    $placa .= $alfabeto[rand(0,25)];
+                }else{
+                    if($modelo==2 && $x==5){
+                        $placa .= $alfabeto[rand(0,25)]; 
+                    }else{
+                        $placa .= rand(1,9);
+                    }
+                    
+                }
+            }
+            $HoraEntrada = rand(8,19);
+            $MinEntrada = rand(1,59);
+
+            $HoraSaida = rand(($HoraEntrada+1),21);
+            $MinSaida = rand(1,59);
+
+
+            $dados[$i] = [
+                'EstacionamentoId'=>$EstacionamentoId
+                ,'PlacaVeiculo'=>$placa
+                ,'DataEntrada'=>$data
+                ,'HoraEntrada'=>($HoraEntrada<10?'0':'').$HoraEntrada.":".($MinEntrada<10?'0':'').$MinEntrada.":00"
+                ,'DataSaida'=>$data
+                ,'HoraSaida'=>($HoraSaida<10?'0':'').$HoraSaida.":".($MinSaida<10?'0':'').$MinSaida.":00"
+                ,'Reserva'=>'N'
+            ];
+            $FluxoVagaId = $this->FluxoVaga_model->setFluxoVaga($dados[$i]);
+
+            $Entrada = $dados[$i]['DataEntrada']." ".$dados[$i]['HoraEntrada'];
+            $Saida = $dados[$i]['DataSaida']." ".$dados[$i]['HoraSaida'];
+
+            $objEstacionamento = $this->Estacionamento_model->getEstacionamento($EstacionamentoId,null,$Entrada,$Saida);
+            $horas_totais = $objEstacionamento['minutos']/60;
+            $ValorHora =  $objEstacionamento['PrecoHora']>0?($horas_totais*$objEstacionamento['PrecoHora']):0;
+            $ValorLivre =  $objEstacionamento['PrecoLivre']>0?$objEstacionamento['PrecoLivre']:0;
+            $valor = $ValorLivre;
+            if(($ValorHora>0 && $ValorLivre>0 && $ValorLivre > $ValorHora) || $ValorLivre<=0){
+                $valor = $ValorHora;
+            }
+
+            $dados_receber[$i] = [
+                'FormaPagamentoId'=>rand(1,4)
+                ,'FluxoVagaId'=>$FluxoVagaId
+                ,'Valor'=> number_format(floatval($valor), 2, '.', '')
+            ];
+
+            $this->FluxoVaga_model->seReceber($dados_receber[$i]);
+
+            $dados_geral[$i] = $dados[$i];
+            $dados_geral[$i] += $dados_receber[$i];
+
+        }
+
+        echo "<pre>";
+        print_r($dados_geral);
+
     }
 }

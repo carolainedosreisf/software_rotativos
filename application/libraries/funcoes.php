@@ -113,6 +113,20 @@ class Funcoes {
         $definidor = substr($placa, 4, 1);
         return is_numeric($definidor) ?(substr($placa, 0, 3).'-'.substr($placa, 3, 4)):$placa;
     }
+
+    public function gerarPdf($html)
+    {
+        $mpdf = new \Mpdf\Mpdf();
+        $mpdf->SetHTMLFooter('
+                <table width="100%">
+                    <tr>
+                        <td width="50%">'.Date('Y/m/d H:i').'</td>
+                        <td width="50%" class="text-right">{PAGENO}/{nbpg}</td>
+                    </tr>
+                </table>');
+        $mpdf->WriteHTML($html);
+        $mpdf->Output();
+    }
     
 }
 
