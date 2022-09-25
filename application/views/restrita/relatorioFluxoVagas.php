@@ -76,7 +76,7 @@
                     <?php echo $a['FormaPagamentoDesc']?$a['FormaPagamentoDesc']:'-'; ?>
                 </td>
                 <td class="text-center">
-                    <?php echo $a['Status']=='A'?'Aberto':'Fechado'; ?>
+                    <?php echo $a['StatusDesc']; ?>
                 </td>
             </tr>
             <?php } ?>

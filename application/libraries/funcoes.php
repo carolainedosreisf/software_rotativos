@@ -127,6 +127,34 @@ class Funcoes {
         $mpdf->WriteHTML($html);
         $mpdf->Output();
     }
+
+    function getStatusClasse($status,$tipo)
+    {
+        switch ($status) {
+            case 'B':
+                $status_desc = 'Aberto';
+                $classe = 'btn-info';
+                break;
+            case 'A':
+                $status_desc = 'Aguardando Pagamento';
+                $classe = 'btn-danger';
+                break;
+            case 'P':
+                $status_desc = 'Processando Pagamento';
+                $classe = 'btn-warning';
+                break;
+            case 'F':
+                $status_desc = 'Finalizado';
+                $classe = 'btn-success';
+                break;
+            default:
+                $status_desc = '';;
+                $classe = '';
+                break;
+        }
+
+        return $tipo=='C'?$classe:$status_desc;
+    }
     
 }
 

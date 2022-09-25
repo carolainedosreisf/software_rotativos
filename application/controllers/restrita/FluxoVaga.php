@@ -27,6 +27,8 @@ class FluxoVaga extends CI_Controller {
         foreach ($lista as $i => $a) {
             $lista[$i]['PlacaVeiculoFormatada'] = $this->funcoes->formataPlacaVeiculo($a['PlacaVeiculo']);
             $lista[$i]['CpfCnpjFormatado'] = $this->funcoes->formatar_cpf_cnpj($a['CpfCnpjEstacionamento']);
+            $lista[$i]['StatusDesc'] = $this->funcoes->getStatusClasse($a['Status'],'S');
+            $lista[$i]['ClassBtn'] = $this->funcoes->getStatusClasse($a['Status'],'C');
         }
         echo json_encode($lista);
     }
@@ -98,29 +100,50 @@ class FluxoVaga extends CI_Controller {
         echo json_encode($obj);
     }
 
+    public function getClientes()
+    {
+        $lista = $this->FluxoVaga_model->getClientes();
+        foreach ($lista as $i => $a) {
+            $lista[$i]['CpfFormatado'] = $this->funcoes->formatar_cpf_cnpj($a['Cpf']);
+        }
+        echo json_encode($lista);
+    }
+
     public function setFluxoVaga()
     {
         $post = $this->funcoes->getPostAngular();
         $FluxoVagaId = isset($post['FluxoVagaId'])?$post['FluxoVagaId']:0;
-
+        $ReservaId = isset($post['ReservaId'])?$post['ReservaId']:0;
+        
         $data = [
             'EstacionamentoId'=>$post['EstacionamentoId']
             ,'CadastroId'=>isset($post['CadastroId'])?$post['CadastroId']:null
-            ,'PlacaVeiculo'=>$post['PlacaVeiculo']
             ,'DataEntrada'=>$this->funcoes->formataData($post['DataEntrada'])
             ,'HoraEntrada'=>$this->funcoes->formataHora($post['HoraEntrada'])
             ,'Observacao'=>isset($post['Observacao'])?$post['Observacao']:null
         ];
 
-        if(isset($post['DataSaida'])){
+        if($post['Tipo']=='F'){
+            $data['PlacaVeiculo'] = $post['PlacaVeiculo'];
+            $this->FluxoVaga_model->setFluxoVaga($data,$FluxoVagaId);
+        }else{
             $data['DataSaida'] = $this->funcoes->formataData($post['DataSaida']);
-        }
+            $data['HoraSaida'] = $this->funcoes->formataHora($post['HoraSaida']);
+            
+            $entrada = $data['DataEntrada'].' '.$data['HoraEntrada'].':00';
+            $saida = $data['DataSaida'].' '.$data['HoraSaida'].':00';
 
-        if(isset($post['HoraEntrada'])){
-            $data['HoraEntrada'] = $this->funcoes->formataHora($post['HoraEntrada']);
-        }
+            if($entrada>=$saida){
+                echo 2;
+                exit;
+            }else if($entrada < Date('Y-m-d H:i:s')){
+                echo 3;
+                exit;
+            }
 
-        $this->FluxoVaga_model->setFluxoVaga($data,$FluxoVagaId);
+            $this->FluxoVaga_model->setReserva($data,$ReservaId);
+            echo 1;
+        }
 
     }
 
@@ -135,12 +158,57 @@ class FluxoVaga extends CI_Controller {
         foreach ($lista as $i => $a) {
             $a['PlacaVeiculoFormatada'] = $this->funcoes->formataPlacaVeiculo($a['PlacaVeiculo']);
             $a['CpfCnpjFormatado'] = $this->funcoes->formatar_cpf_cnpj($a['CpfCnpjEstacionamento']);
+            $a['StatusDesc'] = $this->funcoes->getStatusClasse($a['Status'],'S');
             $data['lista'][$a['EstacionamentoId']][] = $a;
         }
 
         $html = $this->load->view('restrita/relatorioFluxoVagas',$data,true);
 
         $this->funcoes->gerarPdf($html);
+    }
+
+    public function reservas()
+    {
+        $data['controller'] = "reservasController";
+		$this->load->view('restrita/header',$data);
+		$this->load->view('restrita/reservas');
+		$this->load->view('restrita/footer');
+    }
+
+    public function novaReserva()
+    {
+        $data['controller'] = "novaReservaController";
+        $data['ReservaId'] = base64_decode($this->funcoes->get('i'));
+		$this->load->view('restrita/header',$data);
+		$this->load->view('restrita/novaReserva');
+		$this->load->view('restrita/footer');
+    }
+
+    public function setCliente()
+    {
+        $post = $this->funcoes->getPostAngular();
+        $CadastroId = isset($post['CadastroId'])?$post['CadastroId']:0;
+
+        $data = [
+            'Nome'=>$post['Nome']
+            ,'Cpf'=>$post['Cpf']
+            ,'NumeroTelefone'=>$post['NumeroTelefone']
+        ];
+
+        $this->FluxoVaga_model->setCliente($data,$CadastroId);
+    }
+
+    public function getReservas()
+    {
+        $params = json_decode($this->funcoes->get('params'),true);
+        $lista = $this->FluxoVaga_model->getReservas();
+        foreach ($lista as $i => $a) {
+            $lista[$i]['CpfCnpjFormatado'] = $this->funcoes->formatar_cpf_cnpj($a['CpfCnpjEstacionamento']);
+            $lista[$i]['CpfClienteFormatado'] = $this->funcoes->formatar_cpf_cnpj($a['CpfCliente']);
+            $lista[$i]['StatusFluxoDesc'] = $this->funcoes->getStatusClasse($a['StatusFluxo'],'S');
+            $lista[$i]['StatusReservaDesc'] = $this->funcoes->getStatusClasse($a['StatusReserva'],'S');
+        }
+        echo json_encode($lista);
     }
 
     public function gerarFluxos()

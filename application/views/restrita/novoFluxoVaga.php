@@ -22,7 +22,7 @@
         <div class="row form-group" ng-show="disabled_">
             <div class="col-sm-12">
                 <div class="alert alert-warning" role="alert">
-                    Fluxo de vaga finalizado, não é mais possivel editar os dados.
+                    Fluxo de vaga <b>{{FluxoVaga.StatusDesc}}</b>, não é mais possivel editar os dados.
                 </div>
             </div>
         </div>

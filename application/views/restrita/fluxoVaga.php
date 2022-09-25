@@ -19,7 +19,7 @@
 
     <div class="callout callout-default">
         <div class="row form-group">
-            <div class="col-sm-6">
+            <div class="col-sm-5">
                 <label for="EstacionamentoId">Estacionamento:</label>
                 <select class="form-control" name="EstacionamentoId" id="EstacionamentoId" ng-model="filtros.EstacionamentoId">
                     <option value="">Todos</option>
@@ -34,12 +34,14 @@
                 <label for="DataFim">Até:</label>
                 <input type="text" class="form-control" name="DataFim" id="DataFim" ng-model="filtros.DataFim" data-provide="datepicker" data-date-format="dd/mm/yyyy">
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-3">
                 <label for="Status">Status:</label>
                 <select class="form-control" name="Status" id="Status" ng-model="filtros.Status">
                     <option value="">Todos</option>
-                    <option value="A">Aberto</option>
-                    <option value="F">Fechado</option>
+                    <option value="B">Aberto</option>
+                    <option value="A">Aguardando Pagamento</option>
+                    <option value="P">Processando Pagamento</option>
+                    <option value="F">Finalizado</option>
                 </select>
             </div>
         </div>
@@ -111,21 +113,20 @@
                         </td>
                         <td class="text-center">
                         <button  
-                            class="btn btn-sm"
-                            ng-class="l.Status=='A'?'btn-warning':'btn-success'"
+                            class="btn btn-sm {{l.ClassBtn}}"
                             ng-click="openFinalizarLocacao(l)"
                             data-html="true" 
                             data-toggle="tooltip" 
                             data-placement="left"
-                            data-original-title="{{l.Status=='A'?'Clique aqui para finalizar o periódo da locação.':''}}"
+                            data-original-title="{{l.Status=='B'?'Clique aqui para finalizar o periódo da locação.':''}}"
                             tooltip>
-                            {{l.Status=='A'?'Aberto':'Fechado'}}
+                            {{l.StatusDesc}}
                         </button>
                             
                         </td>
                         <td class="text-center">
-                            <button ng-click="novoFluxoVaga(l.FluxoVagaId)" class="btn btn-primary btn-sm">
-                                <i class="glyphicon" ng-class="l.Status=='A'?'glyphicon-pencil':'glyphicon-search'"></i>
+                            <button ng-click="novoFluxoVaga(l.FluxoVagaId)" class="btn btn-default btn-sm">
+                                <i class="glyphicon" ng-class="l.Status=='B'?'glyphicon-pencil':'glyphicon-search'"></i>
                             </button>
                         </td>
                     </tr>

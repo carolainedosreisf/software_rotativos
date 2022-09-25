@@ -15,19 +15,19 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2">
                 <div id="mensagens">
-                    <div class="alert alert-danger" role="alert" ng-show="cad.TipoEmpresa == 'J' && form_cadastro.Cnpj.$invalid && !(form_cadastro.Cnpj.$error.required) && (form_cadastro.$submitted || form_cadastro.nr_cpf.$dirty)">
+                    <div class="alert alert-danger" role="alert" ng-show="cad.TipoEmpresa == 'J' && form_cadastro.Cnpj.$invalid && !(form_cadastro.Cnpj.$error.required) && (form_cadastro.$submitted || form_cadastro.Cnpj.$dirty)">
                         CNPJ Inválido!
                     </div>
-                    <div class="alert alert-danger" role="alert" ng-show="cad.TipoEmpresa == 'F' && form_cadastro.Cpf.$invalid && !(form_cadastro.Cpf.$error.required) && (form_cadastro.$submitted || form_cadastro.nr_cpf.$dirty)">
+                    <div class="alert alert-danger" role="alert" ng-show="cad.TipoEmpresa == 'F' && form_cadastro.Cpf.$invalid && !(form_cadastro.Cpf.$error.required) && (form_cadastro.$submitted || form_cadastro.Cpf.$dirty)">
                         CPF Inválido!
                     </div>
-                    <div class="alert alert-danger" role="alert" ng-show="form_cadastro.Email.$invalid && !(form_cadastro.Email.$error.required) && (form_cadastro.$submitted || form_cadastro.nr_cpf.$dirty)">
+                    <div class="alert alert-danger" role="alert" ng-show="form_cadastro.Email.$invalid && !(form_cadastro.Email.$error.required) && (form_cadastro.$submitted || form_cadastro.Email.$dirty)">
                         E-mail Inválido!
                     </div>
-                    <div class="alert alert-danger" role="alert" ng-show="cad.Senha.length < 8 && !(form_cadastro.Senha.$error.required) && !(form_cadastro.confirm_senha.$error.required) && (form_cadastro.$submitted || form_cadastro.nr_cpf.$dirty)">
+                    <div class="alert alert-danger" role="alert" ng-show="cad.Senha.length < 8 && !(form_cadastro.Senha.$error.required) && !(form_cadastro.confirm_senha.$error.required) && (form_cadastro.$submitted || form_cadastro.Senha.$dirty)">
                         A senha deve conter no mínimo 8 caracteres!
                     </div>
-                    <div class="alert alert-danger" role="alert" ng-show="cad.Senha != cad.confirm_senha && !(form_cadastro.Senha.$error.required) && !(form_cadastro.confirm_senha.$error.required) && (form_cadastro.$submitted || form_cadastro.nr_cpf.$dirty)">
+                    <div class="alert alert-danger" role="alert" ng-show="cad.Senha != cad.confirm_senha && !(form_cadastro.Senha.$error.required) && !(form_cadastro.confirm_senha.$error.required) && (form_cadastro.$submitted || form_cadastro.confirm_senha.$dirty)">
                         As senhas não correspondem!
                     </div>
                     <div class="alert alert-danger" role="alert" ng-show="form_cadastro.$error.required && form_cadastro.$submitted">

@@ -1,21 +1,12 @@
 var app = angular.module('app', ['ui.utils.masks','ui.mask','angularUtils.directives.dirPagination']);
-app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$location', function($scope,$http,$filter,$location) {
-    $scope.FluxoVaga = {Tipo:'F'};
+app.controller('novaReservaController', ['$scope', '$http','$filter','$location', function($scope,$http,$filter,$location) {
+    $scope.Reserva = {Tipo:'R'};
     $scope.lista_estacionamentos = [];
     $scope.lista_clientes = [];
-    $scope.FluxoVagaId = FluxoVagaId;
+    $scope.ReservaId = ReservaId;
     $scope.disabled_ = 0;
-
-    var dataAtual = function(hora=0) {
-        var now = new Date;
-        if(hora){
-            var retorno = (((now.getHours() )<10?'0':'') +now.getHours())+''+(((now.getMinutes())<10?'0':'')+now.getMinutes());
-        }else{
-            var retorno = (now.getDate()+"/"+((now.getMonth()+1)<10?'0':'')+(now.getMonth()+1)+ "/" + now.getFullYear());
-        }
-        return retorno;
-    }
-
+    $scope.erro = 0;
+    
     $scope.getEstacionamentos = function(){
         $scope.carregando = true;
         $http({
@@ -45,16 +36,16 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
         });
     }
 
-    $scope.getFluxoVaga = function(){
+    $scope.getReserva = function(){
         $scope.carregando = true;
         $http({
-            url: base_url+'/FluxoVaga/getFluxoVaga',
+            url: base_url+'/FluxoVaga/getReserva',
             method: 'GET',
-            params:{FluxoVagaId}
+            params:{ReservaId}
         }).then(function (retorno) {
-            $scope.FluxoVaga = retorno.data;
+            $scope.Reserva = retorno.data;
             $scope.carregando = false;
-            if($scope.FluxoVaga.Status!='B'){
+            if($scope.Reserva.Status!='B'){
                 $scope.disabled_ = 1;
             }
         },
@@ -64,27 +55,53 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
     }
 
     $scope.validaHora = function(coluna){
-        if(typeof $scope.FluxoVaga[coluna] != undefined){
-            if($scope.FluxoVaga[coluna] != ""){
-                var hr = $scope.FluxoVaga[coluna].substr(0, 2);
-                var min = $scope.FluxoVaga[coluna].substr(2, 2);
+        if(typeof $scope.Reserva[coluna] != undefined){
+            if($scope.Reserva[coluna] != ""){
+                var hr = $scope.Reserva[coluna].substr(0, 2);
+                var min = $scope.Reserva[coluna].substr(2, 2);
                 if(hr > 23 || min > 59){
-                    $scope.FluxoVaga[coluna] = "";
+                    $scope.Reserva[coluna] = "";
                 }
             }
         }
     }
 
-    $scope.setFluxoVaga = function(){
-        if($scope.form_fluxo_vaga.$valid){
+    $scope.setReserva= function(){
+        if($scope.form_reserva.$valid){
             $scope.carregando = true;
             $http({
                 url: base_url+'/FluxoVaga/setFluxoVaga',
                 method: 'POST',
-                data: $scope.FluxoVaga
+                data: $scope.Reserva
             }).then(function (retorno) {
                 $scope.carregando = false;
-                window.location = base_url+"/FluxoVaga/";
+                if(retorno.data==1){
+                    window.location = base_url+"/FluxoVaga/reservas";
+                }else{
+                    $scope.erro = retorno.data;
+                }
+                
+            },
+            function (retorno) {
+                console.log('Error: '+retorno.status);
+            });
+        }
+    }
+
+    $scope.setCliente = function() {
+        if($scope.form_cliente.$valid){
+            $scope.carregando = true;
+            $http({
+                url: base_url+'/FluxoVaga/setCliente',
+                method: 'POST',
+                data: $scope.objCliente
+            }).then(function (retorno) {
+                $scope.carregando = false;
+                $('#modalCliente').modal('hide');
+                $scope.objCliente = {};
+                $scope.form_cliente.$submitted = false;
+                $scope.form_cliente.$setPristine();
+                $scope.getClientes();
             },
             function (retorno) {
                 console.log('Error: '+retorno.status);
@@ -95,11 +112,8 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
     $scope.getEstacionamentos();
     $scope.getClientes();
 
-    if(FluxoVagaId){
-        $scope.getFluxoVaga();
-    }else{
-        $scope.FluxoVaga.DataEntrada = dataAtual();
-        $scope.FluxoVaga.HoraEntrada = dataAtual(1);
+    if(ReservaId){
+        $scope.getReserva();
     }
 }]);
 
@@ -114,7 +128,3 @@ app.directive('uppercase', function() {
         }
     };
 })
-
-$(document).ready(function(){
-    //$("#PlacaVeiculo").inputmask({mask: 'aaa-9*99'});
-});

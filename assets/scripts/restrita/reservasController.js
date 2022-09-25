@@ -1,43 +1,14 @@
 var app = angular.module('app', ['ui.utils.masks','ui.mask','angularUtils.directives.dirPagination']);
-app.controller('fluxoVagaController', ['$scope', '$http','$filter','$location', function($scope,$http,$filter,$location) {
-    
-    
-    $scope.lista_formas_pagamento = [];
+app.controller('reservasController', ['$scope', '$http','$filter','$location', function($scope,$http,$filter,$location) {
     $scope.lista_estacionamentos = [];
-    $scope.lista_fluxo = [];
-
-    var dataAtual = function(hora=0) {
-        var now = new Date;
-        if(hora){
-            var retorno = (((now.getHours() )<10?'0':'') +now.getHours())+''+(((now.getMinutes())<10?'0':'')+now.getMinutes());
-        }else{
-            var retorno = (now.getDate()+"/"+((now.getMonth()+1)<10?'0':'')+(now.getMonth()+1)+ "/" + now.getFullYear());
-        }
-        return retorno;
-    }
+    $scope.lista_reservas = [];
 
     $scope.filtros = {
         EstacionamentoId:""
         ,DataInicio: ""
         ,DataFim: ""
-        ,TipoPagamento:""
-        ,FormaPagamentoId:""
         ,Status:'B'
     };
-
-    $scope.getFormasPagamento = function(){
-        $scope.carregando = true;
-        $http({
-            url: base_url+'/FormaPagamento/getFormasPagamento',
-            method: 'GET'
-        }).then(function (retorno) {
-            $scope.lista_formas_pagamento = retorno.data;
-            $scope.carregando = false;
-        },
-        function (retorno) {
-            console.log('Error: '+retorno.status);
-        });
-    }
 
     $scope.getEstacionamentos = function(){
         $scope.carregando = true;
@@ -53,29 +24,19 @@ app.controller('fluxoVagaController', ['$scope', '$http','$filter','$location', 
         });
     }
 
-    $scope.getFluxoVagas = function(){
+    $scope.getReservas = function(){
         $scope.carregando = true;
         $http({
-            url: base_url+'/FluxoVaga/getFluxoVagas',
+            url: base_url+'/FluxoVaga/getReservas',
             method: 'GET',
             params: {params:$scope.filtros}
         }).then(function (retorno) {
-            $scope.lista_fluxo = retorno.data;
+            $scope.lista_reservas = retorno.data;
             $scope.carregando = false;
         },
         function (retorno) {
             console.log('Error: '+retorno.status);
         });
-    }
-
-    $scope.openFinalizarLocacao = function(dados){
-        if(dados.Status=='B'){
-            $scope.objFinalizaLocacao = angular.copy(dados);
-            $scope.objFinalizaLocacao.DataSaida = dataAtual();
-            $scope.objFinalizaLocacao.HoraSaida = dataAtual(1);
-            $('#finalizarLocacao').modal('show');
-            $scope.calclulaValor();
-        }
     }
 
     $scope.calclulaValor = function(){
@@ -117,38 +78,16 @@ app.controller('fluxoVagaController', ['$scope', '$http','$filter','$location', 
         
     }
 
-    $scope.setFinalizarLocacao = function() {
-        if($scope.form_finaliza.$valid && $scope.erro_saida==0){
-            $scope.carregando = true;
-            $http({
-                url: base_url+'/FluxoVaga/setFinalizarLocacao',
-                method: 'POST',
-                data: $scope.objFinalizaLocacao
-            }).then(function (retorno) {
-                $('#finalizarLocacao').modal('hide');
-                $scope.objFinalizaLocacao = {};
-                $scope.form_finaliza.$submitted = false;
-                $scope.form_finaliza.$setPristine();
-                $scope.getFluxoVagas();
-                $scope.carregando = false;
-            },
-            function (retorno) {
-                console.log('Error: '+retorno.status);
-            });   
-        }
-    }
-
-    $scope.novoFluxoVaga = function(FluxoVagaId=0){
-        window.location = base_url+"/FluxoVaga/novoFluxoVaga"+(FluxoVagaId?"?i="+btoa(FluxoVagaId):"");
+    $scope.novaReserva = function(ReservaId=0){
+        window.location = base_url+"/FluxoVaga/novaReserva"+(ReservaId?"?i="+btoa(ReservaId):"");
     }
 
     $scope.openRelatorio = function(){
-        window.open(base_url+"/FluxoVaga/relatorio?p="+btoa(JSON.stringify($scope.filtros)))
+        window.open(base_url+"/FluxoVaga/relatorioReserva?p="+btoa(JSON.stringify($scope.filtros)))
     }
 
-    $scope.getFormasPagamento();
     $scope.getEstacionamentos();
-    $scope.getFluxoVagas();
+    $scope.getReservas();
 }]);
 
 app.directive('tooltip', function(){
