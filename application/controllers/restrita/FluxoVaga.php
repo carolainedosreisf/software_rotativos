@@ -110,7 +110,6 @@ class FluxoVaga extends CI_Controller {
             ,'DataEntrada'=>$this->funcoes->formataData($post['DataEntrada'])
             ,'HoraEntrada'=>$this->funcoes->formataHora($post['HoraEntrada'])
             ,'Observacao'=>isset($post['Observacao'])?$post['Observacao']:null
-            ,'Reserva'=>'N'
         ];
 
         if(isset($post['DataSaida'])){
@@ -181,7 +180,6 @@ class FluxoVaga extends CI_Controller {
                 ,'HoraEntrada'=>($HoraEntrada<10?'0':'').$HoraEntrada.":".($MinEntrada<10?'0':'').$MinEntrada.":00"
                 ,'DataSaida'=>$data
                 ,'HoraSaida'=>($HoraSaida<10?'0':'').$HoraSaida.":".($MinSaida<10?'0':'').$MinSaida.":00"
-                ,'Reserva'=>'N'
             ];
             $FluxoVagaId = $this->FluxoVaga_model->setFluxoVaga($dados[$i]);
 
