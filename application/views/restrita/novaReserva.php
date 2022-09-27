@@ -36,21 +36,21 @@
         <div class="row form-group" ng-show="disabled_">
             <div class="col-sm-12">
                 <div class="alert alert-warning" role="alert">
-                    Fluxo de vaga <b>{{Reserva.StatusDesc}}</b>, não é mais possivel editar os dados.
+                   Locação <b>{{Reserva.StatusDesc}}</b>, não é mais possivel editar os dados.
                 </div>
             </div>
         </div>
         <div class="row form-group">
             <div class="col-sm-6" ng-class="form_reserva.EstacionamentoId.$invalid && (form_reserva.$submitted || EstacionamentoId.DataEntrada.$dirty)?'has-error':''">
                 <label for="EstacionamentoId">Estacionamento: </label>
-                <select class="form-control" name="EstacionamentoId" id="EstacionamentoId" ng-model="Reserva.EstacionamentoId" ng-required="true" ng-disabled="disabled_">
+                <select class="form-control" name="EstacionamentoId" id="EstacionamentoId" ng-model="Reserva.EstacionamentoId" ng-required="true" ng-disabled="disabled_" ng-change="calculaValor()">
                     <option value="">Selecione</option>
                     <option value="{{l.EstacionamentoId}}" ng-repeat="l in  lista_estacionamentos">{{l.NomeEstacionamento}} - {{l.CpfCnpjFormatado}}</option>
                 </select>
             </div>
             <div class="col-sm-6" ng-class="form_reserva.CadastroId.$invalid && (form_reserva.$submitted || form_reserva.CadastroId.$dirty)?'has-error':''">
                 <label for="CadastroId">Cliente:</label>
-                <select class="form-control" name="CadastroId" id="CadastroId" ng-model="Reserva.CadastroId" ng-required="true" ng-disabled="disabled_">
+                <select class="form-control" name="CadastroId" id="CadastroId" ng-model="Reserva.CadastroId" ng-required="true" ng-disabled="disabled_" ng-change="calculaValor()">
                     <option value="">Selecione</option>
                     <option value="{{l.CadastroId}}" ng-repeat="l in lista_clientes">{{l.Nome}} - {{l.CpfFormatado}}</option>
                 </select>
@@ -60,19 +60,19 @@
         <div class="row form-group">
             <div class="col-sm-3" ng-class="form_reserva.DataEntrada.$invalid && (form_reserva.$submitted || form_reserva.DataEntrada.$dirty)?'has-error':''">
                 <label for="DataEntrada">Data Entrada:</label>
-                <input type="text" data-provide="datepicker" class="form-control" name="DataEntrada" data-date-format="dd/mm/yyyy" ng-model="Reserva.DataEntrada" ng-required="true" ng-disabled="disabled_">
+                <input type="text" data-provide="datepicker" class="form-control" name="DataEntrada" data-date-format="dd/mm/yyyy" ng-model="Reserva.DataEntrada" ng-required="true" ng-disabled="disabled_" ng-change="calculaValor()">
             </div>
             <div class="col-sm-3" ng-class="form_reserva.HoraEntrada.$invalid && (form_reserva.$submitted || form_reserva.HoraEntrada.$dirty)?'has-error':''">
                 <label for="HoraEntrada">Hora Entrada:</label>
-                <input type="text" class="form-control" id="HoraEntrada" name="HoraEntrada" ng-model="Reserva.HoraEntrada" ui-mask="99:99" placeholder="__:__" ng-change="validaHora('HoraEntrada')" ng-required="true" ng-disabled="disabled_">
+                <input type="text" class="form-control" id="HoraEntrada" name="HoraEntrada" ng-model="Reserva.HoraEntrada" ui-mask="99:99" placeholder="__:__" ng-change="validaHora('HoraEntrada')" ng-required="true" ng-disabled="disabled_" ng-change="calculaValor()">
             </div>
             <div class="col-sm-3" ng-class="form_reserva.DataSaida.$invalid && (form_reserva.$submitted || form_reserva.DataSaida.$dirty)?'has-error':''">
                 <label for="DataSaida">Data Saída:</label>
-                <input type="text" class="form-control" id="DataSaida" name="DataSaida" ng-model="Reserva.DataSaida" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-required="true" ng-disabled="disabled_">
+                <input type="text" class="form-control" id="DataSaida" name="DataSaida" ng-model="Reserva.DataSaida" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-required="true" ng-disabled="disabled_" ng-change="calculaValor()">
             </div>
             <div class="col-sm-3"  ng-class="form_reserva.HoraSaida.$invalid && (form_reserva.$submitted || form_reserva.HoraSaida.$dirty)?'has-error':''">
                 <label for="HoraSaida">Hora Saída:</label>
-                <input type="text" class="form-control" id="HoraSaida" name="HoraSaida" ng-model="Reserva.HoraSaida" ui-mask="99:99" placeholder="__:__" ng-change="validaHora('HoraSaida')" ng-required="true" ng-disabled="disabled_">
+                <input type="text" class="form-control" id="HoraSaida" name="HoraSaida" ng-model="Reserva.HoraSaida" ui-mask="99:99" placeholder="__:__" ng-change="validaHora('HoraSaida')" ng-required="true" ng-disabled="disabled_" ng-change="calculaValor()">
             </div>
         </div>
         <div class="row form-group">
@@ -81,8 +81,38 @@
                 <textarea class="form-control" name="Observacao" id="Observacao" rows="4" ng-model="Reserva.Observacao" maxlength="255" ng-disabled="disabled_"></textarea>
             </div>
         </div>
+
+        <div class="row form-group" ng-show="liberaPagamento=='S'">
+            <br>
+            <div class="col-sm-12">
+                <div class="alert alert-info" role="alert">
+                    O estacionamento {{Reserva.NomeEstacionamento}} possui tempo livre, e o periódo selecionado da reserva é de {{Reserva.Tempo}}, o cliente deseja pagar antecipadamente o valor de {{Reserva.Valor|currency:'R$ '}}?<br><br>
+                    <input type="radio" name="PagarAgora" id="PagarAgoraS" value="S" ng-model="Reserva.PagarAgora">
+                    <label for="PagarAgoraS" style="font-weight:normal;"> Sim</label>
+                    
+                    <input type="radio" name="PagarAgora" id="PagarAgoraN" value="N" ng-model="Reserva.PagarAgora">
+                    <label for="PagarAgoraN" style="font-weight:normal;"> Não</label>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group" ng-show="Reserva.PagarAgora=='S'">
+            <div class="col-sm-6"  ng-class="form_reserva.FormaPagamentoId.$invalid && (form_reserva.$submitted || form_reserva.FormaPagamentoId.$dirty)?'has-error':''">
+                <label for="FormaPagamentoId">Forma de Pagamento:</label>
+                <select class="form-control" name="FormaPagamentoId" id="FormaPagamentoId" ng-model="Reserva.FormaPagamentoId" ng-required="Reserva.PagarAgora=='S'">
+                    <option value="">Selecione</option>
+                    <option value="{{l.FormaPagamentoId}}" ng-repeat="l in lista_formas_pagamento">{{l.Descricao}}</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <label for="Valor">Valor:</label>
+                <input type="text" class="form-control" id="Valor" name="Valor" ng-value="Reserva.Valor|currency:'R$ '" disabled>
+            </div>
+            <div class="col-sm-3">
+                <label for="Tempo">Tempo:</label>
+                <input type="text" class="form-control" id="Tempo" name="Tempo" ng-model="Reserva.Tempo" disabled>
+            </div>
+        </div>
         
-        <br>
         <div class="row form-group" ng-hide="disabled_">
             <div class="col-sm-2">
                 <button type="submit" form="form_reserva" class="btn btn-success form-control">Salvar</button>

@@ -29,27 +29,31 @@ class FluxoVaga extends CI_Controller {
             $lista[$i]['CpfCnpjFormatado'] = $this->funcoes->formatar_cpf_cnpj($a['CpfCnpjEstacionamento']);
             $lista[$i]['StatusDesc'] = $this->funcoes->getStatusClasse($a['Status'],'S');
             $lista[$i]['ClassBtn'] = $this->funcoes->getStatusClasse($a['Status'],'C');
+            $lista[$i]['StatusFluxoDesc'] = $this->funcoes->getStatusClasse($a['StatusFluxo'],'S','F');
+            $lista[$i]['ClassBtnFluxo'] = $this->funcoes->getStatusClasse($a['StatusFluxo'],'C','F');
         }
         echo json_encode($lista);
     }
 
-    public function calclulaValor()
+    public function calculaValor()
     {
-        $id = $this->funcoes->get('EstacionamentoId');
-        $Entrada = $this->funcoes->formataData($this->funcoes->get('DataEntrada')).' '.$this->funcoes->get('HoraEntrada').':00';
+        $FluxoVagaId = $this->funcoes->get('FluxoVagaId');
+        $EstacionamentoId = $this->funcoes->get('EstacionamentoId');
+
+        $Entrada = $this->funcoes->formataData($this->funcoes->get('DataEntrada')).' '.$this->funcoes->formataHora($this->funcoes->get('HoraEntrada')).':00';
         $Saida = $this->funcoes->formataData($this->funcoes->get('DataSaida')).' '.$this->funcoes->formataHora($this->funcoes->get('HoraSaida')).':00';
 
-        if($Entrada>$Saida){
+        if($Entrada>=$Saida){
             echo json_encode(['erro'=>1]);
             exit;
         }
-        $objEstacionamento = $this->Estacionamento_model->getEstacionamento($id,null,$Entrada,$Saida);
-        $horas_totais = $objEstacionamento['minutos']/60;
-        $horas = (int) ($objEstacionamento['minutos']/60);
-        $minutos = $objEstacionamento['minutos']%60;
+        $dadosCalculo = $this->FluxoVaga_model->getDadosCalculo($FluxoVagaId,$EstacionamentoId,$Entrada,$Saida);
+        $horas_totais = $dadosCalculo['minutos']/60;
+        $horas = (int) ($dadosCalculo['minutos']/60);
+        $minutos = $dadosCalculo['minutos']%60;
 
-        $ValorHora =  $objEstacionamento['PrecoHora']>0?($horas_totais*$objEstacionamento['PrecoHora']):0;
-        $ValorLivre =  $objEstacionamento['PrecoLivre']>0?$objEstacionamento['PrecoLivre']:0;
+        $ValorHora =  $dadosCalculo['PrecoHora']>0?($horas_totais*$dadosCalculo['PrecoHora']):0;
+        $ValorLivre =  $dadosCalculo['PrecoLivre']>0?$dadosCalculo['PrecoLivre']:0;
 
         $valor = $ValorLivre;
         if(($ValorHora>0 && $ValorLivre>0 && $ValorLivre > $ValorHora) || $ValorLivre<=0){
@@ -59,6 +63,9 @@ class FluxoVaga extends CI_Controller {
         echo json_encode([
             'valor'=>number_format(floatval($valor), 2, '.', '')
             ,'tempo'=>$horas.'Hrs'. ' e '.$minutos.'Min'
+            ,'liberaPagamento'=>$valor==$ValorLivre?'S':'N'
+            ,'NomeEstacionamento'=>$dadosCalculo['NomeEstacionamento']
+            ,'JaPagou'=>$dadosCalculo['JaPagou']
             ,'erro'=>0
         ]);
     }
@@ -68,17 +75,20 @@ class FluxoVaga extends CI_Controller {
         $post = $this->funcoes->getPostAngular();
         $FluxoVagaId = $post['FluxoVagaId'];
 
-        $data_receber = [
-            'FormaPagamentoId'=>$post['FormaPagamentoId']
-            ,'FluxoVagaId'=>$post['FluxoVagaId']
-            ,'Valor'=>$post['Valor']
-        ];
-
-        $this->FluxoVaga_model->seReceber($data_receber);
+        if($post['JaPagou']=='N'){
+            $data_receber = [
+                'FormaPagamentoId'=>$post['FormaPagamentoId']
+                ,'FluxoVagaId'=>$post['FluxoVagaId']
+                ,'Valor'=>$post['Valor']
+                ,'Status'=>'F'
+            ];
+            $this->FluxoVaga_model->seReceber($data_receber);
+        }
 
         $data_fluxo = [
             'DataSaida'=>$this->funcoes->formataData($post['DataSaida'])
             ,'HoraSaida'=>$this->funcoes->formataHora($post['HoraSaida'])
+            ,'Status'=>'F'
         ];
 
         $this->FluxoVaga_model->setFluxoVaga($data_fluxo,$FluxoVagaId);
@@ -97,6 +107,7 @@ class FluxoVaga extends CI_Controller {
     {
         $FluxoVagaId = $this->funcoes->get('FluxoVagaId');
         $obj = $this->FluxoVaga_model->getFluxoVaga($FluxoVagaId);
+        $obj['StatusFluxoDesc'] = $this->funcoes->getStatusClasse($obj['StatusFluxo'],'S','F');
         echo json_encode($obj);
     }
 
@@ -117,14 +128,25 @@ class FluxoVaga extends CI_Controller {
         
         $data = [
             'EstacionamentoId'=>$post['EstacionamentoId']
-            ,'CadastroId'=>isset($post['CadastroId'])?$post['CadastroId']:null
             ,'DataEntrada'=>$this->funcoes->formataData($post['DataEntrada'])
             ,'HoraEntrada'=>$this->funcoes->formataHora($post['HoraEntrada'])
             ,'Observacao'=>isset($post['Observacao'])?$post['Observacao']:null
         ];
 
+        if(isset($post['CadastroId'])){
+            if($post['CadastroId']){
+                $data['CadastroId'] = $post['CadastroId'];
+            }
+        }
+
         if($post['Tipo']=='F'){
             $data['PlacaVeiculo'] = $post['PlacaVeiculo'];
+            if(isset($post['ReservaId'])){
+                if($post['ReservaId']){
+                    $data['ReservaId'] = $post['ReservaId'];
+                }
+            }
+
             $this->FluxoVaga_model->setFluxoVaga($data,$FluxoVagaId);
         }else{
             $data['DataSaida'] = $this->funcoes->formataData($post['DataSaida']);
@@ -141,7 +163,18 @@ class FluxoVaga extends CI_Controller {
                 exit;
             }
 
-            $this->FluxoVaga_model->setReserva($data,$ReservaId);
+            $ReservaId = $this->FluxoVaga_model->setReserva($data,$ReservaId);
+
+            if($post['PagarAgora']=='S'){
+                $data_receber = [
+                    'FormaPagamentoId'=>$post['FormaPagamentoId']
+                    ,'ReservaId'=>$ReservaId
+                    ,'Valor'=>$post['Valor']
+                    ,'Status'=>'F'
+                ];
+                $this->FluxoVaga_model->seReceber($data_receber);
+            }
+
             echo 1;
         }
 
@@ -152,7 +185,7 @@ class FluxoVaga extends CI_Controller {
         $params = json_decode(base64_decode($this->funcoes->get('p')),true);
         $lista = $this->FluxoVaga_model->getFluxoVagas($params,2);
 
-        $data['titulo'] = 'Fluxo de Vagas';
+        $data['titulo'] = 'Locações de Vagas';
         $data['lista'] = [];
 
         foreach ($lista as $i => $a) {
@@ -201,12 +234,14 @@ class FluxoVaga extends CI_Controller {
     public function getReservas()
     {
         $params = json_decode($this->funcoes->get('params'),true);
-        $lista = $this->FluxoVaga_model->getReservas();
+        $lista = $this->FluxoVaga_model->getReservas($params);
         foreach ($lista as $i => $a) {
             $lista[$i]['CpfCnpjFormatado'] = $this->funcoes->formatar_cpf_cnpj($a['CpfCnpjEstacionamento']);
             $lista[$i]['CpfClienteFormatado'] = $this->funcoes->formatar_cpf_cnpj($a['CpfCliente']);
-            $lista[$i]['StatusFluxoDesc'] = $this->funcoes->getStatusClasse($a['StatusFluxo'],'S');
-            $lista[$i]['StatusReservaDesc'] = $this->funcoes->getStatusClasse($a['StatusReserva'],'S');
+            $lista[$i]['StatusDesc'] = $this->funcoes->getStatusClasse($a['Status'],'S');
+            $lista[$i]['ClassBtn'] = $this->funcoes->getStatusClasse($a['Status'],'C');
+            $lista[$i]['StatusFluxoDesc'] = $this->funcoes->getStatusClasse($a['StatusFluxo'],'S','F');
+            $lista[$i]['ClassBtnFluxo'] = $this->funcoes->getStatusClasse($a['StatusFluxo'],'C','F');
         }
         echo json_encode($lista);
     }

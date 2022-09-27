@@ -23,7 +23,7 @@
                 data-html="true" 
                 data-toggle="tooltip" 
                 data-placement="right"
-                data-original-title="Favor preencher o preço para que o estacionamento possa ser usado nos demais processos do sistema, como Fluxo de Vagas e Reservas"
+                data-original-title="Favor preencher o preço para que o estacionamento possa ser usado nos demais processos do sistema, como Locações e Reservas"
                 tooltip>
                 &nbsp;- Estacionamento sem preço.
             </span>

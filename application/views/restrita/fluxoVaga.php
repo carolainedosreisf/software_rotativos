@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    <h2>Fluxo de Vagas</h2><br>
+    <h2>Locações de Vagas</h2><br>
 
     <div class="callout callout-default">
         <div class="row form-group">
@@ -35,8 +35,18 @@
                 <input type="text" class="form-control" name="DataFim" id="DataFim" ng-model="filtros.DataFim" data-provide="datepicker" data-date-format="dd/mm/yyyy">
             </div>
             <div class="col-sm-3">
-                <label for="Status">Status:</label>
-                <select class="form-control" name="Status" id="Status" ng-model="filtros.Status">
+                <label for="StatusFluxo">Status Locação:</label>
+                <select class="form-control" name="StatusFluxo" id="StatusFluxo" ng-model="filtros.StatusFluxo">
+                    <option value="">Todos</option>
+                    <option value="E">Em Andamento</option>
+                    <option value="F">Finalizada</option>
+                </select>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-sm-3">
+                <label for="StatusPagamento">Status Pagamento:</label>
+                <select class="form-control" name="StatusPagamento" id="StatusPagamento" ng-model="filtros.StatusPagamento">
                     <option value="">Todos</option>
                     <option value="B">Aberto</option>
                     <option value="A">Aguardando Pagamento</option>
@@ -44,8 +54,6 @@
                     <option value="F">Finalizado</option>
                 </select>
             </div>
-        </div>
-        <div class="row form-group">
             <div class="col-sm-3">
                 <label for="TipoPagamento">Tipo de Pagamento:</label>
                 <select class="form-control" name="TipoPagamento" id="TipoPagamento" ng-model="filtros.TipoPagamento">
@@ -84,26 +92,44 @@
                         <th class="text-center">Entrada</th>
                         <th class="text-center">Saída</th>
                         <th>Cliente/Placa</th>
+                        <th class="text-center">Reserva</th>
                         <th class="text-center">Valor</th>
                         <th>Forma de Pagamento</th>
-                        <th class="text-center">Status</th>
+                        <th class="text-center">Status<br>Pagamento</th>
+                        <th class="text-center">Status<br>Locação</th>
                         <th class="text-center" width="10%">Ação</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-show="(lista_fluxo|filter:filtrar).length<=0">
-                        <td colspan="8" class="text-center">Nenhum registro encontrado.</td>
+                        <td colspan="10" class="text-center">Nenhum registro encontrado.</td>
                     </tr>
                     <tr pagination-id="pg_lista" dir-paginate="l in lista_fluxo|filter:filtrar | itemsPerPage:100">
                         <td>
                             {{l.NomeEstacionamento}} <br>
                             {{l.CpfCnpjFormatado}}
                         </td>
-                        <td class="text-center">{{l.DataEntradaBr}} às {{l.HoraEntradaBr}}</td>
-                        <td class="text-center">{{l.DataSaidaBr?(l.DataSaidaBr+' às '+l.HoraSaidaBr):'-'}}</td>
+                        <td class="text-center">{{l.DataEntrada}} às {{l.HoraEntrada}}</td>
+                        <td class="text-center">{{l.DataSaida?(l.DataSaida+' às '+l.HoraSaida):'-'}}</td>
                         <td>
                             <span ng-show="l.NomeCliente">{{l.NomeCliente}}<br></span>
                             {{l.PlacaVeiculoFormatada}}
+                        </td>
+                        <td class="text-center">
+                            <button 
+                                class="btn btn-default btn-xs"
+                                data-html="true" 
+                                data-toggle="tooltip" 
+                                data-placement="left"
+                                data-original-title="{{
+                                    l.IsReserva=='S'?
+                                    '<b>Entrada: </b>'+l.DataEntradaReserva+' '+l.HoraEntradaReserva+'<br>'+
+                                    '<b>Saída: </b>'+l.DataSaidaReserva+' '+l.HoraSaidaReserva+'<br>'
+                                    :''
+                                }}"
+                                tooltip>
+                                {{l.IsReserva=='S'?'Sim':'Não'}}
+                            </button>
                         </td>
                         <td class="text-center">
                             {{l.Valor?(l.Valor|currency:''):'-'}}
@@ -112,21 +138,29 @@
                             {{l.FormaPagamentoDesc?l.FormaPagamentoDesc:'-'}}
                         </td>
                         <td class="text-center">
-                        <button  
-                            class="btn btn-sm {{l.ClassBtn}}"
-                            ng-click="openFinalizarLocacao(l)"
-                            data-html="true" 
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            data-original-title="{{l.Status=='B'?'Clique aqui para finalizar o periódo da locação.':''}}"
-                            tooltip>
-                            {{l.StatusDesc}}
-                        </button>
+                            <button  
+                                class="btn btn-xs {{l.ClassBtn}} cursor-auto"
+                                tooltip>
+                                {{l.StatusDesc}}
+                            </button>
+                            
+                        </td>
+                        <td class="text-center">
+                            <button  
+                                class="btn btn-xs {{l.ClassBtnFluxo}}"
+                                ng-click="openFinalizarLocacao(l)"
+                                data-html="true" 
+                                data-toggle="tooltip" 
+                                data-placement="left"
+                                data-original-title="{{l.StatusFluxo=='E'?'Clique aqui para finalizar o periódo da locação.':''}}"
+                                tooltip>
+                                {{l.StatusFluxoDesc}}
+                            </button>
                             
                         </td>
                         <td class="text-center">
                             <button ng-click="novoFluxoVaga(l.FluxoVagaId)" class="btn btn-default btn-sm">
-                                <i class="glyphicon" ng-class="l.Status=='B'?'glyphicon-pencil':'glyphicon-search'"></i>
+                                <i class="glyphicon" ng-class="l.StatusFluxo=='E'?'glyphicon-pencil':'glyphicon-search'"></i>
                             </button>
                         </td>
                     </tr>
@@ -170,7 +204,7 @@
                                 <span><b>Estacionamento: </b> {{objFinalizaLocacao.NomeEstacionamento}}</span>
                                 <span ng-show="objFinalizaLocacao.NomeCliente"><b>Cliente: </b> {{objFinalizaLocacao.NomeCliente}}</span>
                                 <span><b>Placa Veículo: </b> {{objFinalizaLocacao.PlacaVeiculoFormatada}}</span>
-                                <span><b>Entrada: </b> {{objFinalizaLocacao.DataEntradaBr}} às {{objFinalizaLocacao.HoraEntradaBr}}</span>
+                                <span><b>Entrada: </b> {{objFinalizaLocacao.DataEntrada}} às {{objFinalizaLocacao.HoraEntrada}}</span>
                             </div>
                         </div>
                     </div>
@@ -179,23 +213,23 @@
                         <div class="row form-group">
                             <div class="col-sm-6" ng-class="form_finaliza.DataSaida.$invalid && (form_finaliza.$submitted || form_estacionamento.DataSaida.$dirty)?'has-error':''">
                                 <label for="DataSaida">Data Saída:</label>
-                                <input type="text" class="form-control" id="DataSaida" name="DataSaida" ng-model="objFinalizaLocacao.DataSaida" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-change="calclulaValor()" ng-required="true">
+                                <input type="text" class="form-control" id="DataSaida" name="DataSaida" ng-model="objFinalizaLocacao.DataSaida" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-change="calculaValor()" ng-required="true">
                             </div>
                             <div class="col-sm-6"  ng-class="form_finaliza.HoraSaida.$invalid && (form_finaliza.$submitted || form_estacionamento.HoraSaida.$dirty)?'has-error':''">
                                 <label for="HoraSaida">Hora Saída:</label>
-                                <input type="text" class="form-control" id="HoraSaida" name="HoraSaida" ng-model="objFinalizaLocacao.HoraSaida" ui-mask="99:99" placeholder="__:__" ng-change="calclulaValor()" ng-required="true">
+                                <input type="text" class="form-control" id="HoraSaida" name="HoraSaida" ng-model="objFinalizaLocacao.HoraSaida" ui-mask="99:99" placeholder="__:__" ng-change="calculaValor()" ng-required="true">
                             </div>
                         </div>
-                        <div class="row form-group">
+                        <div class="row form-group" ng-show="objFinalizaLocacao.JaPagou=='N'">
                             <div class="col-sm-12"  ng-class="form_finaliza.FormaPagamentoId.$invalid && (form_finaliza.$submitted || form_estacionamento.FormaPagamentoId.$dirty)?'has-error':''">
                                 <label for="FormaPagamentoId">Forma de Pagamento:</label>
-                                <select class="form-control" name="FormaPagamentoId" id="FormaPagamentoId" ng-model="objFinalizaLocacao.FormaPagamentoId" ng-required="true">
+                                <select class="form-control" name="FormaPagamentoId" id="FormaPagamentoId" ng-model="objFinalizaLocacao.FormaPagamentoId" ng-required="JaPagou=='N'">
                                     <option value="">Selecione</option>
                                     <option value="{{l.FormaPagamentoId}}" ng-repeat="l in lista_formas_pagamento">{{l.Descricao}}</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="row form-group">
+                        <div class="row form-group" ng-show="objFinalizaLocacao.JaPagou=='N'">
                             <div class="col-sm-6">
                                 <label for="Valor">Valor:</label>
                                 <input type="text" class="form-control" id="Valor" name="Valor" ng-value="objFinalizaLocacao.Valor|currency:'R$ '" disabled>

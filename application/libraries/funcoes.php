@@ -128,30 +128,52 @@ class Funcoes {
         $mpdf->Output();
     }
 
-    function getStatusClasse($status,$tipo)
+    function getStatusClasse($status,$tipo,$tipo2='P')
     {
-        switch ($status) {
-            case 'B':
-                $status_desc = 'Aberto';
-                $classe = 'btn-info';
-                break;
-            case 'A':
-                $status_desc = 'Aguardando Pagamento';
-                $classe = 'btn-danger';
-                break;
-            case 'P':
-                $status_desc = 'Processando Pagamento';
-                $classe = 'btn-warning';
-                break;
-            case 'F':
-                $status_desc = 'Finalizado';
-                $classe = 'btn-success';
-                break;
-            default:
-                $status_desc = '';;
-                $classe = '';
-                break;
+        if($tipo2=='P'){
+            switch ($status) {
+                case 'B':
+                    $status_desc = 'Aberto';
+                    $classe = 'btn-info';
+                    break;
+                case 'A':
+                    $status_desc = 'Aguardando Pagamento';
+                    $classe = 'btn-danger';
+                    break;
+                case 'P':
+                    $status_desc = 'Processando Pagamento';
+                    $classe = 'btn-warning';
+                    break;
+                case 'F':
+                    $status_desc = 'Finalizado';
+                    $classe = 'btn-success';
+                    break;
+                default:
+                    $status_desc = '';;
+                    $classe = '';
+                    break;
+            }
+        }else {
+            switch ($status) {
+                case 'N':
+                    $status_desc = 'Não Iniciada';
+                    $classe = 'btn-warning';
+                    break;
+                case 'E':
+                    $status_desc = 'Em Andamento';
+                    $classe = 'btn-info';
+                    break;
+                case 'F':
+                    $status_desc = 'Finalizada';
+                    $classe = 'btn-success';
+                    break;
+                default:
+                    $status_desc = '';;
+                    $classe = '';
+                    break;
+            }
         }
+        
 
         return $tipo=='C'?$classe:$status_desc;
     }

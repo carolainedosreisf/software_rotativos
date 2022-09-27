@@ -10,7 +10,7 @@
             </a>
         </div>
     </div>
-    <h2>{{FluxoVagaId?(disabled_?'Ver':'Editar'):'Cadastrar'}} Fluxo Vaga</h2><br>
+    <h2>{{FluxoVagaId?(disabled_?'Ver':'Editar'):'Cadastrar'}} Locação</h2><br>
     <form name="form_fluxo_vaga" id="form_fluxo_vaga"  ng-submit="setFluxoVaga()" novalidate autocomplete="off">
         <div class="row form-group" ng-show="form_fluxo_vaga.$invalid && form_fluxo_vaga.$submitted">
             <div class="col-sm-12">
@@ -22,27 +22,38 @@
         <div class="row form-group" ng-show="disabled_">
             <div class="col-sm-12">
                 <div class="alert alert-warning" role="alert">
-                    Fluxo de vaga <b>{{FluxoVaga.StatusDesc}}</b>, não é mais possivel editar os dados.
+                    Locação <b>{{FluxoVaga.StatusFluxoDesc}}</b>, não é mais possivel editar os dados.
                 </div>
             </div>
         </div>
         <div class="row form-group">
             <div class="col-sm-6" ng-class="form_fluxo_vaga.EstacionamentoId.$invalid && (form_fluxo_vaga.$submitted || EstacionamentoId.DataEntrada.$dirty)?'has-error':''">
                 <label for="EstacionamentoId">Estacionamento: </label>
-                <select class="form-control" name="EstacionamentoId" id="EstacionamentoId" ng-model="FluxoVaga.EstacionamentoId" ng-required="true" ng-disabled="disabled_">
+                <select class="form-control" name="EstacionamentoId" id="EstacionamentoId" ng-model="FluxoVaga.EstacionamentoId" ng-required="true" ng-disabled="disabled_" ng-change="getReservas()">
                     <option value="">Selecione</option>
                     <option value="{{l.EstacionamentoId}}" ng-repeat="l in  lista_estacionamentos">{{l.NomeEstacionamento}} - {{l.CpfCnpjFormatado}}</option>
                 </select>
             </div>
             <div class="col-sm-6" ng-class="form_fluxo_vaga.CadastroId.$invalid && (form_fluxo_vaga.$submitted || form_fluxo_vaga.CadastroId.$dirty)?'has-error':''">
                 <label for="CadastroId">Cliente:</label>
-                <select class="form-control" name="CadastroId" id="CadastroId" ng-model="FluxoVaga.CadastroId" ng-disabled="disabled_">
+                <select class="form-control" name="CadastroId" id="CadastroId" ng-model="FluxoVaga.CadastroId" ng-disabled="disabled_" ng-change="getReservas()">
                     <option value="">-</option>
                     <option value="{{l.CadastroId}}" ng-repeat="l in  lista_clientes">{{l.Nome}} - {{l.CpfFormatado}}</option>
                 </select>
             </div>
         </div>
-
+        <div class="row form-group">
+            <div class="col-sm-12">
+                <label for="ReservaId">Reseva:</label>
+                <input type="text" class="form-control" ng-value="FluxoVaga.DataEntradaReserva+' '+FluxoVaga.HoraEntradaReserva+' - '+FluxoVaga.DataSaidaReserva+' '+FluxoVaga.HoraSaidaReserva" ng-show="FluxoVagaId && FluxoVaga.ReservaId" ng-disabled="true">
+                <select class="form-control" name="ReservaId" id="ReservaId" ng-model="FluxoVaga.ReservaId" ng-disabled="disabled_" ng-hide="FluxoVagaId">
+                    <option value="">-</option>
+                    <option value="{{l.ReservaId}}" ng-repeat="l in lista_reservas">
+                        {{l.NomeCliente}} ({{l.DataEntrada}} {{l.HoraEntrada}} - {{l.DataSaida}} {{l.HoraSaida}})
+                    </option>
+                </select>
+            </div>
+        </div>
         <div class="row form-group">
             <div class="col-sm-4" ng-class="(form_fluxo_vaga.PlacaVeiculo.$invalid) && (form_fluxo_vaga.$submitted || form_fluxo_vaga.PlacaVeiculo.$dirty)?'has-error':''">
                 <label for="PlacaVeiculo">Placa Veículo:</label>

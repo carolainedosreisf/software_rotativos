@@ -60,10 +60,10 @@
             ?>
             <tr>
                 <td class="text-center">
-                    <?php echo $a['DataEntradaBr'].' '.$a['HoraEntradaBr']; ?>
+                    <?php echo $a['DataEntrada'].' '.$a['HoraEntrada']; ?>
                 </td>
                 <td class="text-center">
-                    <?php echo $a['DataSaidaBr']?($a['DataSaidaBr'].' '.$a['HoraSaidaBr']):'-'; ?>
+                    <?php echo $a['DataSaida']?($a['DataSaida'].' '.$a['HoraSaida']):'-'; ?>
                 </td>
                 <td>
                     <?php echo $a['NomeCliente']?($a['NomeCliente'].'<br>'):''; ?>

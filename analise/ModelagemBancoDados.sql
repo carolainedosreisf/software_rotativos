@@ -340,3 +340,8 @@ ALTER TABLE `mydb`.`FluxoVaga` ADD ReservaId INT NULL;
 ALTER TABLE `mydb`.`FluxoVaga` ADD CONSTRAINT FK_FluxoVaga_ReservaId FOREIGN KEY (ReservaId) REFERENCES Reserva(ReservaId);
 
 ALTER TABLE `mydb`.`FluxoVaga` DROP COLUMN Reserva;
+
+------------------------------------------------ 25/09  --------------------------------------------
+
+ALTER TABLE `mydb`.`FluxoVaga` ADD Status ENUM('E','F') NOT NULL DEFAULT 'E' COMMENT 'E=>Em Andamento,F=>Finalizado';
+UPDATE `mydb`.`FluxoVaga` SET Status = 'F';

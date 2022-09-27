@@ -54,7 +54,7 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
         }).then(function (retorno) {
             $scope.FluxoVaga = retorno.data;
             $scope.carregando = false;
-            if($scope.FluxoVaga.Status!='B'){
+            if($scope.FluxoVaga.StatusFluxo!='E'){
                 $scope.disabled_ = 1;
             }
         },
@@ -91,6 +91,32 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
             });
         }
     }
+
+    $scope.getReservas = function(){
+        if($scope.FluxoVaga.EstacionamentoId && $scope.FluxoVaga.CadastroId){
+            $scope.carregando = true;
+            $http({
+                url: base_url+'/FluxoVaga/getReservas',
+                method: 'GET',
+                params: {params:
+                    {
+                        EstacionamentoId:$scope.FluxoVaga.EstacionamentoId
+                        ,CadastroId:$scope.FluxoVaga.CadastroId
+                        ,StatusFluxo:'N'
+                    }
+                }
+            }).then(function (retorno) {
+                $scope.lista_reservas = retorno.data;
+                $scope.FluxoVaga.ReservaId = "";
+                $scope.carregando = false;
+            },
+            function (retorno) {
+                console.log('Error: '+retorno.status);
+            });
+        }
+        
+    }
+
 
     $scope.getEstacionamentos();
     $scope.getClientes();

@@ -27,8 +27,12 @@ class FluxoVaga_model extends CI_Model {
             $filtro .= " AND a.DataEntrada BETWEEN '{$DataInicio}' AND '{$DataFim}'";
         }
 
-        if($params['Status']){
-            $filtro .= " AND IF(b.ReceberId IS NULL,'B',b.Status) = '{$params['Status']}'";
+        if($params['StatusFluxo']){
+            $filtro .= " AND a.Status = '{$params['StatusFluxo']}'";
+        }
+
+        if($params['StatusPagamento']){
+            $filtro .= " AND IF(b.ReceberId IS NULL AND d.ReceberId IS NULL,'B',IF(d.ReceberId IS NOT NULL, d.Status,b.Status)) = '{$params['StatusPagamento']}'";
         }
 
         if($params['FormaPagamentoId']){
@@ -39,37 +43,38 @@ class FluxoVaga_model extends CI_Model {
         $sql = "SELECT  
                     a.FluxoVagaId
                     ,a.DataEntrada
-                    ,DATE_FORMAT(a.DataEntrada, '%d/%m/%Y') AS DataEntradaBr
-                    ,a.DataSaida
-                    ,DATE_FORMAT(a.DataSaida, '%d/%m/%Y') AS DataSaidaBr
-                    ,a.HoraEntrada
-                    ,DATE_FORMAT(a.HoraEntrada, '%H:%i') AS HoraEntradaBr
-                    ,a.HoraSaida
-                    ,DATE_FORMAT(a.HoraSaida, '%H:%i') AS HoraSaidaBr
+                    ,DATE_FORMAT(a.DataEntrada, '%d/%m/%Y') AS DataEntrada
+                    ,DATE_FORMAT(a.DataSaida, '%d/%m/%Y') AS DataSaida
+                    ,DATE_FORMAT(a.HoraEntrada, '%H:%i') AS HoraEntrada
+                    ,DATE_FORMAT(a.HoraSaida, '%H:%i') AS HoraSaida
                     ,a.CadastroId
-                    ,(SELECT c.Nome 
-                        FROM Cadastro AS c
-                        WHERE a.CadastroId = c.CadastroId) NomeCliente
+                    ,e.Nome AS NomeCliente
                     ,a.PlacaVeiculo
                     ,a.Observacao
+                    ,a.Status AS StatusFluxo
                     ,a.EstacionamentoId
-                    ,(SELECT c.NomeEstacionamento 
-                        FROM Estacionamento AS c
-                        WHERE a.EstacionamentoId = c.EstacionamentoId) NomeEstacionamento
-                    ,(SELECT c.CpfCnpj 
-                        FROM Estacionamento AS c
-                        WHERE a.EstacionamentoId = c.EstacionamentoId) CpfCnpjEstacionamento
-                    ,IF(b.ReceberId IS NULL,'B',b.Status) AS Status
-                    ,b.ReceberId
-                    ,b.Valor
-                    ,(SELECT c.Descricao 
-                        FROM FormaPagamento AS c
-                        WHERE b.FormaPagamentoId = c.FormaPagamentoId) FormaPagamentoDesc
+                    ,f.NomeEstacionamento
+                    ,f.CpfCnpj AS CpfCnpjEstacionamento
+                    ,IF(b.ReceberId IS NULL AND d.ReceberId IS NULL,'B',IF(d.ReceberId IS NOT NULL, d.Status,b.Status)) AS Status
+                    ,IF(d.ReceberId IS NOT NULL, d.ReceberId,b.ReceberId) AS ReceberId
+                    ,IF(d.ReceberId IS NOT NULL, d.Valor,b.Valor) AS Valor
+                    ,(SELECT g.Descricao 
+                        FROM FormaPagamento AS g
+                        WHERE IF(d.ReceberId IS NOT NULL, d.FormaPagamentoId,b.FormaPagamentoId) = g.FormaPagamentoId
+                    ) FormaPagamentoDesc
+                    ,IF(c.ReservaId IS NOT NULL, 'S','N') AS IsReserva
+                    ,DATE_FORMAT(c.DataEntrada, '%d/%m/%Y') AS DataEntradaReserva
+                    ,DATE_FORMAT(c.DataSaida, '%d/%m/%Y') AS DataSaidaReserva
+                    ,DATE_FORMAT(c.HoraEntrada, '%H:%i') AS HoraEntradaReserva
+                    ,DATE_FORMAT(c.HoraSaida, '%H:%i') AS HoraSaidaReserva
+                    ,IF(d.ReceberId IS NOT NULL OR b.ReceberId IS NOT NULL,'S','N') JaPagou
                 FROM Fluxovaga AS a
                 LEFT JOIN Receber b ON a.FluxoVagaId = b.FluxoVagaId
-                WHERE (SELECT EmpresaId 
-                        FROM Estacionamento AS c 
-                        WHERE a.EstacionamentoId = c.EstacionamentoId) = {$this->session->userdata('EmpresaId')}
+                LEFT JOIN Reserva c ON a.ReservaId = c.ReservaId
+                LEFT JOIN Receber d ON c.ReservaId = d.ReservaId
+                LEFT JOIN Cadastro e ON a.CadastroId = e.CadastroId
+                LEFT JOIN Estacionamento f ON a.EstacionamentoId = f.EstacionamentoId
+                WHERE f.EmpresaId = {$this->session->userdata('EmpresaId')}
                 {$filtro}
                 ORDER BY {$order_by}, DataEntrada DESC,HoraEntrada DESC ";
         $query = $this->db->query($sql);
@@ -86,16 +91,25 @@ class FluxoVaga_model extends CI_Model {
                     ,DATE_FORMAT(a.HoraEntrada, '%H%i') AS HoraEntrada
                     ,DATE_FORMAT(a.HoraSaida, '%H%i') AS HoraSaida
                     ,a.CadastroId
+                    ,a.ReservaId
+                    ,DATE_FORMAT(c.DataEntrada, '%d/%m/%Y') AS DataEntradaReserva
+                    ,DATE_FORMAT(c.HoraEntrada, '%H:%i') AS HoraEntradaReserva
+                    ,DATE_FORMAT(c.DataSaida, '%d/%m/%Y') AS DataSaidaReserva
+                    ,DATE_FORMAT(c.HoraSaida, '%H:%i') AS HoraSaidaReserva
                     ,a.PlacaVeiculo
                     ,a.Observacao
                     ,a.EstacionamentoId
-                    ,IF(b.ReceberId IS NULL,'B',b.Status) AS Status
-                    ,b.Valor
-                    ,(SELECT c.Descricao 
-                        FROM FormaPagamento AS c
-                        WHERE b.FormaPagamentoId = c.FormaPagamentoId) FormaPagamentoDesc
+                    ,IF(b.ReceberId IS NULL AND d.ReceberId IS NULL,'B',IF(d.ReceberId IS NOT NULL, d.Status,b.Status)) AS Status
+                    ,a.Status AS StatusFluxo
+                    ,IF(d.ReceberId IS NOT NULL, d.Valor,b.Valor) AS Valor
+                    ,(SELECT e.Descricao 
+                        FROM FormaPagamento AS e
+                        WHERE IF(d.ReceberId IS NOT NULL, d.FormaPagamentoId,b.FormaPagamentoId) = e.FormaPagamentoId
+                    ) FormaPagamentoDesc
                 FROM Fluxovaga AS a
                 LEFT JOIN Receber b ON a.FluxoVagaId = b.FluxoVagaId
+                LEFT JOIN Reserva c ON a.ReservaId = c.ReservaId
+                LEFT JOIN Receber d ON a.ReservaId = c.ReservaId
                 WHERE a.FluxoVagaId = {$FluxoVagaId}";
         $query = $this->db->query($sql);
         $result = $query->row_array();
@@ -153,51 +167,88 @@ class FluxoVaga_model extends CI_Model {
         }
     }
 
-    public function getReservas()
+    public function getReservas($params)
     {
+        $filtro = "";
+        if($params['CadastroId']){
+            $filtro .= " AND a.CadastroId = {$params['CadastroId']}";
+        }
+
+        if($params['EstacionamentoId']){
+            $filtro .= " AND a.EstacionamentoId = {$params['EstacionamentoId']}";
+        }
+
+        if($params['StatusFluxo']){
+            $filtro .= " AND IF(c.FluxoVagaId IS NULL,'N',c.Status) = '{$params['StatusFluxo']}'";
+        }
+
         $sql = "SELECT  
                     a.ReservaId
-                    ,DATE_FORMAT(a.DataEntrada, '%d/%m/%Y') AS DataEntradaBr
-                    ,DATE_FORMAT(a.DataSaida, '%d/%m/%Y') AS DataSaidaBr
-                    ,DATE_FORMAT(a.HoraEntrada, '%H:%i') AS HoraEntradaBr
-                    ,DATE_FORMAT(a.HoraSaida, '%H:%i') AS HoraSaidaBr
+                    ,DATE_FORMAT(a.DataEntrada, '%d/%m/%Y') AS DataEntrada
+                    ,DATE_FORMAT(a.DataSaida, '%d/%m/%Y') AS DataSaida
+                    ,DATE_FORMAT(a.HoraEntrada, '%H:%i') AS HoraEntrada
+                    ,DATE_FORMAT(a.HoraSaida, '%H:%i') AS HoraSaida
                     ,a.CadastroId
-                    ,f.Nome AS NomeCliente
-                    ,f.Cpf AS CpfCliente
-                    ,f.NumeroTelefone AS TelefoneCliente
+                    ,e.Nome AS NomeCliente
+                    ,e.Cpf AS CpfCliente
+                    ,e.NumeroTelefone AS TelefoneCliente
                     ,a.EstacionamentoId
-                    ,(SELECT e.NomeEstacionamento 
-                        FROM Estacionamento AS e
-                        WHERE a.EstacionamentoId = e.EstacionamentoId) NomeEstacionamento
-                    ,(SELECT e.CpfCnpj 
-                        FROM Estacionamento AS e
-                        WHERE a.EstacionamentoId = e.EstacionamentoId) CpfCnpjEstacionamento
-                    ,IF(b.ReceberId IS NULL,'B',b.Status) AS StatusReserva
-                    ,b.Valor AS ValorReserva
-                    ,(SELECT e.Descricao 
-                        FROM FormaPagamento AS e
-                        WHERE b.FormaPagamentoId = e.FormaPagamentoId) FormaPagamentoReservaDesc
-                    ,DATE_FORMAT(c.DataEntrada, '%d/%m/%Y') AS DataEntradaFluxoBr
-                    ,DATE_FORMAT(c.DataSaida, '%d/%m/%Y') AS DataSaidaFluxoBr
-                    ,DATE_FORMAT(c.HoraEntrada, '%H:%i') AS HoraEntradaFluxoBr
-                    ,DATE_FORMAT(c.HoraSaida, '%H:%i') AS HoraSaidaFluxoBr
-                    ,IF(d.ReceberId IS NULL,'B',d.Status) AS StatusFluxo
-                    ,d.Valor AS ValorFluxo
-                    ,(SELECT e.Descricao 
-                        FROM FormaPagamento AS e
-                        WHERE d.FormaPagamentoId = e.FormaPagamentoId) FormaPagamentoFluxoDesc
+                    ,f.NomeEstacionamento
+                    ,f.CpfCnpj AS CpfCnpjEstacionamento
+                    ,IF(b.ReceberId IS NULL AND d.ReceberId IS NULL,'B',IF(d.ReceberId IS NOT NULL, d.Status,b.Status)) AS Status
+                    ,IF(d.ReceberId IS NOT NULL, d.Valor,b.Valor) AS Valor
+                    ,(SELECT g.Descricao 
+                        FROM FormaPagamento AS g
+                        WHERE IF(d.ReceberId IS NOT NULL, d.FormaPagamentoId,b.FormaPagamentoId) = g.FormaPagamentoId
+                    ) FormaPagamentoDesc
+                    ,DATE_FORMAT(c.DataEntrada, '%d/%m/%Y') AS DataEntradaFluxo
+                    ,DATE_FORMAT(c.DataSaida, '%d/%m/%Y') AS DataSaidaFluxo
+                    ,DATE_FORMAT(c.HoraEntrada, '%H:%i') AS HoraEntradaFluxo
+                    ,DATE_FORMAT(c.HoraSaida, '%H:%i') AS HoraSaidaFluxo
+                    ,IF(c.FluxoVagaId IS NULL,'N',c.Status) AS StatusFluxo
                 FROM Reserva AS a
                 LEFT JOIN Receber b ON a.ReservaId = b.ReservaId
-                LEFT JOIN FluxoVaga  c ON a.ReservaId = c.ReservaId
+                LEFT JOIN FluxoVaga c ON a.ReservaId = c.ReservaId
                 LEFT JOIN Receber d ON c.FluxoVagaId = d.FluxoVagaId
-                LEFT JOIN Cadastro f ON a.CadastroId = f.CadastroId
-                WHERE (SELECT EmpresaId 
-                        FROM Estacionamento AS e
-                        WHERE a.EstacionamentoId = e.EstacionamentoId) = {$this->session->userdata('EmpresaId')}
+                LEFT JOIN Cadastro e ON a.CadastroId = e.CadastroId
+                LEFT JOIN Estacionamento f ON a.EstacionamentoId = f.EstacionamentoId
+                WHERE f.EmpresaId  = {$this->session->userdata('EmpresaId')}
+                {$filtro}
                 ORDER BY  a.DataEntrada DESC,a.HoraEntrada DESC";
         $query = $this->db->query($sql);
         $result = $query->result_array();
         return $result;
+    }
+
+    public function getDadosCalculo($FluxoVagaId=0,$EstacionamentoId=0,$Entrada,$Saida)
+    {
+        if($FluxoVagaId){
+            $sql = "SELECT 
+                        e.NomeEstacionamento
+                        ,IFNULL(e.PrecoLivre,0) AS PrecoLivre
+                        ,IFNULL(e.PrecoHora,0) AS PrecoHora 
+                        ,IF(d.ReceberId IS NOT NULL OR b.ReceberId IS NOT NULL,'S','N') AS JaPagou
+                        ,timestampdiff(MINUTE, '{$Entrada}', '{$Saida}') as minutos
+                    FROM Fluxovaga AS a
+                    LEFT JOIN Receber b ON a.FluxoVagaId = b.FluxoVagaId
+                    LEFT JOIN Reserva c ON a.ReservaId = c.ReservaId
+                    LEFT JOIN Receber d ON c.ReservaId = d.ReservaId
+                    LEFT JOIN Estacionamento e ON a.EstacionamentoId = e.EstacionamentoId
+                    WHERE a.FluxoVagaId = {$FluxoVagaId}";
+        }else{
+            $sql = "SELECT 
+                        a.NomeEstacionamento
+                        ,IFNULL(a.PrecoLivre,0) AS PrecoLivre
+                        ,IFNULL(a.PrecoHora,0) AS PrecoHora 
+                        ,'N' AS JaPagou
+                        ,timestampdiff(MINUTE, '{$Entrada}', '{$Saida}') as minutos
+                    FROM Estacionamento AS a
+                    WHERE a.EstacionamentoId = {$EstacionamentoId}";
+        }
+        $query = $this->db->query($sql);
+        $result = $query->row_array();
+        return $result;
+        
     }
 
     

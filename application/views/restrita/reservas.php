@@ -8,14 +8,10 @@
                 <i class="glyphicon glyphicon-plus"></i>
                 Nova
             </button>
-            <button type="button" ng-click="openRelatorio()" class="btn btn-primary">
-                <i class="glyphicon glyphicon-print"></i>
-                Imprimir
-            </button>
         </div>
     </div>
 
-    <h2>Reservas</h2><br>
+    <h2>Reservas de Vagas</h2><br>
 
     <div class="callout callout-default">
         <div class="row form-group">
@@ -35,7 +31,7 @@
                 <input type="text" class="form-control" name="DataFim" id="DataFim" ng-model="filtros.DataFim" data-provide="datepicker" data-date-format="dd/mm/yyyy">
             </div>
             <div class="col-sm-3">
-                <label for="Status">Status:</label>
+                <label for="Status">Status Pagamento:</label>
                 <select class="form-control" name="Status" id="Status" ng-model="filtros.Status">
                     <option value="">Todos</option>
                     <option value="B">Aberto</option>
@@ -65,11 +61,13 @@
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
+                        <th>Estacionamento</th>
                         <th>Periódo Reserva</th>
                         <th>Cliente</th>
-                        <th class="text-center">Valor Reserva</th>
+                        <th>Locação</th>
+                        <th class="text-center">Valor</th>
                         <th>Forma de Pagamento</th>
-                        <th class="text-center">Status</th>
+                        <th class="text-center">Status <br> Pagamento</th>
                         <th class="text-center" width="10%">Ação</th>
                     </tr>
                 </thead>
@@ -79,12 +77,25 @@
                     </tr>
                     <tr pagination-id="pg_lista" dir-paginate="l in lista_reservas|filter:filtrar | itemsPerPage:100">
                         <td>
-                            {{l.DataEntradaBr}} {{l.HoraEntradaBr}} <br>
-                            {{l.DataSaidaBr}} {{l.HoraSaidaBr}}
+                            {{l.NomeEstacionamento}} <br>
+                            {{l.CpfCnpjFormatado}}
+                        </td>
+                        <td>
+                            {{l.DataEntrada}} {{l.HoraEntrada}} <br>
+                            {{l.DataSaida}} {{l.HoraSaida}}
                         </td>
                         <td>
                             {{l.NomeCliente}} <br>
                             {{l.CpfClienteFormatado}}
+                        </td>
+                        <td>
+                            <span ng-show="l.StatusFluxo!='N'">
+                                Início: {{l.DataEntradaFluxo}} {{l.HoraEntradaFluxo}} <br>
+                                Fim: {{l.DataSaidaFluxo?(l.DataSaidaFluxo+' '+l.HoraSaidaFluxo):'-'}}<br>
+                            </span>
+                            <button class="btn {{l.ClassBtnFluxo}} btn-xs cursor-auto">
+                                {{l.StatusFluxoDesc}}
+                            </button>
                         </td>
                         <td class="text-center">
                             {{l.Valor?(l.Valor|currency:''):'-'}}
@@ -93,21 +104,13 @@
                             {{l.FormaPagamentoDesc?l.FormaPagamentoDesc:'-'}}
                         </td>
                         <td class="text-center">
-                        <button  
-                            class="btn btn-sm {{l.ClassBtn}}"
-                            ng-click="openFinalizarLocacao(l)"
-                            data-html="true" 
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            data-original-title="{{l.Status=='B'?'Clique aqui para finalizar o periódo da locação.':''}}"
-                            tooltip>
-                            {{l.StatusDesc}}
-                        </button>
-                            
+                            <button class="btn {{l.ClassBtn}} btn-xs cursor-auto">
+                                {{l.StatusDesc}}
+                            </button>
                         </td>
                         <td class="text-center">
                             <button ng-click="novoFluxoVaga(l.FluxoVagaId)" class="btn btn-default btn-sm">
-                                <i class="glyphicon" ng-class="l.Status=='B'?'glyphicon-pencil':'glyphicon-search'"></i>
+                                <i class="glyphicon" ng-class="l.Status=='B' && l.StatusFluxo=='N'?'glyphicon-pencil':'glyphicon-search'"></i>
                             </button>
                         </td>
                     </tr>

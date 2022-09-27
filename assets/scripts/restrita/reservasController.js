@@ -7,7 +7,9 @@ app.controller('reservasController', ['$scope', '$http','$filter','$location', f
         EstacionamentoId:""
         ,DataInicio: ""
         ,DataFim: ""
-        ,Status:'B'
+        ,StatusPagamento:''
+        ,StatusFluxo:''
+        ,CadastroId:""
     };
 
     $scope.getEstacionamentos = function(){
@@ -39,7 +41,7 @@ app.controller('reservasController', ['$scope', '$http','$filter','$location', f
         });
     }
 
-    $scope.calclulaValor = function(){
+    $scope.calculaValor = function(){
         if(typeof $scope.objFinalizaLocacao.HoraSaida != 'undefined'){
             if($scope.objFinalizaLocacao.HoraSaida.length == 4){
                 var hr = $scope.objFinalizaLocacao.HoraSaida.substr(0, 2);
@@ -50,12 +52,12 @@ app.controller('reservasController', ['$scope', '$http','$filter','$location', f
                 }
                 $scope.carregando = true;
                 $http({
-                    url: base_url+'/FluxoVaga/calclulaValor',
+                    url: base_url+'/FluxoVaga/calculaValor',
                     method: 'GET',
                     params:{
                         EstacionamentoId:$scope.objFinalizaLocacao.EstacionamentoId,
-                        DataEntrada:$scope.objFinalizaLocacao.DataEntradaBr,
-                        HoraEntrada:$scope.objFinalizaLocacao.HoraEntradaBr,
+                        DataEntrada:$scope.objFinalizaLocacao.DataEntrada,
+                        HoraEntrada:$scope.objFinalizaLocacao.HoraEntrada,
                         DataSaida:$scope.objFinalizaLocacao.DataSaida,
                         HoraSaida:$scope.objFinalizaLocacao.HoraSaida,
                     }

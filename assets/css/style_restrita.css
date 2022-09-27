@@ -339,3 +339,7 @@ th,td{
 .legenda-sem-preco .icone{
     color: #721c24;
 }
+
+.cursor-auto{
+    cursor: auto !important;
+}

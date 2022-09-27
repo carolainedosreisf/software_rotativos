@@ -21,7 +21,8 @@ class FormaPagamento extends CI_Controller {
 
 	public function getFormasPagamento()
 	{
-		$lista = $this->FormaPagamento_model->getFormasPagamento();
+		$todos = $this->funcoes->get('todos');
+		$lista = $this->FormaPagamento_model->getFormasPagamento($todos);
 		echo json_encode($lista);
 	}
 

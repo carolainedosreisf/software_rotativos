@@ -1,6 +1,9 @@
 var app = angular.module('app', ['ui.utils.masks','ui.mask','angularUtils.directives.dirPagination']);
 app.controller('novaReservaController', ['$scope', '$http','$filter','$location', function($scope,$http,$filter,$location) {
-    $scope.Reserva = {Tipo:'R'};
+    $scope.Reserva = {
+        Tipo:'R'
+        ,PagarAgora:'N'
+    };
     $scope.lista_estacionamentos = [];
     $scope.lista_clientes = [];
     $scope.ReservaId = ReservaId;
@@ -36,6 +39,20 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
         });
     }
 
+    $scope.getFormasPagamento = function(){
+        $scope.carregando = true;
+        $http({
+            url: base_url+'/FormaPagamento/getFormasPagamento',
+            method: 'GET'
+        }).then(function (retorno) {
+            $scope.lista_formas_pagamento = retorno.data;
+            $scope.carregando = false;
+        },
+        function (retorno) {
+            console.log('Error: '+retorno.status);
+        });
+    }
+
     $scope.getReserva = function(){
         $scope.carregando = true;
         $http({
@@ -64,6 +81,46 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
                 }
             }
         }
+    }
+
+    $scope.calculaValor = function(){
+        setTimeout(() => {
+            console.log($scope.form_reserva.$valid)
+            if($scope.form_reserva.$valid){
+                $scope.carregando = true;
+                $http({
+                    url: base_url+'/FluxoVaga/calculaValor',
+                    method: 'GET',
+                    params:{
+                        EstacionamentoId:$scope.Reserva.EstacionamentoId,
+                        DataEntrada:$scope.Reserva.DataEntrada,
+                        HoraEntrada:$scope.Reserva.HoraEntrada,
+                        DataSaida:$scope.Reserva.DataSaida,
+                        HoraSaida:$scope.Reserva.HoraSaida,
+                    }
+                }).then(function (retorno) {
+                    if(retorno.data.erro==1){
+                        $scope.liberaPagamento = 'N';
+                        $scope.erro = 2;
+                    }else{
+                        $scope.erro = 0;
+                        $scope.liberaPagamento = retorno.data.liberaPagamento;
+                        if(retorno.data.liberaPagamento=='S'){
+                            $scope.Reserva.Valor = retorno.data.valor;
+                            $scope.Reserva.Tempo = retorno.data.tempo;
+                            $scope.Reserva.NomeEstacionamento = retorno.data.NomeEstacionamento;
+                        }
+                    }
+                    
+                    $scope.carregando = false;
+                },
+                function (retorno) {
+                    console.log('Error: '+retorno.status);
+                });
+            }
+        }, 777);
+        
+        
     }
 
     $scope.setReserva= function(){
@@ -111,6 +168,7 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
 
     $scope.getEstacionamentos();
     $scope.getClientes();
+    $scope.getFormasPagamento();
 
     if(ReservaId){
         $scope.getReserva();

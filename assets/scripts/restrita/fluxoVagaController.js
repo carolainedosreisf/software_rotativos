@@ -22,7 +22,8 @@ app.controller('fluxoVagaController', ['$scope', '$http','$filter','$location', 
         ,DataFim: ""
         ,TipoPagamento:""
         ,FormaPagamentoId:""
-        ,Status:'B'
+        ,StatusPagamento:''
+        ,StatusFluxo:'E'
     };
 
     $scope.getFormasPagamento = function(){
@@ -69,16 +70,16 @@ app.controller('fluxoVagaController', ['$scope', '$http','$filter','$location', 
     }
 
     $scope.openFinalizarLocacao = function(dados){
-        if(dados.Status=='B'){
+        if(dados.StatusFluxo=='E'){
             $scope.objFinalizaLocacao = angular.copy(dados);
             $scope.objFinalizaLocacao.DataSaida = dataAtual();
             $scope.objFinalizaLocacao.HoraSaida = dataAtual(1);
             $('#finalizarLocacao').modal('show');
-            $scope.calclulaValor();
+            $scope.calculaValor();
         }
     }
 
-    $scope.calclulaValor = function(){
+    $scope.calculaValor = function(){
         if(typeof $scope.objFinalizaLocacao.HoraSaida != 'undefined'){
             if($scope.objFinalizaLocacao.HoraSaida.length == 4){
                 var hr = $scope.objFinalizaLocacao.HoraSaida.substr(0, 2);
@@ -89,12 +90,12 @@ app.controller('fluxoVagaController', ['$scope', '$http','$filter','$location', 
                 }
                 $scope.carregando = true;
                 $http({
-                    url: base_url+'/FluxoVaga/calclulaValor',
+                    url: base_url+'/FluxoVaga/calculaValor',
                     method: 'GET',
                     params:{
-                        EstacionamentoId:$scope.objFinalizaLocacao.EstacionamentoId,
-                        DataEntrada:$scope.objFinalizaLocacao.DataEntradaBr,
-                        HoraEntrada:$scope.objFinalizaLocacao.HoraEntradaBr,
+                        FluxoVagaId:$scope.objFinalizaLocacao.FluxoVagaId,
+                        DataEntrada:$scope.objFinalizaLocacao.DataEntrada,
+                        HoraEntrada:$scope.objFinalizaLocacao.HoraEntrada,
                         DataSaida:$scope.objFinalizaLocacao.DataSaida,
                         HoraSaida:$scope.objFinalizaLocacao.HoraSaida,
                     }
@@ -105,6 +106,7 @@ app.controller('fluxoVagaController', ['$scope', '$http','$filter','$location', 
                         $scope.erro_saida = 0;
                         $scope.objFinalizaLocacao.Valor = retorno.data.valor;
                         $scope.objFinalizaLocacao.Tempo = retorno.data.tempo;
+                        $scope.objFinalizaLocacao.JaPagou = retorno.data.JaPagou;
                     }
                     
                     $scope.carregando = false;
