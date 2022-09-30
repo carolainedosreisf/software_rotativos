@@ -6,6 +6,14 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
     $scope.FluxoVagaId = FluxoVagaId;
     $scope.disabled_ = 0;
 
+    $scope.filtros = {
+        DataInicio: ""
+        ,DataFim: ""
+        ,StatusFluxo:'N'
+        ,StatusPagamento:''
+        ,FormaPagamentoId:''
+    }
+
     var dataAtual = function(hora=0) {
         var now = new Date;
         if(hora){
@@ -19,7 +27,7 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
     $scope.getEstacionamentos = function(){
         $scope.carregando = true;
         $http({
-            url: base_url+'/Estacionamento/getEstacionamentos',
+            url: base_url+'/Generico/getEstacionamentos',
             method: 'GET',
             params:{ComPreco:1}
         }).then(function (retorno) {
@@ -31,10 +39,10 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
         });
     }
 
-    $scope.getClientes = function(){
+    $scope.getCadastros = function(){
         $scope.carregando = true;
         $http({
-            url: base_url+'/FluxoVaga/getClientes',
+            url: base_url+'/FluxoVaga/getCadastros',
             method: 'GET',
         }).then(function (retorno) {
             $scope.lista_clientes = retorno.data;
@@ -95,16 +103,12 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
     $scope.getReservas = function(){
         if($scope.FluxoVaga.EstacionamentoId && $scope.FluxoVaga.CadastroId){
             $scope.carregando = true;
+            $scope.filtros.EstacionamentoId = $scope.FluxoVaga.EstacionamentoId;
+            $scope.filtros.CadastroId = $scope.FluxoVaga.CadastroId;
             $http({
                 url: base_url+'/FluxoVaga/getReservas',
                 method: 'GET',
-                params: {params:
-                    {
-                        EstacionamentoId:$scope.FluxoVaga.EstacionamentoId
-                        ,CadastroId:$scope.FluxoVaga.CadastroId
-                        ,StatusFluxo:'N'
-                    }
-                }
+                params: {params:$scope.filtros}
             }).then(function (retorno) {
                 $scope.lista_reservas = retorno.data;
                 $scope.FluxoVaga.ReservaId = "";
@@ -119,7 +123,7 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
 
 
     $scope.getEstacionamentos();
-    $scope.getClientes();
+    $scope.getCadastros();
 
     if(FluxoVagaId){
         $scope.getFluxoVaga();

@@ -61,6 +61,35 @@ class Empresa_model extends CI_Model {
         $result = $query->row_array();
         return $result;
     }
+
+    public function getEmpresas()
+    {
+        $sql = "SELECT  
+                    a.EmpresaId
+                    ,a.Nome
+                    ,a.CpfCnpj
+                    ,a.TipoEmpresa
+                    ,a.DataCadastro
+                    ,DATE_FORMAT(a.DataCadastro, '%d/%m/%Y %H:%i') AS DataCadastroBr
+                    ,(SELECT 
+                        COUNT(*) 
+                        FROM estacionamento AS c
+                        WHERE c.EmpresaId = a.EmpresaId) AS QtdEstacionamentos
+                    ,(SELECT 
+                        COUNT(*) 
+                        FROM ReceberEmpresa AS c
+                        WHERE c.EmpresaId = a.EmpresaId) AS QtdMensalidades
+                    ,(SELECT 
+                        SUM(c.Valor) 
+                        FROM ReceberEmpresa AS c
+                        WHERE c.EmpresaId = a.EmpresaId
+                        AND Status = 'F') AS Valor
+                FROM Empresa AS a
+                ORDER BY Nome ASC";
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
+        return $result;
+    }
 }
 
 ?>

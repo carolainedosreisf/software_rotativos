@@ -34,53 +34,39 @@
   
 <div class="container">
     <h2 class="text-center"><?php echo $titulo;?></h2>
-    <?php foreach ($lista as $estacionamento) {?>
     <table class="dados">
         <thead>
             <tr>
-                <th colspan="6">
-                    <?php echo $estacionamento[0]['NomeEstacionamento']; ?> - <?php echo $estacionamento[0]['CpfCnpjFormatado']; ?>
-                </th>
-            </tr>
-            <tr>
-                <th class="text-left" width="25%">Periódo</th>
-                <th class="text-left" width="28%">Cliente/Placa</th>
-                <th class="text-center" width="12%">Reserva</th>
-                <th class="text-left" width="20%">Pagamento</th>
-                <th class="text-center" width="15%">Status Locação</th>  
+            <td>Empresa</td>
+            <td class="text-center">Tipo</td>
+            <td class="text-center">Cadastro</td>
+            <td class="text-center">Estacionamentos</td>
+            <td class="text-center">Mensalidades</td> 
             </tr>
         </thead>
         <tbody>
             <?php 
                 $valor = 0;
-                foreach ($estacionamento as $i => $a) {
+                foreach ($lista as $i => $a) {
                     if($a['Valor']>0){
                         $valor += $a['Valor'];
                     }
             ?>
             <tr>
                 <td>
-                    <?php echo $a['DataEntrada'].' '.$a['HoraEntrada']; ?> <br>
-                    <?php echo $a['DataSaida']?($a['DataSaida'].' '.$a['HoraSaida']):'-'; ?>
-                </td>
-                <td>
-                    <?php echo $a['NomeCliente']?($a['NomeCliente'].'<br>'):''; ?>
-                    <?php echo $a['PlacaVeiculoFormatada']; ?>
+                    <?php echo $a['Nome'].'<br>'.$a['CpfCnpjFormatado'] ?> 
                 </td>
                 <td class="text-center">
-                    <?php echo $a['IsReserva']=='S'?'Sim':'Não'; ?>
-                </td>
-                <td>
-                    <?php 
-                        if($a['JaPagou']=='S'){
-                          echo number_format($a['Valor'],2,",",".").' ('.$a['FormaPagamentoDesc'].')';
-                        }else{
-                            echo $a['StatusDesc'];
-                        }
-                    ?>
+                    <?php echo $a['TipoEmpresa']=='J'?'Jurídica':'Física'; ?>
                 </td>
                 <td class="text-center">
-                    <?php echo $a['StatusFluxoDesc']; ?>
+                    <?php echo $a['DataCadastroBr']; ?>
+                </td>
+                <td class="text-center">
+                    <?php echo $a['QtdEstacionamentos']; ?>
+                </td>
+                <td class="text-center">
+                    <?php echo number_format($a['Valor'],2,",",".").' ('.$a['QtdMensalidades'].')'; ?>
                 </td>
             </tr>
             <?php } ?>
@@ -88,7 +74,6 @@
         </tbody>
     </table>
     <p class="text-right"><b>Total: R$ <?php echo number_format($valor,2,",","."); ?></b></p>
-    <?php } ?>
 
   
 </div>

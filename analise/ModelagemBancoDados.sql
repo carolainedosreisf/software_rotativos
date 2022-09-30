@@ -80,11 +80,11 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Empresa` (
   `CidadeId` INT NULL,
   `BairroEndereco` VARCHAR(80) NULL,
   `UrlLogo` VARCHAR(255) NULL,
-  `NumeroVagas` DECIMAL(5,0) NOT NULL,
   `Sobre` VARCHAR(255) NULL,
   `NumeroTelefone1` VARCHAR(15) NULL,
   `NumeroTelefone2` VARCHAR(15) NULL,
   `Email` VARCHAR(80) NULL,
+  `DataCadastro` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`EmpresaId`),
   INDEX `FK11_idx` (`CidadeId` ASC),
   UNIQUE INDEX `Cnpj_UNIQUE` (`CpfCnpj` ASC),
@@ -162,6 +162,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Login` (
   `EstacionamentoId` INT NULL,
   `PermissaoId` INT NOT NULL,
   `TokenEmail` VARCHAR(255) NULL,
+  `Status` CHAR(1) DEFAULT 'A' NOT NULL,
   PRIMARY KEY (`LoginId`),
   INDEX `FK10_idx` (`CadastroId` ASC),
   INDEX `FK16_idx` (`EstacionamentoId` ASC),
@@ -213,77 +214,15 @@ CREATE TABLE IF NOT EXISTS `mydb`.`FormaPagamento` (
   PRIMARY KEY (`FormaPagamentoId`))
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
--- Table `mydb`.`Receber`
+-- Table `mydb`.`Carteira`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Receber` (
-  `ReceberId` INT NOT NULL AUTO_INCREMENT,
-  `FormaPagamentoId` INT NOT NULL,
-  `CadastroId` INT NOT NULL,
-  `FluxoVagaId` INT NULL,
-  `Valor` DECIMAL(18,2) NOT NULL,
-  PRIMARY KEY (`ReceberId`),
-  INDEX `FK13_idx` (`FormaPagamentoId` ASC) ,
-  INDEX `FK22_idx` (`CadastroId` ASC),
-  CONSTRAINT `FK13`
-    FOREIGN KEY (`FormaPagamentoId`)
-    REFERENCES `mydb`.`FormaPagamento` (`FormaPagamentoId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `FK22`
-    FOREIGN KEY (`CadastroId`)
-    REFERENCES `mydb`.`Cadastro` (`CadastroId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`FluxoVaga`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`FluxoVaga` (
-  `FluxoVagaId` INT NOT NULL AUTO_INCREMENT,
-  `DataEntrada` DATE NOT NULL,
-  `DataSaida` DATE NULL,
-  `HoraEntrada` TIME NOT NULL,
-  `HoraSaida` TIME NULL,
-  `CadastroId` INT NOT NULL,
-  `PlacaVeiculo` VARCHAR(30) NOT NULL,
-  `Observacao` VARCHAR(255) NULL,
-  `EstacionamentoId` INT NOT NULL,
-  `Reserva` CHAR(1) NOT NULL,
-  PRIMARY KEY (`FluxoVagaId`),
-  INDEX `FK15_idx` (`CadastroId` ASC),
-  INDEX `FK24_idx` (`EstacionamentoId` ASC),
-  CONSTRAINT `FK15`
-    FOREIGN KEY (`CadastroId`)
-    REFERENCES `mydb`.`Cadastro` (`CadastroId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `FK24`
-    FOREIGN KEY (`EstacionamentoId`)
-    REFERENCES `mydb`.`Estacionamento` (`EstacionamentoId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
------------------------------------------------- 22/09  ---------------------------------------------
-
-ALTER TABLE `mydb`.`Empresa` DROP COLUMN NumeroVagas;
-ALTER TABLE `mydb`.`Login` ADD Status CHAR(1) DEFAULT 'A' NOT NULL;
-
------------------------------------------------- 23/09  ---------------------------------------------
-
-ALTER TABLE `mydb`.`Fluxovaga` CHANGE `CadastroId` `CadastroId` INT(11) NULL;
-ALTER TABLE `mydb`.`Receber` CHANGE `CadastroId` `CadastroId` INT(11) NULL;
-
------------------------------------------------- 24/09  --------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Carteira` (
   `CarteiraId` INT NOT NULL AUTO_INCREMENT,
   `CadastroId` INT NULL,
   `EmpresaId` INT NULL,
+  `TipoCartao` CHAR(1) NULL COMMENT 'D=>Débito,C=>Crédito, se tivel nullo não é cartão',
   `NumeroCartao` VARCHAR(50) NULL,
   `NomeCartao` VARCHAR(100) NULL,
   `DataExpiracaoCartao` CHAR(6) NULL,
@@ -304,6 +243,10 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Carteira` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `mydb`.`Reserva`
+-- -----------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS `mydb`.`Reserva` (
   `ReservaId` INT NOT NULL AUTO_INCREMENT,
   `DataEntrada` DATE NOT NULL,
@@ -323,25 +266,234 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Reserva` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `mydb`.`FluxoVaga`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`FluxoVaga` (
+  `FluxoVagaId` INT NOT NULL AUTO_INCREMENT,
+  `DataEntrada` DATE NOT NULL,
+  `DataSaida` DATE NULL,
+  `HoraEntrada` TIME NOT NULL,
+  `HoraSaida` TIME NULL,
+  `CadastroId` INT NULL,
+  `PlacaVeiculo` VARCHAR(30) NOT NULL,
+  `Observacao` VARCHAR(255) NULL,
+  `EstacionamentoId` INT NOT NULL,
+  `ReservaId` INT NULL,
+  `Status` ENUM('E','F') NOT NULL DEFAULT 'E' COMMENT 'E=>Em Andamento,F=>Finalizado',
+  PRIMARY KEY (`FluxoVagaId`),
+  INDEX `FK15_idx` (`CadastroId` ASC),
+  INDEX `FK24_idx` (`EstacionamentoId` ASC),
+  CONSTRAINT `FK15`
+    FOREIGN KEY (`CadastroId`)
+    REFERENCES `mydb`.`Cadastro` (`CadastroId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK24`
+    FOREIGN KEY (`EstacionamentoId`)
+    REFERENCES `mydb`.`Estacionamento` (`EstacionamentoId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK39`
+    FOREIGN KEY (`ReservaId`)
+    REFERENCES `mydb`.`Reserva` (`ReservaId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
-ALTER TABLE `mydb`.`Receber` ADD CarteiraId INT NULL;
-ALTER TABLE `mydb`.`Receber` ADD CONSTRAINT FK_Receber_CarteiraId FOREIGN KEY (CarteiraId) REFERENCES Carteira(CarteiraId);
+-- -----------------------------------------------------
+-- Table `mydb`.`Receber`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`Receber` (
+  `ReceberId` INT NOT NULL AUTO_INCREMENT,
+  `FormaPagamentoId` INT NOT NULL,
+  `CadastroId` INT NULL,
+  `FluxoVagaId` INT NULL,
+  `ReservaId` INT NULL,
+  `CarteiraId` INT NULL,
+  `Valor` DECIMAL(18,2) NOT NULL,
+  `Status` ENUM('A','P','R','F') NOT NULL COMMENT 'A=>Aguardando Pagamento,P=>Processando Pagamento,R=>Recusado,F=>Finalizado',
+  PRIMARY KEY (`ReceberId`),
+  INDEX `FK13_idx` (`FormaPagamentoId` ASC) ,
+  INDEX `FK22_idx` (`CadastroId` ASC),
+  INDEX `FK35_idx` (`FluxoVagaId` ASC),
+  INDEX `FK36_idx` (`ReservaId` ASC),
+  INDEX `FK37_idx` (`CarteiraId` ASC),
+  CONSTRAINT `FK13`
+    FOREIGN KEY (`FormaPagamentoId`)
+    REFERENCES `mydb`.`FormaPagamento` (`FormaPagamentoId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK22`
+    FOREIGN KEY (`CadastroId`)
+    REFERENCES `mydb`.`Cadastro` (`CadastroId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK35`
+    FOREIGN KEY (`FluxoVagaId`)
+    REFERENCES `mydb`.`FluxoVaga` (`FluxoVagaId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK36`
+    FOREIGN KEY (`ReservaId`)
+    REFERENCES `mydb`.`Reserva` (`ReservaId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK37`
+    FOREIGN KEY (`CarteiraId`)
+    REFERENCES `mydb`.`Carteira` (`CarteiraId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
-ALTER TABLE `mydb`.`Receber` ADD EmpresaId INT NULL COMMENT 'Pagamento da empresa pelo Software';
-ALTER TABLE `mydb`.`Receber` ADD CONSTRAINT FK_Receber_EmpresaId FOREIGN KEY (EmpresaId) REFERENCES Empresa(EmpresaId);
+-- -----------------------------------------------------
+-- Table `mydb`.`ReceberEmpresa`
+-- -----------------------------------------------------
 
-ALTER TABLE `mydb`.`Receber` ADD ReservaId INT NULL;
-ALTER TABLE `mydb`.`Receber` ADD CONSTRAINT FK_Receber_ReservaId FOREIGN KEY (ReservaId) REFERENCES Reserva(ReservaId);
+CREATE TABLE IF NOT EXISTS `mydb`.`ReceberEmpresa` (
+  `ReceberEmpresaId` INT NOT NULL AUTO_INCREMENT,
+  `FormaPagamentoId` INT NOT NULL,
+  `EmpresaId` INT NOT NULL,
+  `CarteiraId` INT NULL,
+  `Valor` DECIMAL(18,2) NOT NULL,
+  `DataPagamento` DATE NOT NULL,
+  `DataConsiderar` DATE NOT NULL,
+  `Status` ENUM('A','P','R','F') NOT NULL COMMENT 'A=>Aguardando Pagamento,P=>Processando Pagamento,R=>Recusado,F=>Finalizado',
+  PRIMARY KEY (`ReceberEmpresaId`),
+  INDEX `FK32_idx` (`FormaPagamentoId` ASC) ,
+  INDEX `FK33_idx` (`EmpresaId` ASC),
+  INDEX `FK34_idx` (`CarteiraId` ASC),
+  CONSTRAINT `FK32`
+    FOREIGN KEY (`FormaPagamentoId`)
+    REFERENCES `mydb`.`FormaPagamento` (`FormaPagamentoId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK33`
+    FOREIGN KEY (`EmpresaId`)
+    REFERENCES `mydb`.`Empresa` (`EmpresaId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK34`
+    FOREIGN KEY (`CarteiraId`)
+    REFERENCES `mydb`.`Carteira` (`CarteiraId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
-ALTER TABLE `mydb`.`Receber` ADD MesAno CHAR(6) NULL COMMENT 'Pagamento da empresa pelo Software';
-ALTER TABLE `mydb`.`Receber` ADD Status ENUM('A','P','F') NOT NULL COMMENT 'A=>Aguardando Pagamento,P=>Processando Pagamento,F=>Finalizado';
 
-ALTER TABLE `mydb`.`FluxoVaga` ADD ReservaId INT NULL;
-ALTER TABLE `mydb`.`FluxoVaga` ADD CONSTRAINT FK_FluxoVaga_ReservaId FOREIGN KEY (ReservaId) REFERENCES Reserva(ReservaId);
+-- -----------------------------------------------------
+-- VIEW `mydb`.`view_pagamento_empresa`
+-- -----------------------------------------------------
 
-ALTER TABLE `mydb`.`FluxoVaga` DROP COLUMN Reserva;
+CREATE VIEW view_pagamento_empresa AS
+SELECT 
+	  a.EmpresaId
+     ,IF((DATE_ADD(DataCadastro, INTERVAL 30 DAY)>=NOW()),'S','N') AS Experimental
+     ,DATE_FORMAT((DATE_ADD(DataCadastro, INTERVAL 30 DAY)), '%d/%m/%Y %H:%i') AS VencExperimental 
+     ,(EXISTS(
+         SELECT 1 
+         FROM ReceberEmpresa AS b 
+         WHERE b.EmpresaId = a.EmpresaId
+         AND b.Status = 'F')) AS PagouAlgumaVez
+     ,(SELECT b.DataConsiderar
+         FROM ReceberEmpresa AS b 
+         WHERE b.EmpresaId = a.EmpresaId
+         AND b.Status = 'F' 
+         ORDER BY b.ReceberEmpresaId DESC
+         LIMIT 1) AS UltPagamento
+     ,(SELECT DATE_FORMAT(b.DataConsiderar, '%d/%m/%Y') 
+         FROM ReceberEmpresa AS b 
+         WHERE b.EmpresaId = a.EmpresaId 
+         AND b.Status = 'F'
+         ORDER BY b.ReceberEmpresaId DESC
+         LIMIT 1) AS UltPagamentoBr
+     ,(SELECT DATE_ADD(b.DataConsiderar, INTERVAL 1 MONTH) 
+         FROM ReceberEmpresa AS b 
+         WHERE b.EmpresaId = a.EmpresaId 
+         AND b.Status = 'F'
+         ORDER BY b.ReceberEmpresaId DESC
+         LIMIT 1) AS VencUltPagamento
+     ,(SELECT DATE_FORMAT(DATE_ADD(b.DataConsiderar, INTERVAL 1 MONTH), '%d/%m/%Y')
+         FROM ReceberEmpresa AS b 
+         WHERE b.EmpresaId = a.EmpresaId 
+         AND b.Status = 'F'
+         ORDER BY b.ReceberEmpresaId DESC
+         LIMIT 1) AS VencUltPagamentoBr
+     ,DATE_FORMAT(NOW(), '%m/%Y') AS CompetenciaAtual
+FROM Empresa AS a;
 
------------------------------------------------- 25/09  --------------------------------------------
+-- -----------------------------------------------------
+-- FUNCTION `mydb`.`f_SituacaoEmpresa`
+-- -----------------------------------------------------
 
-ALTER TABLE `mydb`.`FluxoVaga` ADD Status ENUM('E','F') NOT NULL DEFAULT 'E' COMMENT 'E=>Em Andamento,F=>Finalizado';
-UPDATE `mydb`.`FluxoVaga` SET Status = 'F';
+CREATE DEFINER=`root`@`localhost` FUNCTION `f_SituacaoEmpresa`(
+	`p_EmpresaId` INT,
+	`p_ret` INT
+)
+RETURNS LONGTEXT
+LANGUAGE SQL
+NOT DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+COMMENT ''
+BEGIN
+
+  
+   DECLARE p_Experimental CHAR(1);
+   DECLARE p_VencExperimental VARCHAR(100);
+   DECLARE p_PagouAlgumaVez INT;
+   DECLARE p_UltPagamento DATE;
+   DECLARE p_UltPagamentoBr VARCHAR(100);
+   DECLARE p_VencUltPagamento DATE;
+   DECLARE p_VencUltPagamentoBr VARCHAR(100);
+   DECLARE p_CompetenciaAtual CHAR(100);
+   DECLARE p_Agora DATE;
+   DECLARE ret VARCHAR(1);
+   DECLARE msg VARCHAR(500);
+   DECLARE retornar VARCHAR(500);
+   SELECT 
+			Experimental
+			,VencExperimental
+			,PagouAlgumaVez 
+			,UltPagamento
+			,UltPagamentoBr
+			,VencUltPagamento
+			,VencUltPagamentoBr
+			,CompetenciaAtual
+			,DATE_FORMAT(NOW(), '%Y-%m-%d')
+			INTO p_Experimental
+					,p_VencExperimental
+					,p_PagouAlgumaVez 
+					,p_UltPagamento
+					,p_UltPagamentoBr
+					,p_VencUltPagamento
+					,p_VencUltPagamentoBr
+					,p_CompetenciaAtual
+					,p_Agora
+		FROM view_pagamento_empresa 
+		WHERE EmpresaId = p_EmpresaId;
+		
+	IF p_Experimental = 'S' THEN
+		SET msg = CONCAT('Sua empresa esta utilizando o Software pelo periódo experimental com expiração em ',p_VencExperimental,'.<br>A partir dessa data a utilização do Software somente ficará disponivel mediante ao pagamento mensal.');
+		SET  ret = '1';
+	ELSE
+		IF p_PagouAlgumaVez = 1 THEN
+			IF p_VencUltPagamento < p_Agora THEN
+				SET msg = CONCAT('O último pagamento venceu em ',p_UltPagamentoBr,'.<br>A utilização do Software somente ficará disponivel novamente mediante ao pagamento do mês atual.');
+				SET ret = '4';
+			ELSE
+			   SET msg = CONCAT('Sua empresa esta com os pagamentos do Software em dia.<br>O próximo vecimento ocorrerá em ',p_VencUltPagamentoBr,'.');
+				SET ret = '2';
+			END IF;
+		ELSE
+			SET msg = CONCAT('O periódo experimental expirou em ',p_VencExperimental,'.<br>A utilização do Software somente ficará disponivel mediante ao pagamento mensal.');
+			SET ret = '3';
+		END IF;
+		
+		
+	END IF;
+	
+	IF p_ret=1 THEN SET retornar = ret; ELSE SET retornar = msg; END IF;
+	
+   RETURN retornar;
+END

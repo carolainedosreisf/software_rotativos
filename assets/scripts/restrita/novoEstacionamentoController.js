@@ -41,6 +41,20 @@ app.controller('novoEstacionamentoController', ['$scope', '$http','$filter','$lo
         });
     }
 
+    $scope.getDiasAtendimento = function(){
+        $scope.carregando = true;
+        $http({
+            url: base_url+'/Generico/getDiasAtendimento',
+            method: 'GET'
+        }).then(function (retorno) {
+            $scope.lista_dias_atendimento = retorno.data;
+            $scope.carregando = false;
+        },
+        function (retorno) {
+            console.log('Error: '+retorno.status);
+        });
+    }
+
     $scope.getEmpresa = function(){
         $scope.carregando = true;
         $http({
@@ -114,6 +128,8 @@ app.controller('novoEstacionamentoController', ['$scope', '$http','$filter','$lo
     }
 
     $scope.getCidades();
+    $scope.getDiasAtendimento();
+    
     if(EstacionamentoId){
         $scope.getEstacionamento();
     }else{

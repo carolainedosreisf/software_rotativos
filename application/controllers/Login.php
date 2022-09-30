@@ -30,19 +30,25 @@ class Login extends CI_Controller {
 			echo 0;
 			exit;
 		}
-
-		$estacionamento = $this->Estacionamento_model->getEstacionamento($login['EstacionamentoId']);
+		if($login['EstacionamentoId']){
+			$estacionamento = $this->Estacionamento_model->getEstacionamento($login['EstacionamentoId']);
+		}
 		
 		$sessao= [
 			'EstacionamentoId' => $login['EstacionamentoId'],
 			'PermissaoId' => $login['PermissaoId'],
-			'nome' => $estacionamento['Nome'],
-			'CpfCnpj' => $estacionamento['CpfCnpj'],
-			'TipoEmpresa' => $estacionamento['TipoEmpresa'],
-			'EmpresaId' => $estacionamento['EmpresaId'],
-			'DataCadastro' => $estacionamento['DataCadastro'],
 			'TempoInatividadeSessao' => strtotime(date("Y-m-d H:i:s")."+30 minutes")
 		];
+		
+		if(isset($estacionamento)){
+			$sessao +=[
+				'nome' => $estacionamento['Nome'],
+				'CpfCnpj' => $estacionamento['CpfCnpj'],
+				'TipoEmpresa' => $estacionamento['TipoEmpresa'],
+				'EmpresaId' => $estacionamento['EmpresaId'],
+				'DataCadastro' => $estacionamento['DataCadastro']
+			];
+		}
 		
 		$this->session->set_userdata($sessao);
 		echo 1;

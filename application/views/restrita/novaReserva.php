@@ -8,7 +8,7 @@
                 <i class="glyphicon glyphicon-arrow-left"></i>
                 Voltar
             </a>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCliente">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCliente" ng-disabled="disabled_">
                 <i class="glyphicon glyphicon-plus"></i> Novo Cliente
             </button>
         </div>
@@ -36,21 +36,21 @@
         <div class="row form-group" ng-show="disabled_">
             <div class="col-sm-12">
                 <div class="alert alert-warning" role="alert">
-                   Locação <b>{{Reserva.StatusDesc}}</b>, não é mais possivel editar os dados.
+                   Esta reserva esta com Status Pagamento <b>{{Reserva.StatusDesc}}</b> e Status Locação <b>{{Reserva.StatusFluxoDesc}}</b>, não é mais possivel editar os dados.
                 </div>
             </div>
         </div>
         <div class="row form-group">
             <div class="col-sm-6" ng-class="form_reserva.EstacionamentoId.$invalid && (form_reserva.$submitted || EstacionamentoId.DataEntrada.$dirty)?'has-error':''">
                 <label for="EstacionamentoId">Estacionamento: </label>
-                <select class="form-control" name="EstacionamentoId" id="EstacionamentoId" ng-model="Reserva.EstacionamentoId" ng-required="true" ng-disabled="disabled_" ng-change="calculaValor()">
+                <select class="form-control" name="EstacionamentoId" id="EstacionamentoId" ng-model="Reserva.EstacionamentoId" ng-required="true" ng-disabled="disabled_">
                     <option value="">Selecione</option>
                     <option value="{{l.EstacionamentoId}}" ng-repeat="l in  lista_estacionamentos">{{l.NomeEstacionamento}} - {{l.CpfCnpjFormatado}}</option>
                 </select>
             </div>
             <div class="col-sm-6" ng-class="form_reserva.CadastroId.$invalid && (form_reserva.$submitted || form_reserva.CadastroId.$dirty)?'has-error':''">
                 <label for="CadastroId">Cliente:</label>
-                <select class="form-control" name="CadastroId" id="CadastroId" ng-model="Reserva.CadastroId" ng-required="true" ng-disabled="disabled_" ng-change="calculaValor()">
+                <select class="form-control" name="CadastroId" id="CadastroId" ng-model="Reserva.CadastroId" ng-required="true" ng-disabled="disabled_">
                     <option value="">Selecione</option>
                     <option value="{{l.CadastroId}}" ng-repeat="l in lista_clientes">{{l.Nome}} - {{l.CpfFormatado}}</option>
                 </select>
@@ -60,19 +60,19 @@
         <div class="row form-group">
             <div class="col-sm-3" ng-class="form_reserva.DataEntrada.$invalid && (form_reserva.$submitted || form_reserva.DataEntrada.$dirty)?'has-error':''">
                 <label for="DataEntrada">Data Entrada:</label>
-                <input type="text" data-provide="datepicker" class="form-control" name="DataEntrada" data-date-format="dd/mm/yyyy" ng-model="Reserva.DataEntrada" ng-required="true" ng-disabled="disabled_" ng-change="calculaValor()">
+                <input type="text" data-provide="datepicker" class="form-control" name="DataEntrada" data-date-format="dd/mm/yyyy" ng-model="Reserva.DataEntrada" ng-required="true" ng-disabled="disabled_">
             </div>
             <div class="col-sm-3" ng-class="form_reserva.HoraEntrada.$invalid && (form_reserva.$submitted || form_reserva.HoraEntrada.$dirty)?'has-error':''">
                 <label for="HoraEntrada">Hora Entrada:</label>
-                <input type="text" class="form-control" id="HoraEntrada" name="HoraEntrada" ng-model="Reserva.HoraEntrada" ui-mask="99:99" placeholder="__:__" ng-change="validaHora('HoraEntrada')" ng-required="true" ng-disabled="disabled_" ng-change="calculaValor()">
+                <input type="text" class="form-control" id="HoraEntrada" name="HoraEntrada" ng-model="Reserva.HoraEntrada" ui-mask="99:99" placeholder="__:__" ng-change="" ng-required="true" ng-disabled="disabled_">
             </div>
             <div class="col-sm-3" ng-class="form_reserva.DataSaida.$invalid && (form_reserva.$submitted || form_reserva.DataSaida.$dirty)?'has-error':''">
                 <label for="DataSaida">Data Saída:</label>
-                <input type="text" class="form-control" id="DataSaida" name="DataSaida" ng-model="Reserva.DataSaida" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-required="true" ng-disabled="disabled_" ng-change="calculaValor()">
+                <input type="text" class="form-control" id="DataSaida" name="DataSaida" ng-model="Reserva.DataSaida" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-required="true" ng-disabled="disabled_">
             </div>
             <div class="col-sm-3"  ng-class="form_reserva.HoraSaida.$invalid && (form_reserva.$submitted || form_reserva.HoraSaida.$dirty)?'has-error':''">
                 <label for="HoraSaida">Hora Saída:</label>
-                <input type="text" class="form-control" id="HoraSaida" name="HoraSaida" ng-model="Reserva.HoraSaida" ui-mask="99:99" placeholder="__:__" ng-change="validaHora('HoraSaida')" ng-required="true" ng-disabled="disabled_" ng-change="calculaValor()">
+                <input type="text" class="form-control" id="HoraSaida" name="HoraSaida" ng-model="Reserva.HoraSaida" ui-mask="99:99" placeholder="__:__" ng-change="" ng-required="true" ng-disabled="disabled_">
             </div>
         </div>
         <div class="row form-group">
@@ -110,6 +110,17 @@
             <div class="col-sm-3">
                 <label for="Tempo">Tempo:</label>
                 <input type="text" class="form-control" id="Tempo" name="Tempo" ng-model="Reserva.Tempo" disabled>
+            </div>
+        </div>
+
+        <div class="row form-group" ng-show="disabled_">
+            <div class="col-sm-9">
+                <label for="FormaPagamentoDesc">Forma de Pagamento:</label>
+                <input type="text" class="form-control" id="FormaPagamentoDesc" name="FormaPagamentoDesc" ng-value="Reserva.FormaPagamentoDesc"ng-disabled="disabled_">
+            </div>
+            <div class="col-sm-3">
+                <label for="Valor">Valor:</label>
+                <input type="text" class="form-control" id="Valor" name="Valor" ng-value="Reserva.Valor|currency:'R$ '"ng-disabled="disabled_">
             </div>
         </div>
         

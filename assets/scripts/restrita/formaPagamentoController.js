@@ -6,7 +6,7 @@ app.controller('formaPagamentoController', ['$scope', '$http','$filter', functio
     $scope.getFormasPagamento = function(){
         $scope.carregando = true;
         $http({
-            url: base_url+'/FormaPagamento/getFormasPagamento',
+            url: base_url+'/Generico/getFormasPagamento',
             method: 'GET',
             params:{todos:1}
         }).then(function (retorno) {

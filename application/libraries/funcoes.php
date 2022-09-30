@@ -120,7 +120,7 @@ class Funcoes {
         $mpdf->SetHTMLFooter('
                 <table width="100%">
                     <tr>
-                        <td width="50%">'.Date('Y/m/d H:i').'</td>
+                        <td width="50%">'.Date('d/m/Y H:i').'</td>
                         <td width="50%" class="text-right">{PAGENO}/{nbpg}</td>
                     </tr>
                 </table>');
@@ -134,7 +134,7 @@ class Funcoes {
             switch ($status) {
                 case 'B':
                     $status_desc = 'Aberto';
-                    $classe = 'btn-info';
+                    $classe = 'btn-warning';
                     break;
                 case 'A':
                     $status_desc = 'Aguardando Pagamento';
@@ -142,7 +142,7 @@ class Funcoes {
                     break;
                 case 'P':
                     $status_desc = 'Processando Pagamento';
-                    $classe = 'btn-warning';
+                    $classe = 'btn-pocessando-pagamento';
                     break;
                 case 'F':
                     $status_desc = 'Finalizado';

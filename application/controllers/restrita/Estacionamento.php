@@ -8,6 +8,12 @@ class Estacionamento extends CI_Controller {
         parent::__construct();
         $this->load->model('Login_model');
 		$this->Login_model->verificaSessao();
+
+        if($this->session->userdata('PermissaoId')!=2){
+            $link = base_url('index.php/Restrita/Home');
+			echo "<script>window.location.href = '$link'</script>";
+        }
+
         $this->load->model('Empresa_model');
         $this->load->model('Estacionamento_model');
     }
@@ -19,25 +25,6 @@ class Estacionamento extends CI_Controller {
 		$this->load->view('restrita/estacionamentos');
 		$this->load->view('restrita/footer');
 	}
-
-    public function getEstacionamentos()
-    {
-        $EmpresaId = $this->session->userdata('EmpresaId');
-        $ComPreco = $this->funcoes->get('ComPreco');
-        $data['lista'] = $this->Estacionamento_model->getEstacionamento(null,$EmpresaId,null,null,$ComPreco);
-        $data['tem_sem_preco'] = 0;
-
-        foreach ($data['lista'] as $i => $a) {
-            if($a['PrecoHora']<=0 && $a['PrecoLivre']<=0){
-                $data['tem_sem_preco'] = 1;
-            }
-            $data['lista'][$i]['CpfCnpjFormatado'] = $this->funcoes->formatar_cpf_cnpj($a['CpfCnpj']);
-            $data['lista'][$i]['NumeroTelefone1Formatado'] = $this->funcoes->formatar_telefone($a['NumeroTelefone1']);
-            $data['lista'][$i]['NumeroTelefone2Formatado'] = $this->funcoes->formatar_telefone($a['NumeroTelefone2']);
-        }
-
-        echo json_encode($data);
-    }
 
     public function novoEstacionamento()
     {
@@ -87,7 +74,8 @@ class Estacionamento extends CI_Controller {
             'Sobre' => isset($post['Sobre'])?$post['Sobre']:null,
             'NomeEstacionamento' => $post['NomeEstacionamento'],
             'PrecoLivre' => $post['PrecoLivre'],
-            'PrecoHora' => $post['PrecoHora']
+            'PrecoHora' => $post['PrecoHora'],
+            'DiasAtendimentoId' => $post['DiasAtendimentoId']
         ];
 
         if(!$EstacionamentoId){

@@ -343,3 +343,13 @@ th,td{
 .cursor-auto{
     cursor: auto !important;
 }
+
+.btn-pocessando-pagamento{
+    border-color: #563d7c;
+    background-color: #8465b3;
+    color:white;
+}
+
+.btn-pocessando-pagamento:hover{
+    color:white;
+}

@@ -8,10 +8,12 @@
                 <i class="glyphicon glyphicon-plus"></i>
                 Novo
             </button>
+            <?php if($this->session->userdata('PermissaoId')==2){ ?>
             <button type="button" ng-click="openRelatorio()" class="btn btn-primary">
                 <i class="glyphicon glyphicon-print"></i>
                 Imprimir
             </button>
+            <?php } ?>
         </div>
     </div>
 
@@ -22,7 +24,7 @@
             <div class="col-sm-5">
                 <label for="EstacionamentoId">Estacionamento:</label>
                 <select class="form-control" name="EstacionamentoId" id="EstacionamentoId" ng-model="filtros.EstacionamentoId">
-                    <option value="">Todos</option>
+                    <option value="" ng-hide="lista_estacionamentos.length==1">Todos</option>
                     <option value="{{l.EstacionamentoId}}" ng-repeat="l in  lista_estacionamentos">{{l.NomeEstacionamento}} - {{l.CpfCnpjFormatado}}</option>
                 </select>
             </div>
@@ -44,6 +46,21 @@
             </div>
         </div>
         <div class="row form-group">
+            <div class="col-sm-4">
+                <label for="CadastroId">Cliente:</label>
+                <select class="form-control" name="CadastroId" id="CadastroId" ng-model="filtros.CadastroId">
+                    <option value="">Todos</option>
+                    <option value="{{l.CadastroId}}" ng-repeat="l in lista_cadastros">{{l.Nome}}</option>
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <label for="Reservado">Reservado:</label>
+                <select class="form-control" name="Reserva" id="Reservado" ng-model="filtros.Reservado">
+                    <option value="">Todos</option>
+                    <option value="S">Sim</option>
+                    <option value="N">Não</option>
+                </select>
+            </div>
             <div class="col-sm-3">
                 <label for="StatusPagamento">Status Pagamento:</label>
                 <select class="form-control" name="StatusPagamento" id="StatusPagamento" ng-model="filtros.StatusPagamento">
@@ -55,22 +72,16 @@
                 </select>
             </div>
             <div class="col-sm-3">
-                <label for="TipoPagamento">Tipo de Pagamento:</label>
-                <select class="form-control" name="TipoPagamento" id="TipoPagamento" ng-model="filtros.TipoPagamento">
-                    <option value="">Todos</option>
-                    <option value="O">Online</option>
-                    <option value="F">Físico</option>
-                </select>
-            </div>
-            <div class="col-sm-3">
                 <label for="FormaPagamentoId">Forma de Pagamento:</label>
                 <select class="form-control" name="FormaPagamentoId" id="FormaPagamentoId" ng-model="filtros.FormaPagamentoId">
                     <option value="">Todos</option>
                     <option value="{{l.FormaPagamentoId}}" ng-repeat="l in lista_formas_pagamento">{{l.Descricao}}</option>
                 </select>
             </div>
+        </div>
+        <div class="row form-group">
             <div class="col-sm-2">
-                <label for="">&nbsp;</label>
+                <!-- <label for="">&nbsp;</label> -->
                 <button type="button" ng-click="getFluxoVagas()" class="btn btn-primary form-control">
                     <i class="glyphicon glyphicon-search"></i>
                     Filtrar
@@ -223,7 +234,7 @@
                         <div class="row form-group" ng-show="objFinalizaLocacao.JaPagou=='N'">
                             <div class="col-sm-12"  ng-class="form_finaliza.FormaPagamentoId.$invalid && (form_finaliza.$submitted || form_estacionamento.FormaPagamentoId.$dirty)?'has-error':''">
                                 <label for="FormaPagamentoId">Forma de Pagamento:</label>
-                                <select class="form-control" name="FormaPagamentoId" id="FormaPagamentoId" ng-model="objFinalizaLocacao.FormaPagamentoId" ng-required="JaPagou=='N'">
+                                <select class="form-control" name="FormaPagamentoId" id="FormaPagamentoId" ng-model="objFinalizaLocacao.FormaPagamentoId" ng-required="objFinalizaLocacao.JaPagou=='N'">
                                     <option value="">Selecione</option>
                                     <option value="{{l.FormaPagamentoId}}" ng-repeat="l in lista_formas_pagamento">{{l.Descricao}}</option>
                                 </select>

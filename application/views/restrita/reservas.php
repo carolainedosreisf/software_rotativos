@@ -18,7 +18,7 @@
             <div class="col-sm-5">
                 <label for="EstacionamentoId">Estacionamento:</label>
                 <select class="form-control" name="EstacionamentoId" id="EstacionamentoId" ng-model="filtros.EstacionamentoId">
-                    <option value="">Todos</option>
+                    <option value="" ng-hide="lista_estacionamentos.length==1">Todos</option>
                     <option value="{{l.EstacionamentoId}}" ng-repeat="l in  lista_estacionamentos">{{l.NomeEstacionamento}} - {{l.CpfCnpjFormatado}}</option>
                 </select>
             </div>
@@ -31,8 +31,19 @@
                 <input type="text" class="form-control" name="DataFim" id="DataFim" ng-model="filtros.DataFim" data-provide="datepicker" data-date-format="dd/mm/yyyy">
             </div>
             <div class="col-sm-3">
-                <label for="Status">Status Pagamento:</label>
-                <select class="form-control" name="Status" id="Status" ng-model="filtros.Status">
+                <label for="StatusFluxo">Status Locação:</label>
+                <select class="form-control" name="StatusFluxo" id="StatusFluxo" ng-model="filtros.StatusFluxo">
+                    <option value="">Todos</option>
+                    <option value="N">Não Iniciada</option>
+                    <option value="E">Em Andamento</option>
+                    <option value="F">Finalizada</option>
+                </select>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-sm-3">
+                <label for="StatusPagamento">Status Pagamento:</label>
+                <select class="form-control" name="StatusPagamento" id="StatusPagamento" ng-model="filtros.StatusPagamento">
                     <option value="">Todos</option>
                     <option value="B">Aberto</option>
                     <option value="A">Aguardando Pagamento</option>
@@ -40,11 +51,16 @@
                     <option value="F">Finalizado</option>
                 </select>
             </div>
-        </div>
-        <div class="row form-group">
+            <div class="col-sm-3">
+                <label for="FormaPagamentoId">Forma de Pagamento:</label>
+                <select class="form-control" name="FormaPagamentoId" id="FormaPagamentoId" ng-model="filtros.FormaPagamentoId">
+                    <option value="">Todos</option>
+                    <option value="{{l.FormaPagamentoId}}" ng-repeat="l in lista_formas_pagamento">{{l.Descricao}}</option>
+                </select>
+            </div>
             <div class="col-sm-2">
                 <label for="">&nbsp;</label>
-                <button type="button" ng-click="getFluxoVagas()" class="btn btn-primary form-control">
+                <button type="button" ng-click="getReservas()" class="btn btn-primary form-control">
                     <i class="glyphicon glyphicon-search"></i>
                     Filtrar
                 </button>
@@ -109,7 +125,7 @@
                             </button>
                         </td>
                         <td class="text-center">
-                            <button ng-click="novoFluxoVaga(l.FluxoVagaId)" class="btn btn-default btn-sm">
+                            <button ng-click="novaReserva(l.ReservaId)" class="btn btn-default btn-sm">
                                 <i class="glyphicon" ng-class="l.Status=='B' && l.StatusFluxo=='N'?'glyphicon-pencil':'glyphicon-search'"></i>
                             </button>
                         </td>

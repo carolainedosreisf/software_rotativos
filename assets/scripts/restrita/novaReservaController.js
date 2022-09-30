@@ -13,7 +13,7 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
     $scope.getEstacionamentos = function(){
         $scope.carregando = true;
         $http({
-            url: base_url+'/Estacionamento/getEstacionamentos',
+            url: base_url+'/Generico/getEstacionamentos',
             method: 'GET',
             params:{ComPreco:1}
         }).then(function (retorno) {
@@ -25,10 +25,10 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
         });
     }
 
-    $scope.getClientes = function(){
+    $scope.getCadastros = function(){
         $scope.carregando = true;
         $http({
-            url: base_url+'/FluxoVaga/getClientes',
+            url: base_url+'/FluxoVaga/getCadastros',
             method: 'GET',
         }).then(function (retorno) {
             $scope.lista_clientes = retorno.data;
@@ -42,7 +42,7 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
     $scope.getFormasPagamento = function(){
         $scope.carregando = true;
         $http({
-            url: base_url+'/FormaPagamento/getFormasPagamento',
+            url: base_url+'/Generico/getFormasPagamento',
             method: 'GET'
         }).then(function (retorno) {
             $scope.lista_formas_pagamento = retorno.data;
@@ -62,7 +62,7 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
         }).then(function (retorno) {
             $scope.Reserva = retorno.data;
             $scope.carregando = false;
-            if($scope.Reserva.Status!='B'){
+            if($scope.Reserva.Status!='B' || $scope.Reserva.StatusFluxo!='N'){
                 $scope.disabled_ = 1;
             }
         },
@@ -71,57 +71,69 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
         });
     }
 
-    $scope.validaHora = function(coluna){
-        if(typeof $scope.Reserva[coluna] != undefined){
-            if($scope.Reserva[coluna] != ""){
-                var hr = $scope.Reserva[coluna].substr(0, 2);
-                var min = $scope.Reserva[coluna].substr(2, 2);
-                if(hr > 23 || min > 59){
-                    $scope.Reserva[coluna] = "";
-                }
-            }
-        }
-    }
-
-    $scope.calculaValor = function(){
-        setTimeout(() => {
-            console.log($scope.form_reserva.$valid)
-            if($scope.form_reserva.$valid){
-                $scope.carregando = true;
-                $http({
-                    url: base_url+'/FluxoVaga/calculaValor',
-                    method: 'GET',
-                    params:{
-                        EstacionamentoId:$scope.Reserva.EstacionamentoId,
-                        DataEntrada:$scope.Reserva.DataEntrada,
-                        HoraEntrada:$scope.Reserva.HoraEntrada,
-                        DataSaida:$scope.Reserva.DataSaida,
-                        HoraSaida:$scope.Reserva.HoraSaida,
-                    }
-                }).then(function (retorno) {
-                    if(retorno.data.erro==1){
-                        $scope.liberaPagamento = 'N';
-                        $scope.erro = 2;
-                    }else{
-                        $scope.erro = 0;
-                        $scope.liberaPagamento = retorno.data.liberaPagamento;
-                        if(retorno.data.liberaPagamento=='S'){
-                            $scope.Reserva.Valor = retorno.data.valor;
-                            $scope.Reserva.Tempo = retorno.data.tempo;
-                            $scope.Reserva.NomeEstacionamento = retorno.data.NomeEstacionamento;
+    $scope.$watchGroup([
+        'Reserva.EstacionamentoId'
+        ,'Reserva.DataEntrada'
+        ,'Reserva.HoraEntrada'
+        ,'Reserva.DataSaida'
+        ,'Reserva.HoraSaida'
+        ], function(newValues, oldValues, scope) {
+            
+            var invalido = 0;
+            newValues.map(function(e, i) {
+                if(!e){
+                    invalido = 1;
+                }else{
+                    if(i==2||i==4){
+                        var coluna = i==2?'HoraEntrada':'HoraSaida';
+                        var hr = $scope.Reserva[coluna].substr(0, 2);
+                        var min = $scope.Reserva[coluna].substr(2, 2);
+                        if(hr > 23 || min > 59){
+                            $scope.Reserva[coluna] = "";
+                            invalido = 1;
                         }
                     }
-                    
-                    $scope.carregando = false;
-                },
-                function (retorno) {
-                    console.log('Error: '+retorno.status);
-                });
-            }
-        }, 777);
-        
-        
-    }
+                }
+            });
+
+            setTimeout(() => {
+                if(invalido==0 && !$scope.disabled_){
+                    $scope.carregando = true;
+                    $http({
+                        url: base_url+'/FluxoVaga/calculaValor',
+                        method: 'GET',
+                        params:{
+                            EstacionamentoId:$scope.Reserva.EstacionamentoId,
+                            DataEntrada:$scope.Reserva.DataEntrada,
+                            HoraEntrada:$scope.Reserva.HoraEntrada,
+                            DataSaida:$scope.Reserva.DataSaida,
+                            HoraSaida:$scope.Reserva.HoraSaida,
+                        }
+                    }).then(function (retorno) {
+                        if(retorno.data.erro==1){
+                            $scope.liberaPagamento = 'N';
+                            $scope.erro = 2;
+                        }else{
+                            $scope.erro = 0;
+                            $scope.liberaPagamento = retorno.data.liberaPagamento;
+                            $scope.Reserva.PagarAgora = 'N';
+                            $scope.Reserva.FormaPagamentoId = '';
+
+                            if(retorno.data.liberaPagamento=='S'){
+                                $scope.Reserva.Valor = retorno.data.valor;
+                                $scope.Reserva.Tempo = retorno.data.tempo;
+                                $scope.Reserva.NomeEstacionamento = retorno.data.NomeEstacionamento;
+                            }
+                        }
+                        
+                        $scope.carregando = false;
+                    },
+                    function (retorno) {
+                        console.log('Error: '+retorno.status);
+                    });
+                }
+            }, 777);
+    });
 
     $scope.setReserva= function(){
         if($scope.form_reserva.$valid){
@@ -158,7 +170,7 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
                 $scope.objCliente = {};
                 $scope.form_cliente.$submitted = false;
                 $scope.form_cliente.$setPristine();
-                $scope.getClientes();
+                $scope.getCadastros();
             },
             function (retorno) {
                 console.log('Error: '+retorno.status);
@@ -167,7 +179,7 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
     }
 
     $scope.getEstacionamentos();
-    $scope.getClientes();
+    $scope.getCadastros();
     $scope.getFormasPagamento();
 
     if(ReservaId){

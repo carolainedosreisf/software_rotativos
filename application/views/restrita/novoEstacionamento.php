@@ -52,13 +52,20 @@
                 </div>
             </div>
             <div class="row form-group">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <label for="Nome">Nome Empresa:</label>
                     <input type="text" name="Nome" id="Nome" class="form-control" ng-value="objEstacionamento.Nome" ng-disabled="true">
                 </div>
-                <div class="col-sm-6" ng-class="form_estacionamento.NomeEstacionamento.$invalid && (form_estacionamento.$submitted || form_estacionamento.NomeEstacionamento.$dirty)?'has-error':''">
+                <div class="col-sm-4" ng-class="form_estacionamento.NomeEstacionamento.$invalid && (form_estacionamento.$submitted || form_estacionamento.NomeEstacionamento.$dirty)?'has-error':''">
                     <label for="NomeEstacionamento">Nome Estacionamento:</label>
                     <input type="text" name="NomeEstacionamento" id="NomeEstacionamento" class="form-control" ng-model="objEstacionamento.NomeEstacionamento" maxlength="100" ng-required="true">
+                </div>
+                <div class="col-sm-4"  ng-class="form_estacionamento.DiasAtendimentoId.$invalid && (form_estacionamento.$submitted || form_estacionamento.DiasAtendimentoId.$dirty)?'has-error':''">
+                    <label for="DiasAtendimentoId">Dias Atendimento:</label>
+                    <select type="text" name="DiasAtendimentoId" id="DiasAtendimentoId" class="form-control" ng-model="objEstacionamento.DiasAtendimentoId" ng-required="true">
+                        <option value="">Selecione</option>
+                        <option value="{{l.DiasAtendimentoId}}" ng-repeat="l in lista_dias_atendimento">{{l.Descricao}}</option>
+                    </select>
                 </div>
                 
             </div>

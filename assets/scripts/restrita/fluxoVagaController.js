@@ -5,6 +5,7 @@ app.controller('fluxoVagaController', ['$scope', '$http','$filter','$location', 
     $scope.lista_formas_pagamento = [];
     $scope.lista_estacionamentos = [];
     $scope.lista_fluxo = [];
+    $scope.lista_cadastros = [];
 
     var dataAtual = function(hora=0) {
         var now = new Date;
@@ -20,16 +21,17 @@ app.controller('fluxoVagaController', ['$scope', '$http','$filter','$location', 
         EstacionamentoId:""
         ,DataInicio: ""
         ,DataFim: ""
-        ,TipoPagamento:""
+        ,CadastroId:""
+        ,Reservado:""
+        ,StatusFluxo:'E'
         ,FormaPagamentoId:""
         ,StatusPagamento:''
-        ,StatusFluxo:'E'
     };
 
     $scope.getFormasPagamento = function(){
         $scope.carregando = true;
         $http({
-            url: base_url+'/FormaPagamento/getFormasPagamento',
+            url: base_url+'/Generico/getFormasPagamento',
             method: 'GET'
         }).then(function (retorno) {
             $scope.lista_formas_pagamento = retorno.data;
@@ -43,10 +45,28 @@ app.controller('fluxoVagaController', ['$scope', '$http','$filter','$location', 
     $scope.getEstacionamentos = function(){
         $scope.carregando = true;
         $http({
-            url: base_url+'/Estacionamento/getEstacionamentos',
+            url: base_url+'/Generico/getEstacionamentos',
             method: 'GET'
         }).then(function (retorno) {
             $scope.lista_estacionamentos = retorno.data.lista;
+            if($scope.lista_estacionamentos.length==1){
+                $scope.filtros.EstacionamentoId = $scope.lista_estacionamentos[0].EstacionamentoId;
+            }
+            $scope.carregando = false;
+        },
+        function (retorno) {
+            console.log('Error: '+retorno.status);
+        });
+    }
+
+    $scope.getCadastros = function(){
+        $scope.carregando = true;
+        $http({
+            url: base_url+'/FluxoVaga/getCadastros',
+            method: 'GET',
+            params: {Ativos:1}
+        }).then(function (retorno) {
+            $scope.lista_cadastros = retorno.data;
             $scope.carregando = false;
         },
         function (retorno) {
@@ -150,6 +170,7 @@ app.controller('fluxoVagaController', ['$scope', '$http','$filter','$location', 
 
     $scope.getFormasPagamento();
     $scope.getEstacionamentos();
+    $scope.getCadastros();
     $scope.getFluxoVagas();
 }]);
 

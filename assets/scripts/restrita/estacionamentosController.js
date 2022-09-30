@@ -5,7 +5,7 @@ app.controller('estacionamentosController', ['$scope', '$http','$filter', functi
     $scope.getEstacionamentos = function(){
         $scope.carregando = true;
         $http({
-            url: base_url+'/Estacionamento/getEstacionamentos',
+            url: base_url+'/Generico/getEstacionamentos',
             method: 'GET'
         }).then(function (retorno) {
             $scope.lista_estacionamentos = retorno.data.lista;

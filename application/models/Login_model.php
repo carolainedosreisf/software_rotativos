@@ -4,7 +4,7 @@ class Login_model extends CI_Model {
 
     public function verificaSessao()
 	{
-		if(!($this->session->userdata('EstacionamentoId'))){
+		if(!($this->session->userdata('EstacionamentoId')) && $this->session->userdata('PermissaoId')!=1){
 			$link = base_url('index.php/Login');
 			echo "<script>window.location.href = '$link'</script>";
 		}
@@ -44,7 +44,7 @@ class Login_model extends CI_Model {
                     FROM Login 
                     WHERE NomeUsuario = '{$NomeUsuario}' 
                     AND Senha = '{$Senha}' 
-                    AND PermissaoId IN(2,3) 
+                    AND PermissaoId IN(1,2,3) 
                     AND Status = 'A'";
         $query = $this->db->query($sql);
         $result = $query->row_array();

@@ -31,13 +31,26 @@ class FluxoVaga_model extends CI_Model {
             $filtro .= " AND a.Status = '{$params['StatusFluxo']}'";
         }
 
+        if($params['CadastroId']){
+            $filtro .= " AND a.CadastroId = {$params['CadastroId']}";
+        }
+
+        if($params['Reservado']){
+            $filtro .= " AND IF(c.ReservaId IS NOT NULL, 'S','N') = '{$params['Reservado']}'";
+        }
+
         if($params['StatusPagamento']){
             $filtro .= " AND IF(b.ReceberId IS NULL AND d.ReceberId IS NULL,'B',IF(d.ReceberId IS NOT NULL, d.Status,b.Status)) = '{$params['StatusPagamento']}'";
         }
 
         if($params['FormaPagamentoId']){
-            $filtro .= " AND b.FormaPagamentoId = {$params['FormaPagamentoId']}";
+            $filtro .= " AND IF(d.ReceberId IS NOT NULL, d.FormaPagamentoId,b.FormaPagamentoId) = {$params['FormaPagamentoId']}";
         }
+
+        if($this->session->userdata('PermissaoId')==3){
+            $filtro .= " AND a.EstacionamentoId = {$this->session->userdata('EstacionamentoId')}";
+        }
+
         $order_by = $order==1?'Status ASC':'NomeEstacionamento ASC';
 
         $sql = "SELECT  
@@ -128,8 +141,24 @@ class FluxoVaga_model extends CI_Model {
         }
     }
 
-    public function getClientes()
+    public function getCadastros($Ativos)
     {
+        $filtro = "";
+        if($Ativos){
+            $filtro .= "AND ((EXISTS(SELECT 1 
+                                    FROM FluxoVaga AS b 
+                                    WHERE a.CadastroId = b.CadastroId
+                                    AND (SELECT c.EmpresaId 
+                                            FROM Estacionamento AS c
+                                            WHERE c.EstacionamentoId = b.EstacionamentoId) = {$this->session->userdata('EmpresaId')}))
+                                OR (EXISTS(SELECT 1 
+                                        FROM Reserva AS b 
+                                        WHERE a.CadastroId = b.CadastroId
+                                        AND (SELECT c.EmpresaId 
+                                                FROM Estacionamento AS c
+                                                WHERE c.EstacionamentoId = b.EstacionamentoId) = {$this->session->userdata('EmpresaId')})))";
+        }
+
         $sql = "SELECT  
                     a.CadastroId
                     ,a.Cpf
@@ -137,6 +166,8 @@ class FluxoVaga_model extends CI_Model {
                     ,a.NumeroTelefone
                     ,a.NumeroCelular
                 FROM Cadastro AS a
+                WHERE 1=1
+                {$filtro}
                 ORDER BY a.Nome ASC";
         $query = $this->db->query($sql);
         $result = $query->result_array();
@@ -148,6 +179,7 @@ class FluxoVaga_model extends CI_Model {
         if($ReservaId){
             $this->db->where('ReservaId', $ReservaId);
             $this->db->update('Reserva',$data);
+            return $ReservaId;
         }else{
             $this->db->insert('Reserva',$data);
             $last_id = $this->db->insert_id();
@@ -178,8 +210,26 @@ class FluxoVaga_model extends CI_Model {
             $filtro .= " AND a.EstacionamentoId = {$params['EstacionamentoId']}";
         }
 
+        if($params['DataInicio'] && $params['DataFim']){
+            $DataInicio = $this->funcoes->formataData($params['DataInicio']);
+            $DataFim = $this->funcoes->formataData($params['DataFim']);
+            $filtro .= " AND a.DataEntrada BETWEEN '{$DataInicio}' AND '{$DataFim}'";
+        }
+      
         if($params['StatusFluxo']){
             $filtro .= " AND IF(c.FluxoVagaId IS NULL,'N',c.Status) = '{$params['StatusFluxo']}'";
+        }
+
+        if($params['StatusPagamento']){
+            $filtro .= " AND IF(b.ReceberId IS NULL AND d.ReceberId IS NULL,'B',IF(d.ReceberId IS NOT NULL, d.Status,b.Status)) = '{$params['StatusPagamento']}'";
+        }
+
+        if($params['FormaPagamentoId']){
+            $filtro .= " AND IF(d.ReceberId IS NOT NULL, d.FormaPagamentoId,b.FormaPagamentoId) = {$params['FormaPagamentoId']}";
+        }
+
+        if($this->session->userdata('PermissaoId')==3){
+            $filtro .= " AND a.EstacionamentoId = {$this->session->userdata('EstacionamentoId')}";
         }
 
         $sql = "SELECT  
@@ -217,6 +267,38 @@ class FluxoVaga_model extends CI_Model {
                 ORDER BY  a.DataEntrada DESC,a.HoraEntrada DESC";
         $query = $this->db->query($sql);
         $result = $query->result_array();
+        return $result;
+    }
+
+    public function getReserva($ReservaId)
+    {
+        $filtro = "";
+
+        $sql = "SELECT  
+                    a.ReservaId
+                    ,a.EstacionamentoId
+                    ,a.CadastroId
+                    ,DATE_FORMAT(a.DataEntrada, '%d/%m/%Y') AS DataEntrada
+                    ,DATE_FORMAT(a.HoraSaida, '%H%i') AS HoraSaida
+                    ,DATE_FORMAT(a.DataSaida, '%d/%m/%Y') AS DataSaida
+                    ,DATE_FORMAT(a.HoraEntrada, '%H%i') AS HoraEntrada
+                    ,a.Observacao
+                    ,IF(b.ReceberId IS NULL AND d.ReceberId IS NULL,'B',IF(d.ReceberId IS NOT NULL, d.Status,b.Status)) AS Status
+                    ,IF(c.FluxoVagaId IS NULL,'N',c.Status) AS StatusFluxo
+                    ,IF(d.ReceberId IS NOT NULL, d.Valor,b.Valor) AS Valor
+                    ,(SELECT g.Descricao 
+                        FROM FormaPagamento AS g
+                        WHERE IF(d.ReceberId IS NOT NULL, d.FormaPagamentoId,b.FormaPagamentoId) = g.FormaPagamentoId
+                    ) FormaPagamentoDesc
+                    ,'R' AS Tipo
+                    ,'N' AS PagarAgora
+                FROM Reserva AS a
+                LEFT JOIN Receber b ON a.ReservaId = b.ReservaId
+                LEFT JOIN FluxoVaga c ON a.ReservaId = c.ReservaId
+                LEFT JOIN Receber d ON c.FluxoVagaId = d.FluxoVagaId
+                WHERE a.ReservaId = {$ReservaId}";
+        $query = $this->db->query($sql);
+        $result = $query->row_array();
         return $result;
     }
 

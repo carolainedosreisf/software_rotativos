@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class FormaPagamento extends CI_Controller {
+class DiasAtendimento extends CI_Controller {
 
 	public function __construct()
     {
@@ -14,25 +14,25 @@ class FormaPagamento extends CI_Controller {
 			echo "<script>window.location.href = '$link'</script>";
         }
 
-        $this->load->model('FormaPagamento_model');
+        $this->load->model('DiasAtendimento_model');
     }
 
 	public function index()
 	{
-		$data['controller'] = "formaPagamentoController";
+		$data['controller'] = "diasAtendimentoController";
 		$this->load->view('restrita/header',$data);
-		$this->load->view('restrita/formaPagamento');
+		$this->load->view('restrita/diasAtendimento');
 		$this->load->view('restrita/footer');
 	}
 
-	public function setFormaPagamento()
+	public function setDiasAtendimento()
 	{
 		$post = $this->funcoes->getPostAngular();
 
-		$FormaPagamentoId = isset($post['FormaPagamentoId'])?$post['FormaPagamentoId']:0;
-		$data = ['Descricao' => $post['Descricao']];
+		$DiasAtendimentoId = isset($post['DiasAtendimentoId'])?$post['DiasAtendimentoId']:0;
+		$data = ['DescricaoDiasAtendimento' => $post['Descricao']];
 
-		$this->FormaPagamento_model->setFormaPagamento($data,$FormaPagamentoId);
+		$this->DiasAtendimento_model->setDiasAtendimento($data,$DiasAtendimentoId);
 		
 	}
 }
