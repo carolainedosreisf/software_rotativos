@@ -32,7 +32,8 @@ app.controller('fluxoVagaController', ['$scope', '$http','$filter','$location', 
         $scope.carregando = true;
         $http({
             url: base_url+'/Generico/getFormasPagamento',
-            method: 'GET'
+            method: 'GET',
+            params:{todos:1}
         }).then(function (retorno) {
             $scope.lista_formas_pagamento = retorno.data;
             $scope.carregando = false;

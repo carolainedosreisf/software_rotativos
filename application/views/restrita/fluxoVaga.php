@@ -236,7 +236,7 @@
                                 <label for="FormaPagamentoId">Forma de Pagamento:</label>
                                 <select class="form-control" name="FormaPagamentoId" id="FormaPagamentoId" ng-model="objFinalizaLocacao.FormaPagamentoId" ng-required="objFinalizaLocacao.JaPagou=='N'">
                                     <option value="">Selecione</option>
-                                    <option value="{{l.FormaPagamentoId}}" ng-repeat="l in lista_formas_pagamento">{{l.Descricao}}</option>
+                                    <option value="{{l.FormaPagamentoId}}" ng-repeat="l in lista_formas_pagamento" ng-show="l.FormaPagamentoId!=5">{{l.Descricao}}</option>
                                 </select>
                             </div>
                         </div>
