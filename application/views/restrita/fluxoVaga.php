@@ -99,7 +99,7 @@
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th>Estacionamento</th>
+                        <th width="20%">Estacionamento</th>
                         <th class="text-center">Entrada</th>
                         <th class="text-center">Saída</th>
                         <th>Cliente/Placa</th>
@@ -120,8 +120,12 @@
                             {{l.NomeEstacionamento}} <br>
                             {{l.CpfCnpjFormatado}}
                         </td>
-                        <td class="text-center">{{l.DataEntrada}} às {{l.HoraEntrada}}</td>
-                        <td class="text-center">{{l.DataSaida?(l.DataSaida+' às '+l.HoraSaida):'-'}}</td>
+                        <td class="text-center">{{l.DataEntrada}}<br>às {{l.HoraEntrada}}</td>
+                        <td class="text-center">
+                            <span ng-show="l.DataSaida">
+                                {{l.DataSaida}}<br>às {{l.HoraSaida}}
+                            </span>
+                        </td>
                         <td>
                             <span ng-show="l.NomeCliente">{{l.NomeCliente}}<br></span>
                             {{l.PlacaVeiculoFormatada}}
@@ -163,7 +167,7 @@
                                 data-html="true" 
                                 data-toggle="tooltip" 
                                 data-placement="left"
-                                data-original-title="{{l.StatusFluxo=='E'?'Clique aqui para finalizar o periódo da locação.':''}}"
+                                data-original-title="{{l.StatusFluxo=='E'?'Clique aqui para finalizar o período da locação.':''}}"
                                 tooltip>
                                 {{l.StatusFluxoDesc}}
                             </button>
@@ -192,7 +196,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Finalizar o periódo da locação</h4>
+                        <h4 class="modal-title">Finalizar o período da locação</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row" ng-show="form_finaliza.$invalid && form_finaliza.$submitted">

@@ -9,7 +9,7 @@ class Estacionamento extends CI_Controller {
         $this->load->model('Login_model');
 		$this->Login_model->verificaSessao();
 
-        if($this->session->userdata('PermissaoId')!=2){
+        if($this->session->userdata('PermissaoId')!=2 || $this->funcoes->verificaSituacaoEmpresa()>2){
             $link = base_url('index.php/Restrita/Home');
 			echo "<script>window.location.href = '$link'</script>";
         }

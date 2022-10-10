@@ -78,7 +78,7 @@
                 <thead>
                     <tr>
                         <th>Estacionamento</th>
-                        <th>Periódo Reserva</th>
+                        <th>Período Reserva</th>
                         <th>Cliente</th>
                         <th>Locação</th>
                         <th class="text-center">Valor</th>

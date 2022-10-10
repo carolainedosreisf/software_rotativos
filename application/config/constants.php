@@ -88,3 +88,4 @@ define('BASE_URL', 'http://localhost/software_rotativos/');
 
 define('URL_ARQUIVOS', BASE_URL.'arquivos');
 define('UPLOAD_ARQUIVOS', $_SERVER["DOCUMENT_ROOT"].'/software_rotativos/arquivos');
+define('VALOR_SOFTWARE', 25);

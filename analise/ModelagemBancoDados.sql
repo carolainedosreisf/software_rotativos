@@ -357,7 +357,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ReceberEmpresa` (
   `CarteiraId` INT NULL,
   `Valor` DECIMAL(18,2) NOT NULL,
   `DataPagamento` DATE NOT NULL,
-  `DataConsiderar` DATE NOT NULL,
+  `DataVencimento` DATE NOT NULL,
   `Status` ENUM('A','P','R','F') NOT NULL COMMENT 'A=>Aguardando Pagamento,P=>Processando Pagamento,R=>Recusado,F=>Finalizado',
   PRIMARY KEY (`ReceberEmpresaId`),
   INDEX `FK32_idx` (`FormaPagamentoId` ASC) ,
@@ -389,31 +389,32 @@ CREATE VIEW view_pagamento_empresa AS
 SELECT 
 	  a.EmpresaId
      ,IF((DATE_ADD(DataCadastro, INTERVAL 30 DAY)>=NOW()),'S','N') AS Experimental
-     ,DATE_FORMAT((DATE_ADD(DataCadastro, INTERVAL 30 DAY)), '%d/%m/%Y %H:%i') AS VencExperimental 
+     ,DATE_FORMAT((DATE_ADD(DataCadastro, INTERVAL 30 DAY)), '%d/%m/%Y %H:%i') AS VencExperimentalBr 
+     ,DATE_FORMAT((DATE_ADD(DataCadastro, INTERVAL 30 DAY)), '%Y-%m-%d') AS VencExperimental
      ,(EXISTS(
          SELECT 1 
          FROM ReceberEmpresa AS b 
          WHERE b.EmpresaId = a.EmpresaId
          AND b.Status = 'F')) AS PagouAlgumaVez
-     ,(SELECT b.DataConsiderar
+     ,(SELECT b.DataPagamento
          FROM ReceberEmpresa AS b 
          WHERE b.EmpresaId = a.EmpresaId
          AND b.Status = 'F' 
          ORDER BY b.ReceberEmpresaId DESC
          LIMIT 1) AS UltPagamento
-     ,(SELECT DATE_FORMAT(b.DataConsiderar, '%d/%m/%Y') 
+     ,(SELECT DATE_FORMAT(b.DataPagamento, '%d/%m/%Y') 
          FROM ReceberEmpresa AS b 
          WHERE b.EmpresaId = a.EmpresaId 
          AND b.Status = 'F'
          ORDER BY b.ReceberEmpresaId DESC
          LIMIT 1) AS UltPagamentoBr
-     ,(SELECT DATE_ADD(b.DataConsiderar, INTERVAL 1 MONTH) 
+     ,(SELECT b.DataVencimento
          FROM ReceberEmpresa AS b 
          WHERE b.EmpresaId = a.EmpresaId 
          AND b.Status = 'F'
          ORDER BY b.ReceberEmpresaId DESC
          LIMIT 1) AS VencUltPagamento
-     ,(SELECT DATE_FORMAT(DATE_ADD(b.DataConsiderar, INTERVAL 1 MONTH), '%d/%m/%Y')
+     ,(SELECT DATE_FORMAT(b.DataVencimento, '%d/%m/%Y')
          FROM ReceberEmpresa AS b 
          WHERE b.EmpresaId = a.EmpresaId 
          AND b.Status = 'F'
@@ -453,7 +454,7 @@ BEGIN
    DECLARE retornar VARCHAR(500);
    SELECT 
 			Experimental
-			,VencExperimental
+			,VencExperimentalBr
 			,PagouAlgumaVez 
 			,UltPagamento
 			,UltPagamentoBr
@@ -473,20 +474,20 @@ BEGIN
 		FROM view_pagamento_empresa 
 		WHERE EmpresaId = p_EmpresaId;
 		
-	IF p_Experimental = 'S' THEN
-		SET msg = CONCAT('Sua empresa esta utilizando o Software pelo periódo experimental com expiração em ',p_VencExperimental,'.<br>A partir dessa data a utilização do Software somente ficará disponivel mediante ao pagamento mensal.');
+	IF p_Experimental = 'S' AND p_PagouAlgumaVez = 0 THEN
+		SET msg = CONCAT('{ADM_OU_EMPRESA} empresa esta utilizando o software pelo período experimental com expiração em ',p_VencExperimental,'.<br>A partir dessa data a utilização do software somente ficará disponível mediante ao pagamento mensal.');
 		SET  ret = '1';
 	ELSE
 		IF p_PagouAlgumaVez = 1 THEN
 			IF p_VencUltPagamento < p_Agora THEN
-				SET msg = CONCAT('O último pagamento venceu em ',p_UltPagamentoBr,'.<br>A utilização do Software somente ficará disponivel novamente mediante ao pagamento do mês atual.');
+				SET msg = CONCAT('O último pagamento venceu em ',p_UltPagamentoBr,'.<br>A utilização do software somente ficará disponível novamente mediante ao pagamento do mês atual.');
 				SET ret = '4';
 			ELSE
-			   SET msg = CONCAT('Sua empresa esta com os pagamentos do Software em dia.<br>O próximo vecimento ocorrerá em ',p_VencUltPagamentoBr,'.');
+			   SET msg = CONCAT('{ADM_OU_EMPRESA} empresa está com os pagamentos do software em dia.<br>O próximo vencimento ocorrerá em ',p_VencUltPagamentoBr,'.<br>A partir dessa data a utilização do software somente ficará disponível mediante ao pagamento mensal.');
 				SET ret = '2';
 			END IF;
 		ELSE
-			SET msg = CONCAT('O periódo experimental expirou em ',p_VencExperimental,'.<br>A utilização do Software somente ficará disponivel mediante ao pagamento mensal.');
+			SET msg = CONCAT('O período experimental expirou em ',p_VencExperimental,'.<br>A utilização do software somente ficará disponível mediante ao pagamento mensal.');
 			SET ret = '3';
 		END IF;
 		

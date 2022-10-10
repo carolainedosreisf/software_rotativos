@@ -12,7 +12,7 @@ app.controller('fluxoVagaController', ['$scope', '$http','$filter','$location', 
         if(hora){
             var retorno = (((now.getHours() )<10?'0':'') +now.getHours())+''+(((now.getMinutes())<10?'0':'')+now.getMinutes());
         }else{
-            var retorno = (now.getDate()+"/"+((now.getMonth()+1)<10?'0':'')+(now.getMonth()+1)+ "/" + now.getFullYear());
+            var retorno = (((now.getDate()<10?'0':'')+now.getDate())+"/"+((now.getMonth()+1)<10?'0':'')+(now.getMonth()+1)+ "/" + now.getFullYear());
         }
         return retorno;
     }

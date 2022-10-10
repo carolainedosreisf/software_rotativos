@@ -9,6 +9,7 @@ class Pagamentos_model extends CI_Model {
                     ,a.Valor
                     ,a.Status
                     ,DATE_FORMAT(a.DataPagamento, '%d/%m/%Y') AS DataPagamento
+                    ,DATE_FORMAT(a.DataVencimento, '%d/%m/%Y') AS DataVencimento
                     ,a.FormaPagamentoId
                     ,IF(c.TipoCartao IS NULL,'P',c.TipoCartao) AS TipoCartao
                     ,(SELECT b.Descricao 
@@ -23,12 +24,23 @@ class Pagamentos_model extends CI_Model {
         return $result;
     }
 
-    public function getVerificaPagamento()
+    public function getVerificaPagamento($EmpresaId)
     {
         $sql = "SELECT 
                     f_SituacaoEmpresa(a.EmpresaId,1) AS Situacao
                     ,f_SituacaoEmpresa(a.EmpresaId,2) AS DescSituacao
                     ,CompetenciaAtual
+                    ,VencExperimental
+                    ,VencUltpagamentoBr
+                    ,DATE_FORMAT(NOW(), '%Y-%m-%d') AS Agora
+                    ,DATE_FORMAT(NOW(), '%d/%m/%Y') AS AgoraBr
+                    ,DATE_ADD(
+                            IF((DATE_FORMAT(NOW(), '%Y-%m-%d') < IF(PagouAlgumaVez=1,VencUltpagamento,DATE_FORMAT(VencExperimental, '%Y-%m-%d'))),
+                                IF(PagouAlgumaVez=1,VencUltpagamento,DATE_FORMAT(VencExperimental, '%Y-%m-%d'))
+                                ,DATE_FORMAT(NOW(), '%Y-%m-%d')
+                                ), INTERVAL 1 MONTH
+                    ) AS ProxVencimento
+                    ,PagouAlgumaVez
                     ,(CASE f_SituacaoEmpresa(a.EmpresaId,1)
                             WHEN '1' THEN 'alert-info'
                             WHEN '2' THEN 'alert-success'
@@ -37,7 +49,7 @@ class Pagamentos_model extends CI_Model {
                             ELSE ''
                         END) AS alert
                 FROM view_pagamento_empresa AS a
-                WHERE a.EmpresaId = {$this->session->userdata('EmpresaId')}";
+                WHERE a.EmpresaId = {$EmpresaId}";
         $query = $this->db->query($sql);
         $result = $query->row_array();
         return $result;

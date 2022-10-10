@@ -43,7 +43,7 @@
                 </th>
             </tr>
             <tr>
-                <th class="text-left" width="25%">Periódo</th>
+                <th class="text-left" width="25%">Período</th>
                 <th class="text-left" width="28%">Cliente/Placa</th>
                 <th class="text-center" width="12%">Reserva</th>
                 <th class="text-left" width="20%">Pagamento</th>

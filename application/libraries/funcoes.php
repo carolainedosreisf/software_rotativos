@@ -177,6 +177,14 @@ class Funcoes {
 
         return $tipo=='C'?$classe:$status_desc;
     }
+
+    public function verificaSituacaoEmpresa()
+    {
+        $EmpresaId = $this->CI->session->userdata('EmpresaId');
+        $this->CI->load->model('Pagamentos_model');
+        $obj = $this->CI->Pagamentos_model->getVerificaPagamento($EmpresaId);
+        return $obj['Situacao'];
+    }
     
 }
 

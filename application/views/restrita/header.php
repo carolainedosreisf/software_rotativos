@@ -49,10 +49,14 @@
                 <ul class="list-unstyled components">
                     <li><a href="<?php echo base_url('index.php/restrita/Home'); ?>">Home</a></li>
 
-                    <?php if($this->session->userdata('PermissaoId')==2){ ?>
+                    <?php if($this->session->userdata('PermissaoId')==2 && $this->funcoes->verificaSituacaoEmpresa()<=2){ ?>
                     <li><a href="<?php echo base_url('index.php/restrita/Estacionamento'); ?>">Perfil Empresa</a></li>
+                    <?php } ?>
+
+                    <?php if($this->session->userdata('PermissaoId')==2){ ?>
                     <li><a href="<?php echo base_url('index.php/restrita/Pagamentos'); ?>">Pagamento</a></li>
                     <?php } ?>
+
 
                     <?php if($this->session->userdata('PermissaoId')==1){ ?>
                     <li><a href="<?php echo base_url('index.php/restrita/FormaPagamento'); ?>">Formas de Pagamento</a></li>
@@ -60,7 +64,7 @@
                     <li><a href="<?php echo base_url('index.php/restrita/Clientes'); ?>">Clientes</a></li>
                     <?php } ?>
 
-                    <?php if($this->session->userdata('PermissaoId')==2||$this->session->userdata('PermissaoId')==3){ ?>
+                    <?php if(($this->session->userdata('PermissaoId')==2||$this->session->userdata('PermissaoId')==3)&&$this->funcoes->verificaSituacaoEmpresa()<=2){ ?>
                     <li><a href="<?php echo base_url('index.php/restrita/FluxoVaga'); ?>">Locações de Vagas</a></li>
                     <li><a href="<?php echo base_url('index.php/restrita/FluxoVaga/reservas'); ?>">Reservas de Vagas</a></li>
                     <?php } ?>

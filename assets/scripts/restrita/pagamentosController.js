@@ -31,29 +31,6 @@ app.controller('pagamentosController', ['$scope', '$http','$filter','$location',
         });
     }
 
-    $scope.setPagamento = function(){
-        if($scope.form_pagamento.$valid){
-            $scope.carregando = true;
-            $http({
-                url: base_url+'/Pagamentos/setPagamento',
-                method: 'POST',
-                data:$scope.objPagamento
-            }).then(function (retorno) {
-                $scope.carregando = false;
-                $('#modalPagamento').modal('hide');
-                $scope.objPagamento = {};
-                $scope.form_pagamento.$submitted = false;
-                $scope.form_pagamento.$setPristine();
-                $scope.getVerificaPagamento();
-                $scope.getPagamentos();
-            },
-            function (retorno) {
-                console.log('Error: '+retorno.status);
-            });
-        }
-    }
-
-
     $scope.getVerificaPagamento();
     $scope.getPagamentos();
 }]);

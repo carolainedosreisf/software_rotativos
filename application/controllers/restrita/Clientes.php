@@ -7,6 +7,7 @@ class Clientes extends CI_Controller {
     {
         parent::__construct();
         $this->load->model('Login_model');
+        $this->load->model('Pagamentos_model');
 		$this->Login_model->verificaSessao();
 
         if($this->session->userdata('PermissaoId')!=1){
@@ -27,7 +28,9 @@ class Clientes extends CI_Controller {
 
     public function getClientes()
     {
-        $lista = $this->Empresa_model->getEmpresas();
+        $situacao_pagamento = $this->funcoes->get('situacao_pagamento');
+        $situacao_software = $this->funcoes->get('situacao_software');
+        $lista = $this->Empresa_model->getEmpresas($situacao_pagamento,$situacao_software);
         foreach ($lista as $i => $a) {
             $lista[$i]['CpfCnpjFormatado'] = $this->funcoes->formatar_cpf_cnpj($a['CpfCnpj']);
         }
@@ -39,7 +42,9 @@ class Clientes extends CI_Controller {
         if($this->session->userdata('PermissaoId')!=1){ 
             exit;
         }
-        $lista = $this->Empresa_model->getEmpresas();
+        $situacao_pagamento = base64_decode($this->funcoes->get('p'));
+        $situacao_software = base64_decode($this->funcoes->get('s'));
+        $lista = $this->Empresa_model->getEmpresas($situacao_pagamento,$situacao_software);
 
         foreach ($lista as $i => $a) {
             $lista[$i]['CpfCnpjFormatado'] = $this->funcoes->formatar_cpf_cnpj($a['CpfCnpj']);
@@ -50,5 +55,21 @@ class Clientes extends CI_Controller {
 
         $html = $this->load->view('restrita/relatorioClientes',$data,true);
         $this->funcoes->gerarPdf($html);
+    }
+
+    public function setPagamento()
+    {
+        $post = $this->funcoes->getPostAngular();
+
+        $data= [
+            'EmpresaId'=>$post['EmpresaId'],
+            'FormaPagamentoId'=>$post['FormaPagamentoId'],
+            'DataPagamento' =>$post['Agora'],
+            'DataVencimento'=>$post['ProxVencimento'],
+            'Valor'=>VALOR_SOFTWARE,
+            'Status'=>'F'
+        ];
+
+        $this->Pagamentos_model->setPagamento($data);
     }
 }

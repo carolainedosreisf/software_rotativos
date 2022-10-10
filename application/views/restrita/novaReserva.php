@@ -86,7 +86,7 @@
             <br>
             <div class="col-sm-12">
                 <div class="alert alert-info" role="alert">
-                    O estacionamento {{Reserva.NomeEstacionamento}} possui tempo livre, e o periódo selecionado da reserva é de {{Reserva.Tempo}}, o cliente deseja pagar antecipadamente o valor de {{Reserva.Valor|currency:'R$ '}}?<br><br>
+                    O estacionamento {{Reserva.NomeEstacionamento}} possui tempo livre, e o período selecionado da reserva é de {{Reserva.Tempo}}, o cliente deseja pagar antecipadamente o valor de {{Reserva.Valor|currency:'R$ '}}?<br><br>
                     <input type="radio" name="PagarAgora" id="PagarAgoraS" value="S" ng-model="Reserva.PagarAgora">
                     <label for="PagarAgoraS" style="font-weight:normal;"> Sim</label>
                     

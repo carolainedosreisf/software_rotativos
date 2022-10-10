@@ -40,6 +40,7 @@
             <td>Empresa</td>
             <td class="text-center">Tipo</td>
             <td class="text-center">Cadastro</td>
+            <td>Situação</td>
             <td class="text-center">Estacionamentos</td>
             <td class="text-center">Mensalidades</td> 
             </tr>
@@ -61,6 +62,9 @@
                 </td>
                 <td class="text-center">
                     <?php echo $a['DataCadastroBr']; ?>
+                </td>
+                <td>
+                    <?php echo ($a['Situacao']>2?"Bloqueado":"Liberado").": <br>".$a['DescSituacao']; ?>
                 </td>
                 <td class="text-center">
                     <?php echo $a['QtdEstacionamentos']; ?>
