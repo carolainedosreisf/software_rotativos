@@ -13,6 +13,16 @@
             </button>
         </div>
     </div>
+
+    <div class="row form-group" ng-show="!disabled_">
+        <div class="col-sm-12">
+            <br>
+            <div class="alert alert-info" role="alert">
+                <span><b>Numero de vagas Total do Estacionamento: </b>{{NumeroVagas}}</span><br>
+                <span><b>Reservas no Período Selecionado: </b>{{reservas_periodo.length}}</span>
+            </div>
+        </div>
+    </div>
     <h2>{{ReservaId?(disabled_?'Ver':'Editar'):'Cadastrar'}} Reserva</h2><br>
     <form name="form_reserva" id="form_reserva"  ng-submit="setReserva()" novalidate autocomplete="off">
         <div class="row form-group" ng-show="form_reserva.$invalid && form_reserva.$submitted">

@@ -68,6 +68,9 @@
         </div>
     </div><br>
     <div class="row form-group">
+        <div class="col-sm-9">
+            <b>Total: </b> {{(lista_reservas|filter:filtrar).length}}
+        </div>
         <div class="col-sm-3 pull-right">
             <input type="text" class="form-control" name="filtrar" id="filtrar" ng-model="filtrar" placeholder="Busca Rápida...">
         </div>

@@ -57,4 +57,12 @@ class Generico extends CI_Controller {
 		$lista = $this->DiasAtendimento_model->getDiasAtendimento();
 		echo json_encode($lista);
 	}
+
+    public function getCidades()
+    {
+        $descricao = $this->funcoes->get('desc');
+        $this->load->model('Empresa_model');
+        $lista = $this->Empresa_model->getCidades($descricao);
+        echo json_encode($lista);
+    }
 }

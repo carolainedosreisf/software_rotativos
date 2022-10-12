@@ -41,7 +41,7 @@
 		<div class="barra-topo">
 			<div class="text-homeimage text-center">
 				<div class="maintext-image" data-scrollreveal="enter top over 1.5s after 0.1s">
-					[NOME DA EMPRESA]
+					<?php echo $EmpresaSoftware['Nome']; ?>
 				</div>
 			</div>
 		</div>

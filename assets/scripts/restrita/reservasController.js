@@ -7,7 +7,7 @@ app.controller('reservasController', ['$scope', '$http','$filter','$location', f
         EstacionamentoId:""
         ,DataInicio: ""
         ,DataFim: ""
-        ,StatusFluxo:''
+        ,StatusFluxo:'N'
         ,StatusPagamento:''
         ,FormaPagamentoId:''
         ,CadastroId:""

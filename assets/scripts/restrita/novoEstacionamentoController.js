@@ -8,7 +8,7 @@ app.controller('novoEstacionamentoController', ['$scope', '$http','$filter','$lo
     $scope.getCidades = function(desc=''){
         $scope.carregando = true;
         $http({
-            url: base_url_externo+'/Empresa/getCidades',
+            url: base_url+'/Generico/getCidades',
             method: 'GET',
             params:{desc}
         }).then(function (retorno) {

@@ -102,6 +102,9 @@ class Funcoes {
 
     public function formataHora($desc)
     {
+        if(strlen($desc)<4){
+            return $desc;
+        }
         $desc = trim(str_replace(":","",$desc));
         $hr = substr($desc,0,2);
         $min = substr($desc,2,2);
@@ -186,6 +189,14 @@ class Funcoes {
         return $obj['Situacao'];
     }
     
+    public function getEmpresaSoftware()
+    {
+        $this->CI->load->model('Empresa_model');
+        $obj = $this->CI->Empresa_model->getEmpresa(7);
+        $obj['NumeroTelefone1Format'] = $this->formatar_telefone($obj['NumeroTelefone1']);
+        $obj['NumeroTelefone2Format'] = $this->formatar_telefone($obj['NumeroTelefone2']);
+        return $obj;
+    }
 }
 
 ?>

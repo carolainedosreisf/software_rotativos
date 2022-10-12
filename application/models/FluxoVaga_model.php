@@ -55,7 +55,8 @@ class FluxoVaga_model extends CI_Model {
 
         $sql = "SELECT  
                     a.FluxoVagaId
-                    ,a.DataEntrada
+                    ,a.DataEntrada AS DataEntradaDb
+                    ,DATE_FORMAT(a.HoraEntrada, '%H')AS HoraEntradaDb
                     ,DATE_FORMAT(a.DataEntrada, '%d/%m/%Y') AS DataEntrada
                     ,DATE_FORMAT(a.DataSaida, '%d/%m/%Y') AS DataSaida
                     ,DATE_FORMAT(a.HoraEntrada, '%H:%i') AS HoraEntrada
@@ -333,7 +334,35 @@ class FluxoVaga_model extends CI_Model {
         
     }
 
-    
+    public function getReservasProximas($EstacionamentoId,$DataEntrada,$HoraEntrada,$HoraSaida)
+    {
+        if($HoraSaida){
+            $filtro = "AND ((a.HoraEntrada >= '{$HoraEntrada}' AND a.HoraEntrada <= '{$HoraSaida}') 
+                                OR (a.HoraSaida >= '{$HoraEntrada}' AND a.HoraEntrada <= '{$HoraSaida}'))";
+        }else{
+            $filtro = "AND a.HoraEntrada >= '{$HoraEntrada}'";
+        }
+
+        $sql = "SELECT 
+                    a.ReservaId
+                    ,a.HoraEntrada
+                    ,a.HoraSaida
+                    ,DATE_FORMAT(a.HoraEntrada, '%H:%i') AS HoraEntradaBr
+                    ,DATE_FORMAT(a.HoraSaida, '%H:%i') AS HoraSaidaBr
+                    ,a.EstacionamentoId
+                    ,if((a.HoraEntrada > '{$HoraEntrada}'),1,0) AS chegaraDepois
+                FROM reserva AS a
+                LEFT JOIN FluxoVaga b ON a.ReservaId = b.ReservaId
+                WHERE a.EstacionamentoId = {$EstacionamentoId}
+                AND b.FluxoVagaId IS NULL
+                AND a.DataEntrada = '{$DataEntrada}' 
+                {$filtro}
+                ORDER BY a.HoraEntrada ASC";
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
+        return $result;
+    }
+
 }
 
 

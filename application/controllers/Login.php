@@ -12,6 +12,7 @@ class Login extends CI_Controller {
 
 	public function index()
 	{
+		$data['EmpresaSoftware'] = $this->funcoes->getEmpresaSoftware();
 		$data['controller'] = "loginController";
 		$this->load->view('header',$data);
 		$this->load->view('login');
@@ -48,7 +49,12 @@ class Login extends CI_Controller {
 				'EmpresaId' => $estacionamento['EmpresaId'],
 				'DataCadastro' => $estacionamento['DataCadastro']
 			];
+		}else{
+			$sessao +=[
+				'EmpresaId' => $login['EmpresaId']
+			];
 		}
+
 		
 		$this->session->set_userdata($sessao);
 		echo 1;
@@ -63,6 +69,7 @@ class Login extends CI_Controller {
 
 	public function novaSenha()
 	{
+		$data['EmpresaSoftware'] = $this->funcoes->getEmpresaSoftware();
 		$data['LoginId'] = base64_decode($this->funcoes->get('i'));
 		$data['token'] = base64_decode($this->funcoes->get('t'));
 

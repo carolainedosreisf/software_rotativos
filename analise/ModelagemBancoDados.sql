@@ -498,3 +498,12 @@ BEGIN
 	
    RETURN retornar;
 END
+
+---------------------------------------------------------------
+
+
+ALTER TABLE Login ADD EmpresaId int(11) AFTER CadastroId;
+ALTER TABLE Login ADD CONSTRAINT id_EmpresaId_Login FOREIGN KEY(EmpresaId) REFERENCES Empresa (EmpresaId);
+
+ALTER TABLE `empresa`
+	CHANGE COLUMN `Sobre` `Sobre` LONGTEXT NULL COLLATE 'utf8_general_ci' AFTER `UrlLogo`;

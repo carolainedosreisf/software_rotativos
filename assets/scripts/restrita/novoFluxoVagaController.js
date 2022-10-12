@@ -71,6 +71,57 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
         });
     }
 
+    $scope.$watchGroup([
+        'FluxoVaga.EstacionamentoId'
+        ,'FluxoVaga.DataEntrada'
+        ,'FluxoVaga.HoraEntrada'
+        ], function(newValues, oldValues, scope) {
+            
+            var invalido = 0;
+            newValues.map(function(e, i) {
+                if(!e){
+                    invalido = 1;
+                    if(i==0){
+                        $scope.NumeroVagas = '';
+                    }
+                }else{
+                    if(i==0){
+                        var index = getIndexEstacionamento();
+                        $scope.NumeroVagas = $scope.lista_estacionamentos[index].NumeroVagas;
+                    }else if(i==2){
+                        var hr = $scope.FluxoVaga['HoraEntrada'].substr(0, 2);
+                        var min = $scope.FluxoVaga['HoraEntrada'].substr(2, 2);
+                        if(hr > 23 || min > 59){
+                            $scope.FluxoVaga['HoraEntrada'] = "";
+                            invalido = 1;
+                        }
+                    }
+                }
+            });
+
+            setTimeout(() => {
+                if(invalido==0&&$scope.disabled_==0){
+                    $scope.carregando = true;
+                    $http({
+                        url: base_url+'/FluxoVaga/getInfoLotacao',
+                        method: 'GET',
+                        params: {
+                            EstacionamentoId:$scope.FluxoVaga.EstacionamentoId
+                            ,DataEntrada:$scope.FluxoVaga.DataEntrada
+                            ,HoraEntrada:$scope.FluxoVaga.HoraEntrada
+                        } 
+                    }).then(function (retorno) {
+                        $scope.carregando = false;
+                        $scope.QtdLocacoes = retorno.data.QtdLocacoes;
+                        $scope.reservas_proximas = retorno.data.reservas_proximas;
+                    },
+                    function (retorno) {
+                        console.log('Error: '+retorno.status);
+                    });
+                }
+            }, 777);
+    });
+
     $scope.validaHora = function(coluna){
         if(typeof $scope.FluxoVaga[coluna] != undefined){
             if($scope.FluxoVaga[coluna] != ""){
@@ -120,6 +171,10 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
         }
         
     }
+
+    var getIndexEstacionamento = function() {
+        return $scope.lista_estacionamentos.map((el) => el.EstacionamentoId).indexOf($scope.FluxoVaga.EstacionamentoId);
+   }
 
 
     $scope.getEstacionamentos();

@@ -5,6 +5,7 @@ class Home extends CI_Controller {
 
 	public function index()
 	{
+		$data['EmpresaSoftware'] = $this->funcoes->getEmpresaSoftware();
 		$data['controller'] = "indexController";
 		$this->load->view('header',$data);
 		$this->load->view('index');

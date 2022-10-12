@@ -3,13 +3,19 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Tempo de geração: 30-Set-2022 às 17:33
+-- Tempo de geração: 12-Out-2022 às 22:35
 -- Versão do servidor: 5.7.31
 -- versão do PHP: 7.3.21
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Banco de dados: `mydb`
@@ -22,7 +28,22 @@ SET time_zone = "+00:00";
 INSERT INTO `cadastro` (`CadastroId`, `Nome`, `TipoCadastro`, `Cpf`, `NumeroTelefone`, `NumeroCelular`, `NumeroCep`, `CidadeId`, `NumeroEndereco`, `Endereco`, `BairroEndereco`, `Complemento`, `Mensalista`) VALUES
 (1, 'Antônio da Silva', NULL, '08173646090', '488577886', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (2, 'Jose de Sousa', NULL, '11129047008', '4885778687', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(3, 'Maria da Rosa', NULL, '99872556040', '488857758', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(3, 'Maria da Rosa', NULL, '99872556040', '488857758', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 'Rafaela Melo', NULL, '48319254035', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'Kaique Cardoso', NULL, '00912808004', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'Lara Carvalho', NULL, '95824899010', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'João Vitor Sales', NULL, '48453375097', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'Maria Clara Carvalho', NULL, '21526701081', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'Yuri Pires', NULL, '96570326015', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'Calebe Barros', NULL, '91757673091', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(11, 'Alana Pereira', NULL, '23569146090', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(12, 'Mirella Cardoso', NULL, '69923362078', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(13, 'Enrico Cardoso', NULL, '55028489068', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(14, 'Lucas Cunha', NULL, '26962337051', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(15, 'Calebe Rodrigues', NULL, '04248796031', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(16, 'Alexia Monteiro', NULL, '93790494046', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(17, 'Luiz Carvalho', NULL, '61961057018', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(18, 'Nicole Azevedo', NULL, '86330521050', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 --
 -- Extraindo dados da tabela `carteira`
@@ -30,7 +51,8 @@ INSERT INTO `cadastro` (`CadastroId`, `Nome`, `TipoCadastro`, `Cpf`, `NumeroTele
 
 INSERT INTO `carteira` (`CarteiraId`, `CadastroId`, `EmpresaId`, `TipoCartao`, `NumeroCartao`, `NomeCartao`, `DataExpiracaoCartao`, `CodigoSegurancaoCartao`, `CodigoPix`, `Status`) VALUES
 (1, NULL, 4, 'C', '4544533434534545', 'TESTE', '072025', '345', NULL, 'A'),
-(2, NULL, 1, 'D', '4343434443434343', 'TESTE CARTÃO', '022024', '443', NULL, 'A');
+(2, NULL, 1, 'D', '4343434443434343', 'TESTE CARTÃO', '022024', '443', NULL, 'A'),
+(3, NULL, 2, 'C', '5645464556564456', 'teste', '072023', '654', NULL, 'A');
 
 --
 -- Extraindo dados da tabela `cidade`
@@ -346,7 +368,9 @@ INSERT INTO `empresa` (`EmpresaId`, `Nome`, `RazaoSocial`, `CpfCnpj`, `TipoEmpre
 (1, 'Rotativos João', 'Rotativos João', '67318259000156', 'J', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-07-22 12:10:54'),
 (2, 'Aguiar Estacionamentos', 'Aguiar Estacionamentos', '74522886000170', 'J', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-08-20 22:55:04'),
 (4, 'Zé Rotativos', 'Zé Rotativos', '90914664000159', 'J', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-07-22 12:33:39'),
-(5, 'Maria Rotativos', 'Maria Rotativos', '41077828000125', 'J', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-09-30 17:07:29');
+(5, 'Maria Rotativos', 'Maria Rotativos', '41077828000125', 'J', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-09-30 17:07:29'),
+(6, 'Luiz Rotativos', 'Luiz Rotativos', '19587477000143', 'J', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-10-10 00:58:11'),
+(7, 'Rotativo Online', 'Rotativo Online', '41520140000178', 'J', 'R. Gonçalves Lêdo', '185', NULL, '88802120', 70, 'Centro', NULL, 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for lorem ipsum will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).\n\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', '48123456789', '48987654321', 'rotativoonline@gmail.com', '2022-10-12 15:21:15');
 
 --
 -- Extraindo dados da tabela `estacionamento`
@@ -357,8 +381,9 @@ INSERT INTO `estacionamento` (`EstacionamentoId`, `NomeEstacionamento`, `CpfCnpj
 (2, 'Aguiar Estacionamentos', '74522886000170', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '50', NULL, '48999985557', '48755585757', 'aguiar.estacionamentos@teste.com', NULL, '10.00', '5.00', 2, '2022-09-15 22:55:04'),
 (3, 'Rotativos João (Santa Bárbara)', '58409749000177', 'Rua Jerônimo Coelho', '100', NULL, '88804340', 70, 'Santa Bárbara', '100', NULL, '48455454545', NULL, 'rotativos.joao@teste.com', NULL, '10.00', '5.00', 1, '2022-09-22 12:18:29'),
 (7, 'Zé Rotativos (Centro)', '90914664000159', 'Rua Coronel Marcos Rovaris', '100', NULL, '88801100', 70, 'Centro', '200', NULL, '4899775757', NULL, 'ze.rotativos@gmail.com', 3, '0.00', '5.00', 4, '2022-09-22 12:33:39'),
-(8, 'Zé Rotativos (Próspera)', '90914664000159', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '150', NULL, '48775557575', NULL, 'ze.rotativos@gmail.com', 5, '8.00', '4.00', 4, '2022-09-22 12:38:41'),
-(9, 'Maria Rotativos', '41077828000125', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '0', NULL, '48877878786', NULL, 'maria.rotativos@teste.com', NULL, NULL, NULL, 5, '2022-09-30 17:07:29');
+(8, 'Zé Rotativos (Próspera)', '90914664000159', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '150', NULL, '48775557575', NULL, 'ze.rotativos@gmail.com', 3, '8.00', '4.00', 4, '2022-09-22 12:38:41'),
+(9, 'Maria Rotativos', '41077828000125', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '0', NULL, '48877878786', NULL, 'maria.rotativos@teste.com', NULL, NULL, NULL, 5, '2022-09-30 17:07:29'),
+(10, 'Luiz Rotativos', '19587477000143', 'Rua São Miguel do Oeste', '100', NULL, '88815100', 70, 'Ceará', '0', NULL, '48555454545', '487878687', 'luiz.rotativos@gmail.com', 2, '12.00', '0.00', 6, '2022-10-10 00:58:11');
 
 --
 -- Extraindo dados da tabela `fluxovaga`
@@ -543,7 +568,90 @@ INSERT INTO `fluxovaga` (`FluxoVagaId`, `DataEntrada`, `DataSaida`, `HoraEntrada
 (180, '2022-09-29', '2022-09-29', '14:31:00', '17:00:00', NULL, 'DFG4456', NULL, 8, NULL, 'F'),
 (181, '2022-09-30', '2022-09-30', '09:18:00', '11:22:00', 2, 'FDG4554', NULL, 8, 12, 'F'),
 (182, '2022-09-30', '2022-09-30', '09:55:00', '12:00:00', 1, 'JHG6567', NULL, 7, NULL, 'F'),
-(183, '2022-09-29', '2022-09-29', '14:31:00', '17:15:00', NULL, 'FGH5R45', NULL, 7, NULL, 'F');
+(183, '2022-09-29', '2022-09-29', '14:31:00', '17:15:00', NULL, 'FGH5R45', NULL, 7, NULL, 'F'),
+(184, '2022-09-30', '2022-09-30', '19:30:00', '21:00:00', 1, 'GTY6454', NULL, 8, 11, 'F'),
+(185, '2022-10-01', '2022-10-01', '09:13:00', '12:23:00', 1, 'DFS5545', NULL, 8, 13, 'F'),
+(186, '2022-10-01', '2022-10-01', '09:00:00', '11:15:00', NULL, 'FGD3454', NULL, 7, NULL, 'F'),
+(187, '2022-10-03', '2022-10-03', '09:55:00', '12:06:00', 1, 'DFG4453', NULL, 8, 14, 'F'),
+(188, '2022-10-11', '2022-10-11', '08:09:00', '14:57:00', NULL, 'TCL2E94', NULL, 8, NULL, 'F'),
+(189, '2022-10-11', '2022-10-11', '09:42:00', '20:07:00', NULL, 'OKD1223', NULL, 8, NULL, 'F'),
+(190, '2022-10-11', '2022-10-11', '12:41:00', '13:32:00', NULL, 'RTB5573', NULL, 8, NULL, 'F'),
+(191, '2022-10-11', '2022-10-11', '16:11:00', '19:23:00', NULL, 'SCD8586', NULL, 8, NULL, 'F'),
+(192, '2022-10-11', '2022-10-11', '16:29:00', '21:50:00', NULL, 'UXV1N14', NULL, 8, NULL, 'F'),
+(193, '2022-10-11', '2022-10-11', '16:34:00', '19:15:00', NULL, 'YFU3646', NULL, 8, NULL, 'F'),
+(194, '2022-10-11', '2022-10-11', '08:46:00', '19:38:00', NULL, 'QQI1V85', NULL, 8, NULL, 'F'),
+(195, '2022-10-11', '2022-10-11', '19:39:00', '20:13:00', NULL, 'VIU5914', NULL, 8, NULL, 'F'),
+(196, '2022-10-11', '2022-10-11', '08:03:00', '21:34:00', NULL, 'EGL2145', NULL, 8, NULL, 'F'),
+(197, '2022-10-11', '2022-10-11', '17:25:00', '18:47:00', NULL, 'JMC7631', NULL, 8, NULL, 'F'),
+(198, '2022-10-11', '2022-10-11', '13:32:00', '19:57:00', NULL, 'OMO7915', NULL, 8, NULL, 'F'),
+(199, '2022-10-11', '2022-10-11', '19:06:00', '21:35:00', NULL, 'AXD5N59', NULL, 8, NULL, 'F'),
+(200, '2022-10-11', '2022-10-11', '18:36:00', '20:42:00', NULL, 'RYR6J95', NULL, 8, NULL, 'F'),
+(201, '2022-10-11', '2022-10-11', '13:48:00', '17:14:00', NULL, 'SXL4997', NULL, 8, NULL, 'F'),
+(202, '2022-10-11', '2022-10-11', '16:54:00', '19:20:00', NULL, 'QJO5618', NULL, 8, NULL, 'F'),
+(203, '2022-10-11', '2022-10-11', '16:48:00', '19:42:00', NULL, 'QJH2871', NULL, 8, NULL, 'F'),
+(204, '2022-10-11', '2022-10-11', '12:58:00', '19:42:00', NULL, 'BEU5437', NULL, 8, NULL, 'F'),
+(205, '2022-10-11', '2022-10-11', '16:31:00', '21:19:00', NULL, 'QUY2K43', NULL, 8, NULL, 'F'),
+(206, '2022-10-11', '2022-10-11', '08:43:00', '12:34:00', NULL, 'VVM1355', NULL, 8, NULL, 'F'),
+(207, '2022-10-11', '2022-10-11', '13:04:00', '20:31:00', NULL, 'EOB1Q18', NULL, 8, NULL, 'F'),
+(208, '2022-10-11', '2022-10-11', '19:19:00', '20:13:00', NULL, 'XNM4A91', NULL, 8, NULL, 'F'),
+(209, '2022-10-11', '2022-10-11', '16:35:00', '17:48:00', NULL, 'MHO8B65', NULL, 8, NULL, 'F'),
+(210, '2022-10-11', '2022-10-11', '17:02:00', '20:54:00', NULL, 'RHN4828', NULL, 8, NULL, 'F'),
+(211, '2022-10-11', '2022-10-11', '16:02:00', '19:45:00', NULL, 'LAH2A66', NULL, 8, NULL, 'F'),
+(212, '2022-10-11', '2022-10-11', '12:07:00', '18:55:00', NULL, 'XNA5292', NULL, 8, NULL, 'F'),
+(213, '2022-10-11', '2022-10-11', '14:20:00', '21:36:00', NULL, 'AOC4J23', NULL, 8, NULL, 'F'),
+(214, '2022-10-11', '2022-10-11', '08:01:00', '10:48:00', NULL, 'ZMH2R41', NULL, 8, NULL, 'F'),
+(215, '2022-10-11', '2022-10-11', '12:36:00', '15:18:00', NULL, 'OEZ3K42', NULL, 8, NULL, 'F'),
+(216, '2022-10-11', '2022-10-11', '15:56:00', '19:13:00', NULL, 'IIG9375', NULL, 8, NULL, 'F'),
+(217, '2022-10-11', '2022-10-11', '09:55:00', '21:46:00', NULL, 'SWY2216', NULL, 8, NULL, 'F'),
+(218, '2022-10-11', '2022-10-11', '15:40:00', '21:47:00', NULL, 'PLV3851', NULL, 8, NULL, 'F'),
+(219, '2022-10-11', '2022-10-11', '17:12:00', '19:51:00', NULL, 'LDA6373', NULL, 8, NULL, 'F'),
+(220, '2022-10-11', '2022-10-11', '08:27:00', '09:06:00', NULL, 'XOD4648', NULL, 8, NULL, 'F'),
+(221, '2022-10-11', '2022-10-11', '13:29:00', '14:33:00', NULL, 'FFH8544', NULL, 8, NULL, 'F'),
+(222, '2022-10-11', '2022-10-11', '14:01:00', '15:27:00', NULL, 'PNF2219', NULL, 8, NULL, 'F'),
+(223, '2022-10-11', '2022-10-11', '17:48:00', '18:41:00', NULL, 'LCB6621', NULL, 8, NULL, 'F'),
+(224, '2022-10-11', '2022-10-11', '09:11:00', '20:27:00', NULL, 'USH8823', NULL, 8, NULL, 'F'),
+(225, '2022-10-11', '2022-10-11', '09:56:00', '16:46:00', NULL, 'YIW6O25', NULL, 8, NULL, 'F'),
+(226, '2022-10-11', '2022-10-11', '17:11:00', '20:18:00', NULL, 'UEX2633', NULL, 8, NULL, 'F'),
+(227, '2022-10-11', '2022-10-11', '09:16:00', '12:47:00', NULL, 'SVI5177', NULL, 8, NULL, 'F'),
+(228, '2022-10-11', '2022-10-11', '17:45:00', '21:29:00', NULL, 'UGW9R83', NULL, 8, NULL, 'F'),
+(229, '2022-10-11', '2022-10-11', '13:11:00', '16:58:00', NULL, 'BIE9381', NULL, 8, NULL, 'F'),
+(230, '2022-10-11', '2022-10-11', '15:14:00', '16:23:00', NULL, 'VDG8T43', NULL, 8, NULL, 'F'),
+(231, '2022-10-11', '2022-10-11', '11:08:00', '13:24:00', NULL, 'AXR6342', NULL, 8, NULL, 'F'),
+(232, '2022-10-11', '2022-10-11', '11:59:00', '12:32:00', NULL, 'ODY2958', NULL, 8, NULL, 'F'),
+(233, '2022-10-11', '2022-10-11', '14:49:00', '21:58:00', NULL, 'QUG3545', NULL, 8, NULL, 'F'),
+(234, '2022-10-11', '2022-10-11', '15:04:00', '20:36:00', NULL, 'EMC9H76', NULL, 8, NULL, 'F'),
+(235, '2022-10-11', '2022-10-11', '10:07:00', '11:08:00', NULL, 'CAM3M41', NULL, 8, NULL, 'F'),
+(236, '2022-10-11', '2022-10-11', '15:05:00', '17:06:00', NULL, 'VVJ1382', NULL, 8, NULL, 'F'),
+(237, '2022-10-11', '2022-10-11', '13:40:00', '17:16:00', NULL, 'EVG7239', NULL, 8, NULL, 'F'),
+(238, '2022-10-11', '2022-10-11', '10:45:00', '18:39:00', NULL, 'VSH1113', NULL, 8, NULL, 'F'),
+(239, '2022-10-11', '2022-10-11', '14:29:00', '21:11:00', NULL, 'DZT9741', NULL, 8, NULL, 'F'),
+(240, '2022-10-11', '2022-10-11', '15:18:00', '18:47:00', NULL, 'YXF2497', NULL, 8, NULL, 'F'),
+(241, '2022-10-11', '2022-10-11', '11:01:00', '12:30:00', NULL, 'QXH3248', NULL, 8, NULL, 'F'),
+(242, '2022-10-11', '2022-10-11', '16:22:00', '17:54:00', NULL, 'ZEK9U26', NULL, 8, NULL, 'F'),
+(243, '2022-10-11', '2022-10-11', '09:47:00', '20:30:00', NULL, 'PVO4C27', NULL, 8, NULL, 'F'),
+(244, '2022-10-11', '2022-10-11', '17:03:00', '18:23:00', NULL, 'IPH1H18', NULL, 8, NULL, 'F'),
+(245, '2022-10-11', '2022-10-11', '16:22:00', '17:34:00', NULL, 'PJB2E22', NULL, 8, NULL, 'F'),
+(246, '2022-10-11', '2022-10-11', '10:12:00', '19:46:00', NULL, 'VZM6114', NULL, 8, NULL, 'F'),
+(247, '2022-10-11', '2022-10-11', '11:58:00', '15:53:00', NULL, 'WEY3335', NULL, 8, NULL, 'F'),
+(248, '2022-10-11', '2022-10-11', '11:30:00', '16:32:00', NULL, 'SWT4822', NULL, 8, NULL, 'F'),
+(249, '2022-10-11', '2022-10-11', '13:07:00', '16:01:00', NULL, 'RMH5836', NULL, 8, NULL, 'F'),
+(250, '2022-10-11', '2022-10-11', '17:45:00', '21:01:00', NULL, 'BVP7M51', NULL, 8, NULL, 'F'),
+(251, '2022-10-11', '2022-10-11', '15:23:00', '16:37:00', NULL, 'LHT9791', NULL, 8, NULL, 'F'),
+(252, '2022-10-11', '2022-10-11', '16:09:00', '20:08:00', NULL, 'GAC5Q64', NULL, 8, NULL, 'F'),
+(253, '2022-10-11', '2022-10-11', '12:09:00', '15:13:00', NULL, 'ADL3354', NULL, 8, NULL, 'F'),
+(254, '2022-10-11', '2022-10-11', '10:54:00', '12:52:00', NULL, 'PMV7Y87', NULL, 8, NULL, 'F'),
+(255, '2022-10-11', '2022-10-11', '18:57:00', '19:18:00', NULL, 'YGU4K94', NULL, 8, NULL, 'F'),
+(256, '2022-10-11', '2022-10-11', '08:52:00', '13:49:00', NULL, 'PEF9K23', NULL, 8, NULL, 'F'),
+(258, '2022-10-13', '2022-10-13', '17:25:00', '19:01:00', NULL, 'GJT7M12', NULL, 8, NULL, 'F'),
+(259, '2022-10-13', '2022-10-13', '12:16:00', '13:55:00', NULL, 'YFA2J15', NULL, 8, NULL, 'F'),
+(260, '2022-10-13', '2022-10-13', '18:08:00', '21:54:00', NULL, 'LRB3796', NULL, 8, NULL, 'F'),
+(261, '2022-10-13', '2022-10-13', '09:51:00', '20:40:00', NULL, 'FYG5111', NULL, 8, NULL, 'F'),
+(262, '2022-10-13', '2022-10-13', '12:57:00', '20:45:00', NULL, 'UYW1C74', NULL, 8, NULL, 'F'),
+(263, '2022-10-13', '2022-10-13', '19:16:00', '20:30:00', NULL, 'MVO9181', NULL, 8, NULL, 'F'),
+(264, '2022-10-13', '2022-10-13', '12:39:00', '16:12:00', NULL, 'RLL2V67', NULL, 8, NULL, 'F'),
+(265, '2022-10-13', '2022-10-13', '18:39:00', '19:52:00', NULL, 'NNV5654', NULL, 8, NULL, 'F'),
+(266, '2022-10-13', '2022-10-13', '19:10:00', '20:59:00', NULL, 'WIO6S65', NULL, 8, NULL, 'F'),
+(267, '2022-10-13', '2022-10-13', '08:09:00', '16:45:00', NULL, 'NHW1414', NULL, 8, NULL, 'F');
 
 --
 -- Extraindo dados da tabela `formapagamento`
@@ -562,19 +670,25 @@ INSERT INTO `formapagamento` (`FormaPagamentoId`, `Descricao`) VALUES
 
 INSERT INTO `fotoestacionamento` (`FotoEstacionamentoId`, `EstacionamentoId`, `UrlFoto`) VALUES
 (10, 2, '/estacionamentos/2524975640024223631202209152256.PNG'),
-(11, 7, '/estacionamentos/3018677628477373060202209221410.PNG');
+(11, 7, '/estacionamentos/3018677628477373060202209221410.PNG'),
+(12, 8, '/estacionamentos/135988858811098332202210122227.jpg'),
+(13, 1, '/estacionamentos/177512164840148336202210122228.jpg'),
+(15, 3, '/estacionamentos/660121618955361000202210122230.jpg'),
+(16, 9, '/estacionamentos/1179740254869119612202210122232.jpg'),
+(17, 10, '/estacionamentos/1455789700830310895202210122234.PNG');
 
 --
 -- Extraindo dados da tabela `login`
 --
 
-INSERT INTO `login` (`LoginId`, `Email`, `NomeUsuario`, `Senha`, `CadastroId`, `EstacionamentoId`, `PermissaoId`, `TokenEmail`, `Status`) VALUES
-(1, 'rotativos.joao@teste.com', 'rotativos.joao', '25d55ad283aa400af464c76d713c07ad', NULL, 1, 2, NULL, 'A'),
-(12, 'aguiar.estacionamentos@teste.com', 'aguiar.estacionamentos', '25d55ad283aa400af464c76d713c07ad', NULL, 2, 2, NULL, 'A'),
-(15, 'ze.rotativos@gmail.com', 'ze.rotativos', '25d55ad283aa400af464c76d713c07ad', NULL, 7, 2, NULL, 'A'),
-(16, 'caroldosreis97@gmail.com', 'carolaine.zerotativos', '25d55ad283aa400af464c76d713c07ad', NULL, 7, 3, NULL, 'A'),
-(17, 'adm.software.rotativos@gmail.com', 'adm.software', '25d55ad283aa400af464c76d713c07ad', NULL, NULL, 1, NULL, 'A'),
-(18, 'maria.rotativos@teste.com', 'maria.rotativos', '25d55ad283aa400af464c76d713c07ad', NULL, 9, 2, NULL, 'A');
+INSERT INTO `login` (`LoginId`, `Email`, `NomeUsuario`, `Senha`, `CadastroId`, `EmpresaId`, `EstacionamentoId`, `PermissaoId`, `TokenEmail`, `Status`) VALUES
+(1, 'rotativos.joao@teste.com', 'rotativos.joao', '25d55ad283aa400af464c76d713c07ad', NULL, NULL, 1, 2, NULL, 'A'),
+(12, 'aguiar.estacionamentos@teste.com', 'aguiar.estacionamentos', '25d55ad283aa400af464c76d713c07ad', NULL, NULL, 2, 2, NULL, 'A'),
+(15, 'ze.rotativos@gmail.com', 'ze.rotativos', '25d55ad283aa400af464c76d713c07ad', NULL, NULL, 7, 2, NULL, 'A'),
+(16, 'caroldosreis97@gmail.com', 'carolaine.zerotativos', '25d55ad283aa400af464c76d713c07ad', NULL, NULL, 7, 3, NULL, 'A'),
+(17, 'adm.software.rotativos@gmail.com', 'adm.software', '25d55ad283aa400af464c76d713c07ad', NULL, 7, NULL, 1, NULL, 'A'),
+(18, 'maria.rotativos@teste.com', 'maria.rotativos', '25d55ad283aa400af464c76d713c07ad', NULL, NULL, 9, 2, NULL, 'A'),
+(19, 'luiz.rotativos@gmail.com', 'luiz.rotativos', '25d55ad283aa400af464c76d713c07ad', NULL, NULL, 10, 2, NULL, 'A');
 
 --
 -- Extraindo dados da tabela `permissao`
@@ -771,16 +885,99 @@ INSERT INTO `receber` (`ReceberId`, `FormaPagamentoId`, `CadastroId`, `FluxoVaga
 (178, 2, NULL, NULL, 13, NULL, '8.00', 'F'),
 (179, 2, NULL, 181, NULL, NULL, '8.00', 'F'),
 (180, 1, NULL, 182, NULL, NULL, '10.42', 'F'),
-(181, 1, NULL, 183, NULL, NULL, '13.67', 'F');
+(181, 1, NULL, 183, NULL, NULL, '13.67', 'F'),
+(182, 1, NULL, NULL, 14, NULL, '8.00', 'F'),
+(183, 1, NULL, 186, NULL, NULL, '11.25', 'F'),
+(184, 3, NULL, 188, NULL, NULL, '8.00', 'F'),
+(185, 2, NULL, 189, NULL, NULL, '8.00', 'F'),
+(186, 2, NULL, 190, NULL, NULL, '3.40', 'F'),
+(187, 1, NULL, 191, NULL, NULL, '8.00', 'F'),
+(188, 3, NULL, 192, NULL, NULL, '8.00', 'F'),
+(189, 1, NULL, 193, NULL, NULL, '8.00', 'F'),
+(190, 4, NULL, 194, NULL, NULL, '8.00', 'F'),
+(191, 1, NULL, 195, NULL, NULL, '2.27', 'F'),
+(192, 2, NULL, 196, NULL, NULL, '8.00', 'F'),
+(193, 1, NULL, 197, NULL, NULL, '5.47', 'F'),
+(194, 2, NULL, 198, NULL, NULL, '8.00', 'F'),
+(195, 4, NULL, 199, NULL, NULL, '8.00', 'F'),
+(196, 2, NULL, 200, NULL, NULL, '8.00', 'F'),
+(197, 4, NULL, 201, NULL, NULL, '8.00', 'F'),
+(198, 3, NULL, 202, NULL, NULL, '8.00', 'F'),
+(199, 2, NULL, 203, NULL, NULL, '8.00', 'F'),
+(200, 2, NULL, 204, NULL, NULL, '8.00', 'F'),
+(201, 2, NULL, 205, NULL, NULL, '8.00', 'F'),
+(202, 1, NULL, 206, NULL, NULL, '8.00', 'F'),
+(203, 1, NULL, 207, NULL, NULL, '8.00', 'F'),
+(204, 4, NULL, 208, NULL, NULL, '3.60', 'F'),
+(205, 3, NULL, 209, NULL, NULL, '4.87', 'F'),
+(206, 2, NULL, 210, NULL, NULL, '8.00', 'F'),
+(207, 3, NULL, 211, NULL, NULL, '8.00', 'F'),
+(208, 3, NULL, 212, NULL, NULL, '8.00', 'F'),
+(209, 4, NULL, 213, NULL, NULL, '8.00', 'F'),
+(210, 3, NULL, 214, NULL, NULL, '8.00', 'F'),
+(211, 4, NULL, 215, NULL, NULL, '8.00', 'F'),
+(212, 4, NULL, 216, NULL, NULL, '8.00', 'F'),
+(213, 4, NULL, 217, NULL, NULL, '8.00', 'F'),
+(214, 4, NULL, 218, NULL, NULL, '8.00', 'F'),
+(215, 1, NULL, 219, NULL, NULL, '8.00', 'F'),
+(216, 2, NULL, 220, NULL, NULL, '2.60', 'F'),
+(217, 4, NULL, 221, NULL, NULL, '4.27', 'F'),
+(218, 2, NULL, 222, NULL, NULL, '5.73', 'F'),
+(219, 4, NULL, 223, NULL, NULL, '3.53', 'F'),
+(220, 3, NULL, 224, NULL, NULL, '8.00', 'F'),
+(221, 2, NULL, 225, NULL, NULL, '8.00', 'F'),
+(222, 2, NULL, 226, NULL, NULL, '8.00', 'F'),
+(223, 3, NULL, 227, NULL, NULL, '8.00', 'F'),
+(224, 4, NULL, 228, NULL, NULL, '8.00', 'F'),
+(225, 2, NULL, 229, NULL, NULL, '8.00', 'F'),
+(226, 4, NULL, 230, NULL, NULL, '4.60', 'F'),
+(227, 3, NULL, 231, NULL, NULL, '8.00', 'F'),
+(228, 1, NULL, 232, NULL, NULL, '2.20', 'F'),
+(229, 2, NULL, 233, NULL, NULL, '8.00', 'F'),
+(230, 1, NULL, 234, NULL, NULL, '8.00', 'F'),
+(231, 2, NULL, 235, NULL, NULL, '4.07', 'F'),
+(232, 1, NULL, 236, NULL, NULL, '8.00', 'F'),
+(233, 2, NULL, 237, NULL, NULL, '8.00', 'F'),
+(234, 4, NULL, 238, NULL, NULL, '8.00', 'F'),
+(235, 3, NULL, 239, NULL, NULL, '8.00', 'F'),
+(236, 3, NULL, 240, NULL, NULL, '8.00', 'F'),
+(237, 3, NULL, 241, NULL, NULL, '5.93', 'F'),
+(238, 2, NULL, 242, NULL, NULL, '6.13', 'F'),
+(239, 3, NULL, 243, NULL, NULL, '8.00', 'F'),
+(240, 4, NULL, 244, NULL, NULL, '5.33', 'F'),
+(241, 3, NULL, 245, NULL, NULL, '4.80', 'F'),
+(242, 3, NULL, 246, NULL, NULL, '8.00', 'F'),
+(243, 4, NULL, 247, NULL, NULL, '8.00', 'F'),
+(244, 3, NULL, 248, NULL, NULL, '8.00', 'F'),
+(245, 3, NULL, 249, NULL, NULL, '8.00', 'F'),
+(246, 3, NULL, 250, NULL, NULL, '8.00', 'F'),
+(247, 1, NULL, 253, NULL, NULL, '8.00', 'F'),
+(248, 4, NULL, 254, NULL, NULL, '7.87', 'F'),
+(249, 2, NULL, 256, NULL, NULL, '8.00', 'F'),
+(250, 1, NULL, 251, NULL, NULL, '4.93', 'F'),
+(251, 3, NULL, 255, NULL, NULL, '1.40', 'F'),
+(252, 3, NULL, 252, NULL, NULL, '8.00', 'F'),
+(253, 3, NULL, 263, NULL, NULL, '4.93', 'F'),
+(254, 3, NULL, 266, NULL, NULL, '7.27', 'F'),
+(255, 2, NULL, 265, NULL, NULL, '4.87', 'F'),
+(256, 2, NULL, 260, NULL, NULL, '8.00', 'F'),
+(257, 1, NULL, 258, NULL, NULL, '6.40', 'F'),
+(258, 3, NULL, 262, NULL, NULL, '8.00', 'F'),
+(259, 1, NULL, 264, NULL, NULL, '8.00', 'F'),
+(260, 3, NULL, 259, NULL, NULL, '6.60', 'F'),
+(261, 4, NULL, 261, NULL, NULL, '8.00', 'F'),
+(262, 2, NULL, 267, NULL, NULL, '8.00', 'F');
 
 --
 -- Extraindo dados da tabela `receberempresa`
 --
 
-INSERT INTO `receberempresa` (`ReceberEmpresaId`, `FormaPagamentoId`, `EmpresaId`, `CarteiraId`, `Valor`, `DataPagamento`, `DataConsiderar`, `Status`) VALUES
-(1, 4, 4, NULL, '25.00', '2022-08-19', '2022-08-21', 'F'),
-(2, 5, 4, 1, '25.00', '2022-09-30', '2022-09-30', 'F'),
-(3, 5, 1, 2, '25.00', '2022-08-29', '2022-08-29', 'F');
+INSERT INTO `receberempresa` (`ReceberEmpresaId`, `FormaPagamentoId`, `EmpresaId`, `CarteiraId`, `Valor`, `DataPagamento`, `DataVencimento`, `Status`) VALUES
+(1, 1, 5, NULL, '25.00', '2022-10-09', '2022-11-30', 'F'),
+(2, 2, 1, NULL, '25.00', '2022-08-25', '2022-09-25', 'F'),
+(3, 1, 2, NULL, '25.00', '2022-10-09', '2022-11-09', 'F'),
+(4, 3, 4, NULL, '25.00', '2022-10-09', '2022-11-09', 'F'),
+(5, 1, 1, NULL, '25.00', '2022-10-12', '2022-11-12', 'F');
 
 --
 -- Extraindo dados da tabela `reserva`
@@ -795,6 +992,27 @@ INSERT INTO `reserva` (`ReservaId`, `DataEntrada`, `DataSaida`, `HoraEntrada`, `
 (10, '2022-09-30', '2022-09-30', '08:00:00', '12:00:00', 1, NULL, 8),
 (11, '2022-09-30', '2022-09-30', '19:15:00', '21:15:00', 1, NULL, 8),
 (12, '2022-09-30', '2022-09-30', '09:00:00', '12:00:00', 2, NULL, 8),
-(13, '2022-10-01', '2022-10-01', '09:00:00', '11:00:00', 1, NULL, 8);
+(13, '2022-10-01', '2022-10-01', '09:00:00', '11:00:00', 1, NULL, 8),
+(14, '2022-10-03', '2022-10-03', '10:00:00', '12:00:00', 1, NULL, 8),
+(15, '2022-10-18', '2022-10-18', '08:45:00', '09:45:00', 5, NULL, 8),
+(16, '2022-10-18', '2022-10-18', '11:30:00', '16:30:00', 6, NULL, 8),
+(17, '2022-10-18', '2022-10-18', '08:45:00', '09:45:00', 7, NULL, 8),
+(18, '2022-10-18', '2022-10-18', '18:45:00', '20:30:00', 13, NULL, 8),
+(19, '2022-10-18', '2022-10-18', '11:45:00', '19:45:00', 2, NULL, 8),
+(20, '2022-10-18', '2022-10-18', '16:45:00', '18:45:00', 1, NULL, 8),
+(21, '2022-10-18', '2022-10-18', '10:45:00', '13:30:00', 1, NULL, 8),
+(22, '2022-10-18', '2022-10-18', '09:45:00', '13:30:00', 7, NULL, 8),
+(23, '2022-10-18', '2022-10-18', '10:45:00', '13:45:00', 7, NULL, 8),
+(24, '2022-10-18', '2022-10-18', '16:30:00', '20:30:00', 18, NULL, 8),
+(25, '2022-10-18', '2022-10-18', '09:45:00', '13:00:00', 14, NULL, 8),
+(26, '2022-10-18', '2022-10-18', '17:45:00', '19:45:00', 10, NULL, 8),
+(27, '2022-10-18', '2022-10-18', '13:00:00', '21:00:00', 1, NULL, 8),
+(28, '2022-10-18', '2022-10-18', '16:00:00', '17:45:00', 4, NULL, 8),
+(29, '2022-10-18', '2022-10-18', '14:00:00', '19:00:00', 16, NULL, 8),
+(30, '2022-10-18', '2022-10-18', '08:45:00', '18:30:00', 9, NULL, 8),
+(31, '2022-10-18', '2022-10-18', '16:30:00', '19:45:00', 18, NULL, 8);
+COMMIT;
 
--- --------------------------------------------------------
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -266,73 +266,192 @@ class FluxoVaga extends CI_Controller {
         echo json_encode($obj);
     }
 
+    public function getInfoLotacao()
+    {
+        $EstacionamentoId = $this->funcoes->get('EstacionamentoId');
+        $DataEntrada = $this->funcoes->formataData($this->funcoes->get('DataEntrada'));
+        $HoraEntrada = $this->funcoes->formataHora($this->funcoes->get('HoraEntrada'));
+        $HoraSaida = $this->funcoes->formataHora($this->funcoes->get('HoraSaida'));
+
+        $filtros = [
+            'EstacionamentoId'=> $EstacionamentoId
+            ,'DataInicio'=> ""
+            ,'DataFim'=> ""
+            ,'CadastroId'=> ""
+            ,'Reservado'=> ""
+            ,'StatusFluxo'=> "E"
+            ,'FormaPagamentoId'=> ""
+            ,'StatusPagamento'=> ""
+        ];
+        $locacoes = $this->FluxoVaga_model->getFluxoVagas($filtros);
+        $reservas_proximas = $this->FluxoVaga_model->getReservasProximas($EstacionamentoId,$DataEntrada,$HoraEntrada,$HoraSaida);
+
+        echo json_encode([
+                'QtdLocacoes'=> count($locacoes)
+                ,'reservas_proximas'=> $reservas_proximas
+            ]);
+    }
+
     public function gerarFluxos()
     {
         $alfabeto = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
         $EstacionamentoId = 8;
-        $data = "2022-09-22";
-        $gerar = 50;
-        $fechar = 1;
+        $data = "2022-10-13";
+        $gerar = 4;
+        $fechar = 0;
+        $somente_fechar = 1;
+        $Reserva = 0;
 
-        for ($i=0; $i <$gerar ; $i++) { 
-            $modelo = rand(1,2);
-            $placa = "";
-            for ($x=1; $x <=7 ; $x++) { 
-                if($x<=3){
-                    $placa .= $alfabeto[rand(0,25)];
-                }else{
-                    if($modelo==2 && $x==5){
-                        $placa .= $alfabeto[rand(0,25)]; 
-                    }else{
-                        $placa .= rand(1,9);
+        if($somente_fechar==1){
+            $dados_geral = [];
+
+            $filtros = [
+                'EstacionamentoId'=> $EstacionamentoId
+                ,'DataInicio'=> ""
+                ,'DataFim'=> ""
+                ,'CadastroId'=> ""
+                ,'Reservado'=> ""
+                ,'StatusFluxo'=> "E"
+                ,'FormaPagamentoId'=> ""
+                ,'StatusPagamento'=> ""
+            ];
+            $lista = $this->FluxoVaga_model->getFluxoVagas($filtros);
+
+            foreach ($lista as $i => $a) {
+                if($gerar>=$i){
+                    $HoraSaida = rand(($a['HoraEntradaDb']+1),21);
+                    $MinSaida = rand(1,59);
+
+                    $dados[$i] = [
+                        'Status'=>'F'
+                        ,'DataSaida'=>$a['DataEntradaDb']
+                        ,'HoraSaida'=>($HoraSaida<10?'0':'').$HoraSaida.":".($MinSaida<10?'0':'').$MinSaida.":00"
+                    ];
+
+                    $dados_geral[$i] = $dados[$i];
+
+                    $this->FluxoVaga_model->setFluxoVaga($dados[$i],$a['FluxoVagaId']);
+
+                    if($a['JaPagou']=='N'){
+                        $Entrada = $a['DataEntradaDb']." ".$a['HoraEntrada'].":00";
+                        $Saida = $dados[$i]['DataSaida']." ".$dados[$i]['HoraSaida'];
+
+                        $objEstacionamento = $this->FluxoVaga_model->getDadosCalculo(null,$EstacionamentoId,$Entrada,$Saida);
+                        $horas_totais = $objEstacionamento['minutos']/60;
+                        $ValorHora =  $objEstacionamento['PrecoHora']>0?($horas_totais*$objEstacionamento['PrecoHora']):0;
+                        $ValorLivre =  $objEstacionamento['PrecoLivre']>0?$objEstacionamento['PrecoLivre']:0;
+                        $valor = $ValorLivre;
+                        if(($ValorHora>0 && $ValorLivre>0 && $ValorLivre > $ValorHora) || $ValorLivre<=0){
+                            $valor = $ValorHora;
+                        }
+
+                        $dados_receber[$i] = [
+                            'FormaPagamentoId'=>rand(1,4)
+                            ,'FluxoVagaId'=>$a['FluxoVagaId']
+                            ,'Status'=>'F'
+                            ,'Valor'=> number_format(floatval($valor), 2, '.', '')
+                        ];
+
+                        $this->FluxoVaga_model->seReceber($dados_receber[$i]);
+
+                        $dados_geral[$i] += $dados_receber[$i];
                     }
-                    
                 }
             }
-            $HoraEntrada = rand(8,19);
-            $MinEntrada = rand(1,59);
 
-            $HoraSaida = rand(($HoraEntrada+1),21);
-            $MinSaida = rand(1,59);
+            echo "<pre>";
+            print_r($dados_geral);
+        }else{
+            
+            for ($i=0; $i <$gerar ; $i++) { 
+                if($Reserva==0){
+                    $modelo = rand(1,2);
+                    $placa = "";
+                    for ($x=1; $x <=7 ; $x++) { 
+                        if($x<=3){
+                            $placa .= $alfabeto[rand(0,25)];
+                        }else{
+                            if($modelo==2 && $x==5){
+                                $placa .= $alfabeto[rand(0,25)]; 
+                            }else{
+                                $placa .= rand(1,9);
+                            }
+                        }
+                    }
+                }
+                $possiveis_minutos = [15,30,45,00];
+
+                $HoraEntrada = rand(8,19);
+                $MinEntrada = $Reserva==0?rand(1,59):$possiveis_minutos[rand(1,3)];
+
+                if($fechar==1||$Reserva==1){
+                    $HoraSaida = rand(($HoraEntrada+1),21);
+                    $MinSaida = $Reserva==0?rand(1,59):$possiveis_minutos[rand(1,3)];
+                }
+                
+                if($Reserva==0){
+                   $dados[$i] = [
+                        'EstacionamentoId'=>$EstacionamentoId
+                        ,'PlacaVeiculo'=>$placa
+                        ,'Status'=>$fechar==1?'F':'E'
+                        ,'DataEntrada'=>$data
+                        ,'HoraEntrada'=>($HoraEntrada<10?'0':'').$HoraEntrada.":".($MinEntrada<10?'0':'').$MinEntrada.":00"
+                    
+                    ]; 
+                }else{
+                    $dados[$i] = [
+                        'EstacionamentoId'=>$EstacionamentoId
+                        ,'CadastroId'=>rand(1,18)
+                        ,'DataEntrada'=>$data
+                        ,'HoraEntrada'=>($HoraEntrada<10?'0':'').$HoraEntrada.":".($MinEntrada<10?'0':'').$MinEntrada.":00"
+                    ]; 
+                }
+                
+                if($fechar==1||$Reserva==1){
+                    $dados[$i] += [
+                        'DataSaida'=>$data
+                        ,'HoraSaida'=>($HoraSaida<10?'0':'').$HoraSaida.":".($MinSaida<10?'0':'').$MinSaida.":00"
+                    ];
+                }
+                if($Reserva==0){
+                    $FluxoVagaId = $this->FluxoVaga_model->setFluxoVaga($dados[$i]);
+                }else{
+                    $ReservaId = $this->FluxoVaga_model->setReserva($dados[$i]); 
+                }
+
+                $dados_geral[$i] = $dados[$i];
+
+                if($fechar==1){
+                    $Entrada = $dados[$i]['DataEntrada']." ".$dados[$i]['HoraEntrada'];
+                    $Saida = $dados[$i]['DataSaida']." ".$dados[$i]['HoraSaida'];
+
+                    $objEstacionamento = $this->FluxoVaga_model->getDadosCalculo(null,$EstacionamentoId,$Entrada,$Saida);
+                    $horas_totais = $objEstacionamento['minutos']/60;
+                    $ValorHora =  $objEstacionamento['PrecoHora']>0?($horas_totais*$objEstacionamento['PrecoHora']):0;
+                    $ValorLivre =  $objEstacionamento['PrecoLivre']>0?$objEstacionamento['PrecoLivre']:0;
+                    $valor = $ValorLivre;
+                    if(($ValorHora>0 && $ValorLivre>0 && $ValorLivre > $ValorHora) || $ValorLivre<=0){
+                        $valor = $ValorHora;
+                    }
+
+                    $dados_receber[$i] = [
+                        'FormaPagamentoId'=>rand(1,4)
+                        ,'FluxoVagaId'=>$FluxoVagaId
+                        ,'Status'=>'F'
+                        ,'Valor'=> number_format(floatval($valor), 2, '.', '')
+                    ];
+
+                    $this->FluxoVaga_model->seReceber($dados_receber[$i]);
+
+                    $dados_geral[$i] += $dados_receber[$i];
+                }
 
 
-            $dados[$i] = [
-                'EstacionamentoId'=>$EstacionamentoId
-                ,'PlacaVeiculo'=>$placa
-                ,'DataEntrada'=>$data
-                ,'HoraEntrada'=>($HoraEntrada<10?'0':'').$HoraEntrada.":".($MinEntrada<10?'0':'').$MinEntrada.":00"
-                ,'DataSaida'=>$data
-                ,'HoraSaida'=>($HoraSaida<10?'0':'').$HoraSaida.":".($MinSaida<10?'0':'').$MinSaida.":00"
-            ];
-            $FluxoVagaId = $this->FluxoVaga_model->setFluxoVaga($dados[$i]);
-
-            $Entrada = $dados[$i]['DataEntrada']." ".$dados[$i]['HoraEntrada'];
-            $Saida = $dados[$i]['DataSaida']." ".$dados[$i]['HoraSaida'];
-
-            $objEstacionamento = $this->FluxoVaga_model->getDadosCalculo(null,$EstacionamentoId,$Entrada,$Saida);
-            $horas_totais = $objEstacionamento['minutos']/60;
-            $ValorHora =  $objEstacionamento['PrecoHora']>0?($horas_totais*$objEstacionamento['PrecoHora']):0;
-            $ValorLivre =  $objEstacionamento['PrecoLivre']>0?$objEstacionamento['PrecoLivre']:0;
-            $valor = $ValorLivre;
-            if(($ValorHora>0 && $ValorLivre>0 && $ValorLivre > $ValorHora) || $ValorLivre<=0){
-                $valor = $ValorHora;
             }
 
-            $dados_receber[$i] = [
-                'FormaPagamentoId'=>rand(1,4)
-                ,'FluxoVagaId'=>$FluxoVagaId
-                ,'Valor'=> number_format(floatval($valor), 2, '.', '')
-            ];
-
-            $this->FluxoVaga_model->seReceber($dados_receber[$i]);
-
-            $dados_geral[$i] = $dados[$i];
-            $dados_geral[$i] += $dados_receber[$i];
-
+            echo "<pre>";
+            print_r($dados_geral);
         }
-
-        echo "<pre>";
-        print_r($dados_geral);
 
     }
 }

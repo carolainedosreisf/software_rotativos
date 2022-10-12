@@ -35,6 +35,8 @@
     </head>
     <body ng-app="app" ng-controller="<?php echo $controller; ?>">
 	    <script> var base_url = "<?php echo base_url();?>index.php/restrita";</script>
+        <?php $EmpresaSoftware = $this->funcoes->getEmpresaSoftware();?>
+
         <div class="loading ng-hide" ng-show="carregando">
             <img class="loading-img" src="<?php echo base_url('assets/images/load.gif'); ?>">
         </div>
@@ -42,7 +44,7 @@
             <nav id="sidebar">
                 <div class="sidebar-header">
                     <h3>
-                        [NOME DA EMPRESA]
+                        <?php echo $EmpresaSoftware['Nome']; ?>
                     </h3>
                 </div>
 
@@ -59,6 +61,7 @@
 
 
                     <?php if($this->session->userdata('PermissaoId')==1){ ?>
+                    <li><a href="<?php echo base_url('index.php/restrita/PerfilEmpresa'); ?>">Perfil Empresa</a></li>
                     <li><a href="<?php echo base_url('index.php/restrita/FormaPagamento'); ?>">Formas de Pagamento</a></li>
                     <li><a href="<?php echo base_url('index.php/restrita/DiasAtendimento'); ?>">Dias de Atendimento</a></li>
                     <li><a href="<?php echo base_url('index.php/restrita/Clientes'); ?>">Clientes</a></li>

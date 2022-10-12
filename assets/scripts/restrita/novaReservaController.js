@@ -83,8 +83,14 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
             newValues.map(function(e, i) {
                 if(!e){
                     invalido = 1;
+                    if(i==0){
+                        $scope.NumeroVagas = '';
+                    }
                 }else{
-                    if(i==2||i==4){
+                    if(i==0){
+                        var index = getIndexEstacionamento();
+                        $scope.NumeroVagas = $scope.lista_estacionamentos[index].NumeroVagas;
+                    }else if(i==2||i==4){
                         var coluna = i==2?'HoraEntrada':'HoraSaida';
                         var hr = $scope.Reserva[coluna].substr(0, 2);
                         var min = $scope.Reserva[coluna].substr(2, 2);
@@ -98,35 +104,58 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
 
             setTimeout(() => {
                 if(invalido==0 && !$scope.disabled_){
+
                     $scope.carregando = true;
                     $http({
-                        url: base_url+'/FluxoVaga/calculaValor',
+                        url: base_url+'/FluxoVaga/getInfoLotacao',
                         method: 'GET',
-                        params:{
-                            EstacionamentoId:$scope.Reserva.EstacionamentoId,
-                            DataEntrada:$scope.Reserva.DataEntrada,
-                            HoraEntrada:$scope.Reserva.HoraEntrada,
-                            DataSaida:$scope.Reserva.DataSaida,
-                            HoraSaida:$scope.Reserva.HoraSaida,
-                        }
+                        params: {
+                            EstacionamentoId:$scope.Reserva.EstacionamentoId
+                            ,DataEntrada:$scope.Reserva.DataEntrada
+                            ,HoraEntrada:$scope.Reserva.HoraEntrada
+                            ,HoraSaida:$scope.Reserva.HoraSaida
+                        } 
                     }).then(function (retorno) {
-                        if(retorno.data.erro==1){
-                            $scope.liberaPagamento = 'N';
-                            $scope.erro = 2;
-                        }else{
-                            $scope.erro = 0;
-                            $scope.liberaPagamento = retorno.data.liberaPagamento;
-                            $scope.Reserva.PagarAgora = 'N';
-                            $scope.Reserva.FormaPagamentoId = '';
-
-                            if(retorno.data.liberaPagamento=='S'){
-                                $scope.Reserva.Valor = retorno.data.valor;
-                                $scope.Reserva.Tempo = retorno.data.tempo;
-                                $scope.Reserva.NomeEstacionamento = retorno.data.NomeEstacionamento;
-                            }
-                        }
-                        
                         $scope.carregando = false;
+                        $scope.reservas_periodo = retorno.data.reservas_proximas;
+                        if($scope.reservas_periodo.length>=$scope.NumeroVagas){
+                            $scope.erro = 0;
+                            $scope.mensagemLotacao();
+                        }else{
+                            $scope.carregando = true;
+                            $http({
+                                url: base_url+'/FluxoVaga/calculaValor',
+                                method: 'GET',
+                                params:{
+                                    EstacionamentoId:$scope.Reserva.EstacionamentoId,
+                                    DataEntrada:$scope.Reserva.DataEntrada,
+                                    HoraEntrada:$scope.Reserva.HoraEntrada,
+                                    DataSaida:$scope.Reserva.DataSaida,
+                                    HoraSaida:$scope.Reserva.HoraSaida,
+                                }
+                            }).then(function (retorno) {
+                                if(retorno.data.erro==1){
+                                    $scope.liberaPagamento = 'N';
+                                    $scope.erro = 2;
+                                }else{
+                                    $scope.erro = 0;
+                                    $scope.liberaPagamento = retorno.data.liberaPagamento;
+                                    $scope.Reserva.PagarAgora = 'N';
+                                    $scope.Reserva.FormaPagamentoId = '';
+        
+                                    if(retorno.data.liberaPagamento=='S'){
+                                        $scope.Reserva.Valor = retorno.data.valor;
+                                        $scope.Reserva.Tempo = retorno.data.tempo;
+                                        $scope.Reserva.NomeEstacionamento = retorno.data.NomeEstacionamento;
+                                    }
+                                }
+                                
+                                $scope.carregando = false;
+                            },
+                            function (retorno) {
+                                console.log('Error: '+retorno.status);
+                            });
+                        }
                     },
                     function (retorno) {
                         console.log('Error: '+retorno.status);
@@ -136,7 +165,7 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
     });
 
     $scope.setReserva= function(){
-        if($scope.form_reserva.$valid){
+        if($scope.form_reserva.$valid && $scope.reservas_periodo.length<$scope.NumeroVagas){
             $scope.carregando = true;
             $http({
                 url: base_url+'/FluxoVaga/setFluxoVaga',
@@ -154,7 +183,22 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
             function (retorno) {
                 console.log('Error: '+retorno.status);
             });
+        }else if($scope.reservas_periodo.length>=$scope.NumeroVagas){
+            $scope.mensagemLotacao();
         }
+    }
+
+    $scope.mensagemLotacao = function() {
+        swal({
+            title: "",
+            text: "Estacionamento lotado no período selecionado.",
+            type: "warning",
+            showCancelButton: false,
+            confirmButtonText: "Ok",
+            },
+            function(){
+            
+        });
     }
 
     $scope.setCliente = function() {
@@ -176,6 +220,10 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
                 console.log('Error: '+retorno.status);
             });
         }
+    }
+
+    var getIndexEstacionamento = function() {
+         return $scope.lista_estacionamentos.map((el) => el.EstacionamentoId).indexOf($scope.Reserva.EstacionamentoId);
     }
 
     $scope.getEstacionamentos();
