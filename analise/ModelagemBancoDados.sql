@@ -427,16 +427,13 @@ FROM Empresa AS a;
 -- FUNCTION `mydb`.`f_SituacaoEmpresa`
 -- -----------------------------------------------------
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `f_SituacaoEmpresa`(
+DELIMITER //
+CREATE FUNCTION `f_SituacaoEmpresa`(
 	`p_EmpresaId` INT,
 	`p_ret` INT
 )
 RETURNS LONGTEXT
-LANGUAGE SQL
-NOT DETERMINISTIC
-CONTAINS SQL
-SQL SECURITY DEFINER
-COMMENT ''
+
 BEGIN
 
   
@@ -497,7 +494,9 @@ BEGIN
 	IF p_ret=1 THEN SET retornar = ret; ELSE SET retornar = msg; END IF;
 	
    RETURN retornar;
-END
+END //
+
+DELIMITER ;
 
 ---------------------------------------------------------------
 
@@ -507,3 +506,65 @@ ALTER TABLE Login ADD CONSTRAINT id_EmpresaId_Login FOREIGN KEY(EmpresaId) REFER
 
 ALTER TABLE `empresa`
 	CHANGE COLUMN `Sobre` `Sobre` LONGTEXT NULL COLLATE 'utf8_general_ci' AFTER `UrlLogo`;
+
+
+-- -----------------------------------------------------
+-- FUNCTION `mydb`.`f_verificaCalculaValor`
+-- -----------------------------------------------------
+
+DELIMITER //
+
+CREATE FUNCTION f_verificaCalculaValor(p_EstacionamentoId INT,p_Entrada DATETIME, p_Saida DATETIME)
+RETURNS JSON
+
+BEGIN
+	DECLARE p_ValorHoraEstacioanemnto FLOAT;
+	DECLARE p_ValorLivreEstacioanemnto FLOAT;
+	DECLARE p_Minutos FLOAT;
+	
+	DECLARE p_ValorHora FLOAT;
+	DECLARE p_ValorLivre FLOAT;
+	DECLARE p_HorasTotais FLOAT;
+	DECLARE p_Final FLOAT;
+	DECLARE p_liberaPagarAdiantado CHAR(1);
+	
+	DECLARE p_tempoDesc VARCHAR(100);
+	SELECT 
+			IFNULL(PrecoHora,0)
+			,IFNULL(PrecoLivre,0)
+			,timestampdiff(MINUTE, p_Entrada, p_Saida)
+			INTO p_ValorHoraEstacioanemnto
+					,p_ValorLivreEstacioanemnto
+					,p_Minutos
+		FROM Estacionamento 
+		WHERE EstacionamentoId = p_EstacionamentoId;
+		
+   SET p_HorasTotais = p_Minutos/60;
+   SET p_ValorHora = p_ValorHoraEstacioanemnto*p_HorasTotais;
+   SET p_ValorLivre = p_ValorLivreEstacioanemnto;
+   
+   
+   
+   IF ((p_ValorHora>0 && p_ValorLivre>0 && p_ValorLivre > p_ValorHora) || p_ValorLivre<=0) THEN
+   	SET p_Final = p_ValorHora;
+   ELSE
+   	SET p_Final = p_ValorLivre;
+   END IF;
+   
+   IF p_Final = p_ValorLivre THEN
+   	SET p_liberaPagarAdiantado = 'S';
+   ELSE
+   	SET p_liberaPagarAdiantado = 'N';
+   END IF;
+   
+   SET p_tempoDesc = CONCAT(p_Minutos DIV 60,'Hrs e ',p_Minutos MOD 60,' Min');
+ 
+   RETURN CONCAT('{"liberaPagarAdiantado": "',p_liberaPagarAdiantado,'", "minutos":',p_Minutos,',"valor":',p_Final,',"tempoDesc":"',p_tempoDesc,'"}');
+
+
+END; //
+
+DELIMITER ;
+
+
+----- EXEMPLO SELECT f_verificaCalculaValor(8,'2022-10-14 08:00:00','2022-10-14 09:25:00') AS json;

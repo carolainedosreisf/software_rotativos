@@ -296,10 +296,10 @@ class FluxoVaga extends CI_Controller {
     {
         $alfabeto = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
         $EstacionamentoId = 8;
-        $data = "2022-10-13";
-        $gerar = 4;
-        $fechar = 0;
-        $somente_fechar = 1;
+        $data = "2022-09-27";
+        $gerar = 45;
+        $fechar = 1;
+        $somente_fechar = 0;
         $Reserva = 0;
 
         if($somente_fechar==1){
