@@ -32,3 +32,10 @@ Tutorial pra Importar a estrutura e dados do banco de dados (Wamp)
 -  4° Cole nesse campo o script copiado no passo 1
 -  5° Clique no botão "Executar" no canto inferior
 -  6° Repita o processo para o arquivo 'analise/BaseDeDados.sql'
+
+**************************
+Observações
+**************************
+
+-  Caso tenha problema com isntalação do composer, o projeto ainda irá rodar sem erros, com exceção dos relatorios em PDF
+-  Para usar um login já existente pegue da tabela login todas senhas são 12345678
