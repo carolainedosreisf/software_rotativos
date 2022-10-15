@@ -423,6 +423,16 @@ SELECT
      ,DATE_FORMAT(NOW(), '%m/%Y') AS CompetenciaAtual
 FROM Empresa AS a;
 
+
+SHOW DATABASES;
+USE mydb;
+
+ALTER TABLE Login ADD EmpresaId int(11) AFTER CadastroId;
+ALTER TABLE Login ADD CONSTRAINT id_EmpresaId_Login FOREIGN KEY(EmpresaId) REFERENCES Empresa (EmpresaId);
+
+ALTER TABLE `empresa`
+	CHANGE COLUMN `Sobre` `Sobre` LONGTEXT NULL COLLATE 'utf8_general_ci' AFTER `UrlLogo`;
+
 -- -----------------------------------------------------
 -- FUNCTION `mydb`.`f_SituacaoEmpresa`
 -- -----------------------------------------------------
@@ -498,16 +508,6 @@ END //
 
 DELIMITER ;
 
----------------------------------------------------------------
-
-
-ALTER TABLE Login ADD EmpresaId int(11) AFTER CadastroId;
-ALTER TABLE Login ADD CONSTRAINT id_EmpresaId_Login FOREIGN KEY(EmpresaId) REFERENCES Empresa (EmpresaId);
-
-ALTER TABLE `empresa`
-	CHANGE COLUMN `Sobre` `Sobre` LONGTEXT NULL COLLATE 'utf8_general_ci' AFTER `UrlLogo`;
-
-
 -- -----------------------------------------------------
 -- FUNCTION `mydb`.`f_verificaCalculaValor`
 -- -----------------------------------------------------
@@ -567,4 +567,6 @@ END; //
 DELIMITER ;
 
 
------ EXEMPLO SELECT f_verificaCalculaValor(8,'2022-10-14 08:00:00','2022-10-14 09:25:00') AS json;
+-- -----------------------------------------------------
+-- EXEMPLO SELECT f_verificaCalculaValor(8,'2022-10-14 08:00:00','2022-10-14 09:25:00') AS json;
+-- -----------------------------------------------------

@@ -1,3 +1,7 @@
+
+SHOW DATABASES;
+USE mydb;
+
 -- phpMyAdmin SQL Dump
 -- version 5.0.2
 -- https://www.phpmyadmin.net/
@@ -44,15 +48,6 @@ INSERT INTO `cadastro` (`CadastroId`, `Nome`, `TipoCadastro`, `Cpf`, `NumeroTele
 (16, 'Alexia Monteiro', NULL, '93790494046', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (17, 'Luiz Carvalho', NULL, '61961057018', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (18, 'Nicole Azevedo', NULL, '86330521050', '4899999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-
---
--- Extraindo dados da tabela `carteira`
---
-
-INSERT INTO `carteira` (`CarteiraId`, `CadastroId`, `EmpresaId`, `TipoCartao`, `NumeroCartao`, `NomeCartao`, `DataExpiracaoCartao`, `CodigoSegurancaoCartao`, `CodigoPix`, `Status`) VALUES
-(1, NULL, 4, 'C', '4544533434534545', 'TESTE', '072025', '345', NULL, 'A'),
-(2, NULL, 1, 'D', '4343434443434343', 'TESTE CARTÃO', '022024', '443', NULL, 'A'),
-(3, NULL, 2, 'C', '5645464556564456', 'teste', '072023', '654', NULL, 'A');
 
 --
 -- Extraindo dados da tabela `cidade`
@@ -384,6 +379,40 @@ INSERT INTO `estacionamento` (`EstacionamentoId`, `NomeEstacionamento`, `CpfCnpj
 (8, 'Zé Rotativos (Próspera)', '90914664000159', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '150', NULL, '48775557575', NULL, 'ze.rotativos@gmail.com', 3, '8.00', '4.00', 4, '2022-09-22 12:38:41'),
 (9, 'Maria Rotativos', '41077828000125', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '0', NULL, '48877878786', NULL, 'maria.rotativos@teste.com', NULL, NULL, NULL, 5, '2022-09-30 17:07:29'),
 (10, 'Luiz Rotativos', '19587477000143', 'Rua São Miguel do Oeste', '100', NULL, '88815100', 70, 'Ceará', '0', NULL, '48555454545', '487878687', 'luiz.rotativos@gmail.com', 2, '12.00', '0.00', 6, '2022-09-10 00:58:11');
+
+--
+-- Extraindo dados da tabela `reserva`
+--
+
+INSERT INTO `reserva` (`ReservaId`, `DataEntrada`, `DataSaida`, `HoraEntrada`, `HoraSaida`, `CadastroId`, `Observacao`, `EstacionamentoId`) VALUES
+(1, '2022-09-28', '2022-09-28', '08:00:00', '10:00:00', 1, 'It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', 8),
+(2, '2022-09-27', '2022-09-27', '12:00:00', '16:00:00', 1, NULL, 7),
+(3, '2022-09-26', '2022-09-26', '12:00:00', '16:00:00', 2, NULL, 8),
+(8, '2022-09-30', '2022-09-30', '10:00:00', '12:00:00', 3, NULL, 8),
+(9, '2022-09-30', '2022-09-30', '14:00:00', '16:30:00', 3, 'It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', 8),
+(10, '2022-09-30', '2022-09-30', '08:00:00', '12:00:00', 1, NULL, 8),
+(11, '2022-09-30', '2022-09-30', '19:15:00', '21:15:00', 1, NULL, 8),
+(12, '2022-09-30', '2022-09-30', '09:00:00', '12:00:00', 2, NULL, 8),
+(13, '2022-10-01', '2022-10-01', '09:00:00', '11:00:00', 1, NULL, 8),
+(14, '2022-10-03', '2022-10-03', '10:00:00', '12:00:00', 1, NULL, 8),
+(15, '2022-10-18', '2022-10-18', '08:45:00', '09:45:00', 5, NULL, 8),
+(16, '2022-10-18', '2022-10-18', '11:30:00', '16:30:00', 6, NULL, 8),
+(17, '2022-10-18', '2022-10-18', '08:45:00', '09:45:00', 7, NULL, 8),
+(18, '2022-10-18', '2022-10-18', '18:45:00', '20:30:00', 13, NULL, 8),
+(19, '2022-10-18', '2022-10-18', '11:45:00', '19:45:00', 2, NULL, 8),
+(20, '2022-10-18', '2022-10-18', '16:45:00', '18:45:00', 1, NULL, 8),
+(21, '2022-10-18', '2022-10-18', '10:45:00', '13:30:00', 1, NULL, 8),
+(22, '2022-10-18', '2022-10-18', '09:45:00', '13:30:00', 7, NULL, 8),
+(23, '2022-10-18', '2022-10-18', '10:45:00', '13:45:00', 7, NULL, 8),
+(24, '2022-10-18', '2022-10-18', '16:30:00', '20:30:00', 18, NULL, 8),
+(25, '2022-10-18', '2022-10-18', '09:45:00', '13:00:00', 14, NULL, 8),
+(26, '2022-10-18', '2022-10-18', '17:45:00', '19:45:00', 10, NULL, 8),
+(27, '2022-10-18', '2022-10-18', '13:00:00', '21:00:00', 1, NULL, 8),
+(28, '2022-10-18', '2022-10-18', '16:00:00', '17:45:00', 4, NULL, 8),
+(29, '2022-10-18', '2022-10-18', '14:00:00', '19:00:00', 16, NULL, 8),
+(30, '2022-10-18', '2022-10-18', '08:45:00', '18:30:00', 9, NULL, 8),
+(31, '2022-10-18', '2022-10-18', '16:30:00', '19:45:00', 18, NULL, 8);
+COMMIT;
 
 --
 -- Extraindo dados da tabela `fluxovaga`
@@ -3345,6 +3374,16 @@ INSERT INTO `fotoestacionamento` (`FotoEstacionamentoId`, `EstacionamentoId`, `U
 (17, 10, '/estacionamentos/1455789700830310895202210122234.PNG');
 
 --
+-- Extraindo dados da tabela `permissao`
+--
+
+INSERT INTO `permissao` (`PermissaoId`, `Descricao`) VALUES
+(1, 'Administrador do Software'),
+(2, 'Empresas de Rotativos (Permissão Total)'),
+(3, 'Empresas de Rotativos (Permissão Restringida)'),
+(4, 'Clientes de Empresas de Rotativos');
+
+--
 -- Extraindo dados da tabela `login`
 --
 
@@ -3356,16 +3395,6 @@ INSERT INTO `login` (`LoginId`, `Email`, `NomeUsuario`, `Senha`, `CadastroId`, `
 (17, 'adm.software.rotativos@gmail.com', 'adm.software', '25d55ad283aa400af464c76d713c07ad', NULL, 7, NULL, 1, NULL, 'A'),
 (18, 'maria.rotativos@teste.com', 'maria.rotativos', '25d55ad283aa400af464c76d713c07ad', NULL, NULL, 9, 2, NULL, 'A'),
 (19, 'luiz.rotativos@gmail.com', 'luiz.rotativos', '25d55ad283aa400af464c76d713c07ad', NULL, NULL, 10, 2, NULL, 'A');
-
---
--- Extraindo dados da tabela `permissao`
---
-
-INSERT INTO `permissao` (`PermissaoId`, `Descricao`) VALUES
-(1, 'Administrador do Software'),
-(2, 'Empresas de Rotativos (Permissão Total)'),
-(3, 'Empresas de Rotativos (Permissão Restringida)'),
-(4, 'Clientes de Empresas de Rotativos');
 
 --
 -- Extraindo dados da tabela `receber`
@@ -6310,40 +6339,6 @@ INSERT INTO `receberempresa` (`ReceberEmpresaId`, `FormaPagamentoId`, `EmpresaId
 (4, 3, 4, NULL, '25.00', '2022-10-09', '2022-11-09', 'F'),
 (5, 1, 1, NULL, '25.00', '2022-10-12', '2022-11-12', 'F'),
 (6, 1, 6, NULL, '25.00', '2022-10-14', '2022-11-14', 'F');
-
---
--- Extraindo dados da tabela `reserva`
---
-
-INSERT INTO `reserva` (`ReservaId`, `DataEntrada`, `DataSaida`, `HoraEntrada`, `HoraSaida`, `CadastroId`, `Observacao`, `EstacionamentoId`) VALUES
-(1, '2022-09-28', '2022-09-28', '08:00:00', '10:00:00', 1, 'It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', 8),
-(2, '2022-09-27', '2022-09-27', '12:00:00', '16:00:00', 1, NULL, 7),
-(3, '2022-09-26', '2022-09-26', '12:00:00', '16:00:00', 2, NULL, 8),
-(8, '2022-09-30', '2022-09-30', '10:00:00', '12:00:00', 3, NULL, 8),
-(9, '2022-09-30', '2022-09-30', '14:00:00', '16:30:00', 3, 'It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', 8),
-(10, '2022-09-30', '2022-09-30', '08:00:00', '12:00:00', 1, NULL, 8),
-(11, '2022-09-30', '2022-09-30', '19:15:00', '21:15:00', 1, NULL, 8),
-(12, '2022-09-30', '2022-09-30', '09:00:00', '12:00:00', 2, NULL, 8),
-(13, '2022-10-01', '2022-10-01', '09:00:00', '11:00:00', 1, NULL, 8),
-(14, '2022-10-03', '2022-10-03', '10:00:00', '12:00:00', 1, NULL, 8),
-(15, '2022-10-18', '2022-10-18', '08:45:00', '09:45:00', 5, NULL, 8),
-(16, '2022-10-18', '2022-10-18', '11:30:00', '16:30:00', 6, NULL, 8),
-(17, '2022-10-18', '2022-10-18', '08:45:00', '09:45:00', 7, NULL, 8),
-(18, '2022-10-18', '2022-10-18', '18:45:00', '20:30:00', 13, NULL, 8),
-(19, '2022-10-18', '2022-10-18', '11:45:00', '19:45:00', 2, NULL, 8),
-(20, '2022-10-18', '2022-10-18', '16:45:00', '18:45:00', 1, NULL, 8),
-(21, '2022-10-18', '2022-10-18', '10:45:00', '13:30:00', 1, NULL, 8),
-(22, '2022-10-18', '2022-10-18', '09:45:00', '13:30:00', 7, NULL, 8),
-(23, '2022-10-18', '2022-10-18', '10:45:00', '13:45:00', 7, NULL, 8),
-(24, '2022-10-18', '2022-10-18', '16:30:00', '20:30:00', 18, NULL, 8),
-(25, '2022-10-18', '2022-10-18', '09:45:00', '13:00:00', 14, NULL, 8),
-(26, '2022-10-18', '2022-10-18', '17:45:00', '19:45:00', 10, NULL, 8),
-(27, '2022-10-18', '2022-10-18', '13:00:00', '21:00:00', 1, NULL, 8),
-(28, '2022-10-18', '2022-10-18', '16:00:00', '17:45:00', 4, NULL, 8),
-(29, '2022-10-18', '2022-10-18', '14:00:00', '19:00:00', 16, NULL, 8),
-(30, '2022-10-18', '2022-10-18', '08:45:00', '18:30:00', 9, NULL, 8),
-(31, '2022-10-18', '2022-10-18', '16:30:00', '19:45:00', 18, NULL, 8);
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
