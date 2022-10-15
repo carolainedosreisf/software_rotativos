@@ -40,8 +40,12 @@ class Login_model extends CI_Model {
 
     public function getValidaAcesso($NomeUsuario,$Senha)
     {
-        $sql = "SELECT EstacionamentoId,EmpresaId,PermissaoId
-                    FROM Login 
+        $sql = "SELECT 
+                        EstacionamentoId
+                        ,a.EmpresaId
+                        ,PermissaoId
+                        ,(SELECT nome FROM Empresa AS b WHERE b.EmpresaId = a.EmpresaId) AS NomeEmpresa
+                    FROM Login AS a
                     WHERE NomeUsuario = '{$NomeUsuario}' 
                     AND Senha = '{$Senha}' 
                     AND PermissaoId IN(1,2,3) 

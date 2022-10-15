@@ -5,22 +5,9 @@ app.controller('homeController', ['$scope', '$http','$filter','$location', funct
     var columns = [0, 1,{ calc: "stringify",sourceColumn: 1,type: "string",role: "annotation" },2];
     var now = new Date;
     $scope.Ano = now.getFullYear();
-    $scope.Mes = (now.getMonth()+1)+"";
+    $scope.Mes = PermissaoId==2?(now.getMonth()+1)+"":"";
 
-    $scope.Meses = {
-        '1': 'Janeiro',
-        '2': 'Fevereiro',
-        '3': 'Março',
-        '4': 'Abril',
-        '5': 'Maio',
-        '6': 'Junho',
-        '7': 'Julho',
-        '8': 'Agosto',
-        '9': 'Setembro',
-        '10': 'Outubro',
-        '11': 'Novembro',
-        '12': 'Dezembro'
-    }
+    $scope.lista_meses = lista_meses;
 
     $scope.getVerificaPagamento = function(){
         $scope.carregando = true;
@@ -40,7 +27,7 @@ app.controller('homeController', ['$scope', '$http','$filter','$location', funct
         if($scope.form_filtrar.$valid){
             $scope.carregando = true;
             $http({
-                url: base_url+'/Home/getDadosGrafico',
+                url: base_url+'/Home/'+(PermissaoId==1?'getDadosGraficoEmpresas':'getDadosGrafico'),
                 method: 'GET',
                 params: { 
                     Ano:$scope.Ano
@@ -48,7 +35,7 @@ app.controller('homeController', ['$scope', '$http','$filter','$location', funct
                 }
             }).then(function (retorno) {
                 $scope.lista = retorno.data;
-                $scope.title = 'Faturamento do '+($scope.Mes?'Mês':'Ano');
+                $scope.title = PermissaoId==1?'Cadastros de empresas no sistema':'Faturamento do '+($scope.Mes?'Mês':'Ano');
                 if($scope.lista.length>1){
                     var height = (($scope.lista.length-1)*60);
                     document.getElementById("myChart").style.height = height<300?300:height+"px";
@@ -74,11 +61,12 @@ app.controller('homeController', ['$scope', '$http','$filter','$location', funct
         chart.draw(dataTable, options);
     }
 
-    if(PermissaoId==2){
+    if(PermissaoId==2||PermissaoId==1){
         setTimeout(() => {
             $scope.getDadosGrafico();
         }, 100);
     }
+
     if(PermissaoId==2|| PermissaoId==3){
         $scope.getVerificaPagamento();
     }

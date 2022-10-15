@@ -53,25 +53,20 @@ class FluxoVaga extends CI_Controller {
             echo json_encode(['erro'=>1]);
             exit;
         }
-        $dadosCalculo = $this->FluxoVaga_model->getDadosCalculo($FluxoVagaId,$EstacionamentoId,$Entrada,$Saida);
-        $horas_totais = $dadosCalculo['minutos']/60;
-        $horas = (int) ($dadosCalculo['minutos']/60);
-        $minutos = $dadosCalculo['minutos']%60;
 
-        $ValorHora =  $dadosCalculo['PrecoHora']>0?($horas_totais*$dadosCalculo['PrecoHora']):0;
-        $ValorLivre =  $dadosCalculo['PrecoLivre']>0?$dadosCalculo['PrecoLivre']:0;
-
-        $valor = $ValorLivre;
-        if(($ValorHora>0 && $ValorLivre>0 && $ValorLivre > $ValorHora) || $ValorLivre<=0){
-            $valor = $ValorHora;
+        if($FluxoVagaId){
+            $FluxoVaga = $this->FluxoVaga_model->getFluxoVaga($FluxoVagaId);
         }
 
+        $dados = $this->FluxoVaga_model->getDadosCalculo($EstacionamentoId,$Entrada,$Saida);
+        $dadosCalculo = json_decode($dados['json'],true);
+       
         echo json_encode([
-            'valor'=>number_format(floatval($valor), 2, '.', '')
-            ,'tempo'=>$horas.'Hrs'. ' e '.$minutos.'Min'
-            ,'liberaPagamento'=>$valor==$ValorLivre?'S':'N'
+            'valor'=>number_format(floatval($dadosCalculo['valor']), 2, '.', '')
+            ,'tempo'=>$dadosCalculo['tempoDesc']
+            ,'liberaPagamento'=>$dadosCalculo['liberaPagarAdiantado']
             ,'NomeEstacionamento'=>$dadosCalculo['NomeEstacionamento']
-            ,'JaPagou'=>$dadosCalculo['JaPagou']
+            ,'JaPagou'=>isset($FluxoVaga['JaPagou'])?$FluxoVaga['JaPagou']:'N'
             ,'erro'=>0
         ]);
     }
@@ -296,8 +291,8 @@ class FluxoVaga extends CI_Controller {
     {
         $alfabeto = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
         $EstacionamentoId = 8;
-        $data = "2022-09-27";
-        $gerar = 45;
+        $data = "2022-10-15";
+        $gerar = 30;
         $fechar = 1;
         $somente_fechar = 0;
         $Reserva = 0;
@@ -336,20 +331,14 @@ class FluxoVaga extends CI_Controller {
                         $Entrada = $a['DataEntradaDb']." ".$a['HoraEntrada'].":00";
                         $Saida = $dados[$i]['DataSaida']." ".$dados[$i]['HoraSaida'];
 
-                        $objEstacionamento = $this->FluxoVaga_model->getDadosCalculo(null,$EstacionamentoId,$Entrada,$Saida);
-                        $horas_totais = $objEstacionamento['minutos']/60;
-                        $ValorHora =  $objEstacionamento['PrecoHora']>0?($horas_totais*$objEstacionamento['PrecoHora']):0;
-                        $ValorLivre =  $objEstacionamento['PrecoLivre']>0?$objEstacionamento['PrecoLivre']:0;
-                        $valor = $ValorLivre;
-                        if(($ValorHora>0 && $ValorLivre>0 && $ValorLivre > $ValorHora) || $ValorLivre<=0){
-                            $valor = $ValorHora;
-                        }
+                        $dadosCalculo = $this->FluxoVaga_model->getDadosCalculo($EstacionamentoId,$Entrada,$Saida);
+                        $objEstacionamento = json_decode($dadosCalculo['json'],true);
 
                         $dados_receber[$i] = [
                             'FormaPagamentoId'=>rand(1,4)
                             ,'FluxoVagaId'=>$a['FluxoVagaId']
                             ,'Status'=>'F'
-                            ,'Valor'=> number_format(floatval($valor), 2, '.', '')
+                            ,'Valor'=> number_format(floatval($objEstacionamento['valor']), 2, '.', '')
                         ];
 
                         $this->FluxoVaga_model->seReceber($dados_receber[$i]);
@@ -425,20 +414,14 @@ class FluxoVaga extends CI_Controller {
                     $Entrada = $dados[$i]['DataEntrada']." ".$dados[$i]['HoraEntrada'];
                     $Saida = $dados[$i]['DataSaida']." ".$dados[$i]['HoraSaida'];
 
-                    $objEstacionamento = $this->FluxoVaga_model->getDadosCalculo(null,$EstacionamentoId,$Entrada,$Saida);
-                    $horas_totais = $objEstacionamento['minutos']/60;
-                    $ValorHora =  $objEstacionamento['PrecoHora']>0?($horas_totais*$objEstacionamento['PrecoHora']):0;
-                    $ValorLivre =  $objEstacionamento['PrecoLivre']>0?$objEstacionamento['PrecoLivre']:0;
-                    $valor = $ValorLivre;
-                    if(($ValorHora>0 && $ValorLivre>0 && $ValorLivre > $ValorHora) || $ValorLivre<=0){
-                        $valor = $ValorHora;
-                    }
+                    $dadosCalculo = $this->FluxoVaga_model->getDadosCalculo($EstacionamentoId,$Entrada,$Saida);
+                    $objEstacionamento = json_decode($dadosCalculo['json'],true);
 
                     $dados_receber[$i] = [
                         'FormaPagamentoId'=>rand(1,4)
                         ,'FluxoVagaId'=>$FluxoVagaId
                         ,'Status'=>'F'
-                        ,'Valor'=> number_format(floatval($valor), 2, '.', '')
+                        ,'Valor'=> number_format(floatval($objEstacionamento['valor']), 2, '.', '')
                     ];
 
                     $this->FluxoVaga_model->seReceber($dados_receber[$i]);

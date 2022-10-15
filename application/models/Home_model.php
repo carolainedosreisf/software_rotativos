@@ -7,20 +7,6 @@ class Home_model extends CI_Model {
     {
         $sql ="SELECT 
                     MONTH(DataEntrada) mes
-                    ,(CASE MONTH(DataEntrada)
-                            WHEN '1' THEN 'Janeiro'
-                            WHEN '2' THEN 'Fevereiro'
-                            WHEN '3' THEN 'Março'
-                            WHEN '4' THEN 'Abril'
-                            WHEN '5' THEN 'Maio'
-                            WHEN '6' THEN 'Junho'
-                            WHEN '7' THEN 'Julho'
-                            WHEN '8' THEN 'Agosto'
-                            WHEN '9' THEN 'Setembro'
-                            WHEN '10' THEN 'Outubro'
-                            WHEN '11' THEN 'Novembro'
-                            WHEN '12' THEN 'Dezembro'
-                        END) AS mes_desc
                     ,COUNT(*) AS qtd_veiculos
                     ,SUM(b.valor) AS valor
                 FROM fluxovaga  AS a
@@ -55,6 +41,19 @@ class Home_model extends CI_Model {
                                 AND c.EmpresaId = {$this->session->userdata('EmpresaId')})
                 GROUP BY DAY(DataEntrada)
                 ORDER BY dia DESC";
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
+        return $result;
+    }
+
+    public function getMesEmpresas()
+    {
+        $sql = "SELECT 
+                month(DataCadastro) AS mes
+                ,COUNT(*) AS qtd
+            FROM empresa
+            GROUP BY month(DataCadastro)
+            ORDER BY mes DESC";
         $query = $this->db->query($sql);
         $result = $query->result_array();
         return $result;

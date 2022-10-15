@@ -107,29 +107,24 @@ app.controller('atendentesEstacionamentoController', ['$scope', '$http','$filter
                 i: btoa(data.i),
                 e: data.e,
                 t: data.t
-            },
-            // headers: {
-            //     "Access-Control-Allow-Origin": '*',
-            //     'Access-Control-Allow-Methods': 'POST, GET',
-            //     'Access-Control-Allow-Headers': '*',
-            // },
+            }
         }).then(function (retorno) {
-           
+               if(reload==1){
+                    swal({
+                        title: "Sucesso!",
+                        text: "Atendente cadastrado com sucesso.",
+                        type: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    },function () {
+                        window.location.reload();
+                    });
+               }else{
+                    swal('Token enviado com sucesso!','','success')
+               }
         },
         function (retorno) {
-            if(reload==1){
-                swal({
-                    title: "Sucesso!",
-                    text: "Atendente cadastrado com sucesso.",
-                    type: "success",
-                    timer: 2000,
-                    showConfirmButton: false
-                },function () {
-                    window.location.reload();
-                });
-           }else{
-                swal('Token enviado com sucesso!','','success')
-           }
+        
             console.log('Error: '+retorno.status);
         });
     }

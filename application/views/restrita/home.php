@@ -20,7 +20,7 @@
         </div>
     </div>
     <?php } ?>
-    <?php if($PermissaoId==2){ ?>
+    <?php if($PermissaoId==2||$PermissaoId==1){ ?>
     <form name="form_filtrar" id="form_filtrar" ng-submit="getDadosGrafico()" novalidate>
 
         <div class="row form-group">
@@ -28,13 +28,17 @@
                 <label for="Ano">Ano:</label>
                 <input type="text" class="form-control" id="Ano" name="Ano" ui-mask="9999" ng-model="Ano" ng-required="true">
             </div>
+            
+            <?php if($PermissaoId==2){ ?>
             <div class="col-sm-3">
                 <label for="Mes">Mês:</label>
                 <select name="Mes" id="Mes" class="form-control" ng-model="Mes">
                         <option value="">Selecione</option>
-                        <option value="{{key}}" ng-repeat="(key,mes) in Meses">{{mes}}</option>
+                        <option value="{{key}}" ng-repeat="(key,mes) in lista_meses">{{mes}}</option>
                 </select>
             </div>
+            <?php } ?>
+
             <div class="col-sm-2">
                 <label for="">&nbsp;</label>
                 <button type="submit" form="form_filtrar" class="btn btn-primary form-control">
@@ -63,4 +67,5 @@
 </div>
 <script>
     var PermissaoId = <?php echo $PermissaoId; ?>;
+    var lista_meses = <?php echo json_encode($lista_meses); ?>;
 </script>

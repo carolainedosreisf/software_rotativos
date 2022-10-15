@@ -115,6 +115,7 @@ app.controller('fluxoVagaController', ['$scope', '$http','$filter','$location', 
                     method: 'GET',
                     params:{
                         FluxoVagaId:$scope.objFinalizaLocacao.FluxoVagaId,
+                        EstacionamentoId:$scope.objFinalizaLocacao.EstacionamentoId,
                         DataEntrada:$scope.objFinalizaLocacao.DataEntrada,
                         HoraEntrada:$scope.objFinalizaLocacao.HoraEntrada,
                         DataSaida:$scope.objFinalizaLocacao.DataSaida,

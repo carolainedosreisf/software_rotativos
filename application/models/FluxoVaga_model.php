@@ -90,7 +90,7 @@ class FluxoVaga_model extends CI_Model {
                 LEFT JOIN Estacionamento f ON a.EstacionamentoId = f.EstacionamentoId
                 WHERE f.EmpresaId = {$this->session->userdata('EmpresaId')}
                 {$filtro}
-                ORDER BY {$order_by}, DataEntrada DESC,HoraEntrada DESC ";
+                ORDER BY {$order_by}, a.DataEntrada DESC,a.HoraEntrada DESC ";
         $query = $this->db->query($sql);
         $result = $query->result_array();
         return $result;
@@ -120,10 +120,11 @@ class FluxoVaga_model extends CI_Model {
                         FROM FormaPagamento AS e
                         WHERE IF(d.ReceberId IS NOT NULL, d.FormaPagamentoId,b.FormaPagamentoId) = e.FormaPagamentoId
                     ) FormaPagamentoDesc
+                    ,IF(d.ReceberId IS NOT NULL OR b.ReceberId IS NOT NULL,'S','N') AS JaPagou
                 FROM Fluxovaga AS a
                 LEFT JOIN Receber b ON a.FluxoVagaId = b.FluxoVagaId
                 LEFT JOIN Reserva c ON a.ReservaId = c.ReservaId
-                LEFT JOIN Receber d ON a.ReservaId = c.ReservaId
+                LEFT JOIN Receber d ON a.ReservaId = d.ReservaId
                 WHERE a.FluxoVagaId = {$FluxoVagaId}";
         $query = $this->db->query($sql);
         $result = $query->row_array();
@@ -303,36 +304,44 @@ class FluxoVaga_model extends CI_Model {
         return $result;
     }
 
-    public function getDadosCalculo($FluxoVagaId=0,$EstacionamentoId=0,$Entrada,$Saida)
+    public function getDadosCalculo($EstacionamentoId,$Entrada,$Saida)
     {
-        if($FluxoVagaId){
-            $sql = "SELECT 
-                        e.NomeEstacionamento
-                        ,IFNULL(e.PrecoLivre,0) AS PrecoLivre
-                        ,IFNULL(e.PrecoHora,0) AS PrecoHora 
-                        ,IF(d.ReceberId IS NOT NULL OR b.ReceberId IS NOT NULL,'S','N') AS JaPagou
-                        ,timestampdiff(MINUTE, '{$Entrada}', '{$Saida}') as minutos
-                    FROM Fluxovaga AS a
-                    LEFT JOIN Receber b ON a.FluxoVagaId = b.FluxoVagaId
-                    LEFT JOIN Reserva c ON a.ReservaId = c.ReservaId
-                    LEFT JOIN Receber d ON c.ReservaId = d.ReservaId
-                    LEFT JOIN Estacionamento e ON a.EstacionamentoId = e.EstacionamentoId
-                    WHERE a.FluxoVagaId = {$FluxoVagaId}";
-        }else{
-            $sql = "SELECT 
-                        a.NomeEstacionamento
-                        ,IFNULL(a.PrecoLivre,0) AS PrecoLivre
-                        ,IFNULL(a.PrecoHora,0) AS PrecoHora 
-                        ,'N' AS JaPagou
-                        ,timestampdiff(MINUTE, '{$Entrada}', '{$Saida}') as minutos
-                    FROM Estacionamento AS a
-                    WHERE a.EstacionamentoId = {$EstacionamentoId}";
-        }
+        $sql = "SELECT f_verificaCalculaValor($EstacionamentoId,'{$Entrada}','{$Saida}') AS json";
         $query = $this->db->query($sql);
         $result = $query->row_array();
         return $result;
-        
     }
+
+    // public function getDadosCalculo($FluxoVagaId=0,$EstacionamentoId=0,$Entrada,$Saida)
+    // {
+    //     if($FluxoVagaId){
+    //         $sql = "SELECT 
+    //                     e.NomeEstacionamento
+    //                     ,IFNULL(e.PrecoLivre,0) AS PrecoLivre
+    //                     ,IFNULL(e.PrecoHora,0) AS PrecoHora 
+    //                     ,IF(d.ReceberId IS NOT NULL OR b.ReceberId IS NOT NULL,'S','N') AS JaPagou
+    //                     ,timestampdiff(MINUTE, '{$Entrada}', '{$Saida}') as minutos
+    //                 FROM Fluxovaga AS a
+    //                 LEFT JOIN Receber b ON a.FluxoVagaId = b.FluxoVagaId
+    //                 LEFT JOIN Reserva c ON a.ReservaId = c.ReservaId
+    //                 LEFT JOIN Receber d ON c.ReservaId = d.ReservaId
+    //                 LEFT JOIN Estacionamento e ON a.EstacionamentoId = e.EstacionamentoId
+    //                 WHERE a.FluxoVagaId = {$FluxoVagaId}";
+    //     }else{
+    //         $sql = "SELECT 
+    //                     a.NomeEstacionamento
+    //                     ,IFNULL(a.PrecoLivre,0) AS PrecoLivre
+    //                     ,IFNULL(a.PrecoHora,0) AS PrecoHora 
+    //                     ,'N' AS JaPagou
+    //                     ,timestampdiff(MINUTE, '{$Entrada}', '{$Saida}') as minutos
+    //                 FROM Estacionamento AS a
+    //                 WHERE a.EstacionamentoId = {$EstacionamentoId}";
+    //     }
+    //     $query = $this->db->query($sql);
+    //     $result = $query->row_array();
+    //     return $result;
+        
+    // }
 
     public function getReservasProximas($EstacionamentoId,$DataEntrada,$HoraEntrada,$HoraSaida)
     {

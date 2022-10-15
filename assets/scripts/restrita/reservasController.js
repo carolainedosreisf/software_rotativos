@@ -60,45 +60,6 @@ app.controller('reservasController', ['$scope', '$http','$filter','$location', f
         });
     }
 
-    $scope.calculaValor = function(){
-        if(typeof $scope.objFinalizaLocacao.HoraSaida != 'undefined'){
-            if($scope.objFinalizaLocacao.HoraSaida.length == 4){
-                var hr = $scope.objFinalizaLocacao.HoraSaida.substr(0, 2);
-                var min = $scope.objFinalizaLocacao.HoraSaida.substr(2, 2);
-                if(hr > 23 || min > 59){
-                    $scope.objFinalizaLocacao.HoraSaida = "";
-                    return;
-                }
-                $scope.carregando = true;
-                $http({
-                    url: base_url+'/FluxoVaga/calculaValor',
-                    method: 'GET',
-                    params:{
-                        EstacionamentoId:$scope.objFinalizaLocacao.EstacionamentoId,
-                        DataEntrada:$scope.objFinalizaLocacao.DataEntrada,
-                        HoraEntrada:$scope.objFinalizaLocacao.HoraEntrada,
-                        DataSaida:$scope.objFinalizaLocacao.DataSaida,
-                        HoraSaida:$scope.objFinalizaLocacao.HoraSaida,
-                    }
-                }).then(function (retorno) {
-                    if(retorno.data.erro==1){
-                        $scope.erro_saida = 1;
-                    }else{
-                        $scope.erro_saida = 0;
-                        $scope.objFinalizaLocacao.Valor = retorno.data.valor;
-                        $scope.objFinalizaLocacao.Tempo = retorno.data.tempo;
-                    }
-                    
-                    $scope.carregando = false;
-                },
-                function (retorno) {
-                    console.log('Error: '+retorno.status);
-                });
-            }
-        }
-        
-    }
-
     $scope.novaReserva = function(ReservaId=0){
         window.location = base_url+"/FluxoVaga/novaReserva"+(ReservaId?"?i="+btoa(ReservaId):"");
     }

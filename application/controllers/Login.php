@@ -52,6 +52,7 @@ class Login extends CI_Controller {
 		}else{
 			$sessao +=[
 				'EmpresaId' => $login['EmpresaId']
+				,'nome' => $login['NomeEmpresa']
 			];
 		}
 
