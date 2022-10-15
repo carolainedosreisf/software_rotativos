@@ -1,71 +1,24 @@
 ###################
-What is CodeIgniter
+Rotativo online
 ###################
 
-CodeIgniter is an Application Development Framework - a toolkit - for people
-who build web sites using PHP. Its goal is to enable you to develop projects
-much faster than you could if you were writing code from scratch, by providing
-a rich set of libraries for commonly needed tasks, as well as a simple
-interface and logical structure to access these libraries. CodeIgniter lets
-you creatively focus on your project by minimizing the amount of code needed
-for a given task.
-
 *******************
-Release Information
+Requisitos:
 *******************
-
-This repo contains in-development code for future releases. To download the
-latest stable release please visit the `CodeIgniter Downloads
-<https://codeigniter.com/download>`_ page.
+Ter um servidor rodando MySql e php versão 7+, recomendo o wamp caso não tenha nenhum.
+Ter o composer instalado na sua máquina.
+-  `Link Wamp <https://www.wampserver.com/en/download-wampserver-64bits/>`_
+-  `Link composer <https://getcomposer.org/Composer-Setup.exe>`_
 
 **************************
-Changelog and New Features
+Passos
 **************************
 
-You can find a list of all changes for each release in the `user
-guide change log <https://github.com/bcit-ci/CodeIgniter/blob/develop/user_guide_src/source/changelog.rst>`_.
-
-*******************
-Server Requirements
-*******************
-
-PHP version 5.6 or newer is recommended.
-
-It should work on 5.3.7 as well, but we strongly advise you NOT to run
-such old versions of PHP, because of potential security and performance
-issues, as well as missing features.
-
-************
-Installation
-************
-
-Please see the `installation section <https://codeigniter.com/userguide3/installation/index.html>`_
-of the CodeIgniter User Guide.
-
-*******
-License
-*******
-
-Please see the `license
-agreement <https://github.com/bcit-ci/CodeIgniter/blob/develop/user_guide_src/source/license.rst>`_.
-
-*********
-Resources
-*********
-
--  `User Guide <https://codeigniter.com/docs>`_
--  `Contributing Guide <https://github.com/bcit-ci/CodeIgniter/blob/develop/contributing.md>`_
--  `Language File Translations <https://github.com/bcit-ci/codeigniter3-translations>`_
--  `Community Forums <http://forum.codeigniter.com/>`_
--  `Community Wiki <https://github.com/bcit-ci/CodeIgniter/wiki>`_
--  `Community Slack Channel <https://codeigniterchat.slack.com>`_
-
-Report security issues to our `Security Panel <mailto:security@codeigniter.com>`_
-or via our `page on HackerOne <https://hackerone.com/codeigniter>`_, thank you.
-
-***************
-Acknowledgement
-***************
-
-The CodeIgniter team would like to thank EllisLab, all the
-contributors to the CodeIgniter project and you, the CodeIgniter user.
+-  Baixar o projeto do gitHub
+-  Renomear a pasta do projeto para 'software_rotativos'
+-  Colocar a pasta do projeto no servidor, se for o Wamp é a pasta 'wamp/www' no disco do seu computador
+-  Rodar no MySql o arquivo localizado em 'analise/ModelagemBancoDados.sql' no projeto, esse script contém a estrutura do banco de dados
+-  Rodar no MySql o arquivo localizado em 'analise/BaseDeDados.sql' no projeto, esse script contém a os dados do banco de dados
+-  A conexão do banco de dados que esta no projeto é a padrão do mysql do Wamp, para alterar abra no projeto o arquivo localizado em 'application/config/database.php' e altere a conexão default.
+-  Abra um terminal de sua preferência na pasta do projeto, e execute os comandos localizado na pasta raiz do projeto chamado "comandos.txt"
+-  Start o seu servidor, após startado acesse no navegador 'http://localhost/software_rotativos/'
