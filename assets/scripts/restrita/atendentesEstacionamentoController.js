@@ -104,9 +104,10 @@ app.controller('atendentesEstacionamentoController', ['$scope', '$http','$filter
             params:{
                 a: 'C',
                 s:$scope.objEstacionamento.NomeEstacionamento,
-                i: btoa(data.i),
+                i: data.i,
                 e: data.e,
-                t: data.t
+                t: data.t,
+                p: 3
             }
         }).then(function (retorno) {
                if(reload==1){

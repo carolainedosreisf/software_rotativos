@@ -68,6 +68,30 @@ class Login extends CI_Controller {
 		echo "<script>window.location.href = '$link'</script>";
 	}
 
+	public function gerarToken()
+    {
+		$LoginId = $this->funcoes->get('LoginId');
+		$Login = $this->Login_model->getLogin($LoginId);
+
+		if(!isset($Login['PermissaoId'])){
+			echo json_encode(['erro'=>1]);
+		}else{
+			$token = (bin2hex(random_bytes(12))).'_'.Date('Y-m-d-H-i');
+			$token_code =base64_encode($token);
+			$data = ['TokenEmail' => $token];
+			$this->Login_model->setLogin($data,$LoginId);
+	
+			echo json_encode([
+				'token_code'=>$token_code
+				,'PermissaoId'=>$Login['PermissaoId']
+				,'Email'=>$Login['Email']
+				,'LoginId'=>$LoginId
+				,'NomeEstacionamento'=>$Login['NomeEstacionamento']
+				,'erro'=>0
+			]);
+		}
+    }
+
 	public function novaSenha()
 	{
 		$data['EmpresaSoftware'] = $this->funcoes->getEmpresaSoftware();

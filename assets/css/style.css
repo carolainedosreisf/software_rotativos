@@ -169,7 +169,7 @@ h1.latestitems {
 	width:20px;
 	vertical-align:top;
 	text-align:center;
-	color:#e4e4e4;
+	color:#444!important;
 }
 .paddingtop0 {
 	padding-top:0 !Important;
@@ -787,8 +787,7 @@ button.main_bt {
     display: -ms-flexbox;
     display: flex;
     justify-content: center;
-    padding: 50px 0px;
-    background: #f2f2f2;
+    padding: 20px 0px 50px 0px;
 }
 
 .wrap-login100 {

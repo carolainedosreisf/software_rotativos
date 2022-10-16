@@ -1,6 +1,6 @@
 
 <section class="body">
-    <div class="container" style="margin-top:50px;margin-bottom:50px;">
+    <div class="container" style="margin-top:50px;margin-bottom:50px; padding:0px 100px">
 
         <div class="underlined-title" id="mensagens">
             <div class="editContent">
@@ -14,7 +14,7 @@
                 </span>
             </div>
         </div>
-        <p style="text-align: justify;"><?php echo nl2br($EmpresaSoftware['Sobre']); ?></p>
+        <p class="text-center"><?php echo nl2br($EmpresaSoftware['Sobre']); ?></p>
     </div>  
    
 </section>

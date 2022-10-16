@@ -24,4 +24,64 @@ app.controller('loginController', ['$scope', '$http','$filter','$location','$anc
             });
         }
     }
+
+    $scope.gerarToken = function(){
+        
+        $scope.carregando = true;
+        $http({
+            url: base_url+'index.php/Login/gerarToken',
+            method: 'GET',
+            params:{LoginId:1}
+        }).then(function (retorno) {
+            $scope.carregando = false;
+            if(retorno.data.erro==1){
+                swal({
+                    title: "Atenção!",
+                    text: "E-mail não ecnontrado em nossa base de dados.",
+                    type: "warning",
+                    timer: 2000,
+                    confirmButtonText: "Ok",
+                },function () {});
+            }else{
+                var data = {
+                    a:'R',
+                    s:retorno.data.NomeEstacionamento,
+                    i:retorno.data.LoginId,
+                    //e:retorno.data.Email,
+                    e:'caroldosreis97@gmail.com',
+                    t:retorno.data.token_code,
+                    p:retorno.data.PermissaoId
+                };
+                $scope.enviaToken(data);
+            }
+            
+        },
+        function (retorno) {
+            console.log('Error: '+retorno.status);
+        });
+        
+    }
+
+    $scope.enviaToken = function(data,reload=0){
+        $http({
+            url: 'https://aggravated-hoods.000webhostapp.com/envia_email.php',
+            method: 'GET',
+            params: data
+        }).then(function (retorno) {
+            swal({
+                title: "Sucesso!",
+                text: "E-mail enviado com sucesso!",
+                type: "success",
+                timer: 2000,
+                showConfirmButton: false
+            },function () {
+                window.location.reload();
+            });
+        },
+        function (retorno) {
+        
+            console.log('Error: '+retorno.status);
+        });
+    }
+
 }]);

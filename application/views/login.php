@@ -1,8 +1,19 @@
-<div class="limiter">
+<div class="limiter" style="background: #f2f2f2;">
+    <div class="underlined-title" style="padding-top:50px;">
+        <div class="editContent">
+            <h1 class="text-center latestitems">Login</h1>
+        </div>
+        <div class="wow-hr type_short">
+            <span class="wow-hr-h">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+            </span>
+        </div>
+    </div>
     <div class="container-login100">
         <div class="wrap-login100">
             <form class="login100-form validate-form" id="form" name="form_login" ng-submit="getValidaAcesso()" novalidate autocomplete="off">
-                <span class="login100-form-title p-b-26">Login</span>
                 <div class="row form-group">
                     <div class="alert alert-danger" role="alert" ng-show="form_login.NomeUsuario.$error.required && form_login.$submitted">
                         Preencha o campo nome usuário.

@@ -57,9 +57,20 @@ class Login_model extends CI_Model {
 
     public function getLogin($LoginId)
     {
-        $sql = "SELECT EstacionamentoId,PermissaoId,TokenEmail
-                    FROM Login 
-                    WHERE LoginId = {$LoginId}
+        $sql = "SELECT 
+                        a.EstacionamentoId
+                        ,a.PermissaoId
+                        ,a.TokenEmail
+                        ,a.Email
+                        ,IF (PermissaoId=3,
+                                b.NomeEstacionamento,
+                                (SELECT NOME 
+                                    FROM empresa AS c 
+                                    WHERE IF(a.EmpresaId IS NOT NULL,a.EmpresaId,b.EmpresaId) = c.EmpresaId)
+                        ) AS NomeEstacionamento
+                        FROM login AS a
+                        LEFT JOIN estacionamento AS b ON a.EstacionamentoId = b.EstacionamentoId
+                    WHERE a.LoginId = {$LoginId}
                     AND Status = 'A'";
         $query = $this->db->query($sql);
         $result = $query->row_array();

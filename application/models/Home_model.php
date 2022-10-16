@@ -46,12 +46,13 @@ class Home_model extends CI_Model {
         return $result;
     }
 
-    public function getMesEmpresas()
+    public function getMesEmpresas($Ano)
     {
         $sql = "SELECT 
                 month(DataCadastro) AS mes
                 ,COUNT(*) AS qtd
             FROM empresa
+            WHERE YEAR(DataCadastro) = {$Ano} 
             GROUP BY month(DataCadastro)
             ORDER BY mes DESC";
         $query = $this->db->query($sql);

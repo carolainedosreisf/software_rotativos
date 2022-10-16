@@ -90,13 +90,23 @@
     </style>
 </head>
 <body ng-app="app" ng-controller="<?php echo $controller; ?>">
-    <div class="limiter" >
+    <div class="limiter" style="background: #f2f2f2">
         <?php if($retorno==1) { ?>
-
-        <div class="container-login100" style="padding: 100px 0px;">
+        <div class="underlined-title" style="padding-top:50px;">
+            <div class="editContent">
+                <h1 class="text-center latestitems">Redefinir Senha</h1>
+            </div>
+            <div class="wow-hr type_short">
+                <span class="wow-hr-h">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                </span>
+            </div>
+        </div>
+        <div class="container-login100">
             <div class="wrap-login100">
                 <form class="login100-form validate-form" id="form" name="form_senha" ng-submit="setNovaSenha()" novalidate autocomplete="off">
-                    <span class="login100-form-title p-b-26">Cadastrar Senha</span>
                     <div class="row form-group">
                         <div class="alert alert-danger" role="alert" ng-show="form_senha.$error.required && form_senha.$submitted">
                             Preencha os campos destacados.
