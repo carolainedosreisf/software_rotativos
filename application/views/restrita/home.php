@@ -1,4 +1,11 @@
 <div id="content" class="container" style="width:100%;">
+    <div class="row">
+        <div class="col-sm-12">
+            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                <i class="glyphicon glyphicon-align-left"></i>
+            </button>
+        </div>
+    </div>
     <h2>Bem vindo(a) <?php echo $this->session->userdata('nome'); ?></h2><br>
     <?php if($PermissaoId==2||$PermissaoId==3){ ?>
     <div class="row form-group">

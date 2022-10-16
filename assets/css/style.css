@@ -951,9 +951,25 @@ button.main_bt {
     cursor: not-allowed !important;
 }
 
+.texto-sobre{
+	margin-top:50px;
+	margin-bottom:50px; 
+	padding:0px 100px;
+	text-align:center;
+}
+
+@media (max-width:800px) {
+	.texto-sobre {
+		padding:0px 50px
+	}	
+}
+
 @media (max-width:600px) {
 	.navbar-lg .navbar-brand {
 		padding-top: 10px !important;
+	}	
+	.texto-sobre {
+		padding:0px 30px
 	}	
 }
 
@@ -993,6 +1009,12 @@ button.main_bt {
 		width: 100%;
 		float: left;
 	}
+}
+
+@media (max-width:400px) {
+	.texto-sobre {
+		text-align:justify;
+	}	
 }
 
 

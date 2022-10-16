@@ -38,4 +38,3 @@ Observações
 **************************
 
 -  Caso tenha problema com instalação do composer, o projeto ainda irá rodar sem erros, com exceção dos relatorios em PDF
--  Para usar um login já existente pegue da tabela login todas senhas são 12345678
