@@ -55,23 +55,34 @@ class Login_model extends CI_Model {
         return $result;
     }
 
-    public function getLogin($LoginId)
+    public function getLogin($LoginId,$Email='')
     {
+        $filtro = "";
+        if($LoginId){
+            $filtro .= " AND a.LoginId = {$LoginId} AND Status = 'A'";
+        }elseif ($Email) {
+            $filtro .= " AND a.Email = '{$Email}'";
+        }else {
+            return [];
+        }
+
         $sql = "SELECT 
                         a.EstacionamentoId
+                        ,a.LoginId
                         ,a.PermissaoId
                         ,a.TokenEmail
                         ,a.Email
+                        ,a.Status
                         ,IF (PermissaoId=3,
                                 b.NomeEstacionamento,
                                 (SELECT NOME 
                                     FROM empresa AS c 
                                     WHERE IF(a.EmpresaId IS NOT NULL,a.EmpresaId,b.EmpresaId) = c.EmpresaId)
                         ) AS NomeEstacionamento
-                        FROM login AS a
-                        LEFT JOIN estacionamento AS b ON a.EstacionamentoId = b.EstacionamentoId
-                    WHERE a.LoginId = {$LoginId}
-                    AND Status = 'A'";
+                    FROM login AS a
+                    LEFT JOIN estacionamento AS b ON a.EstacionamentoId = b.EstacionamentoId
+                    WHERE 1=1
+                    {$filtro}";
         $query = $this->db->query($sql);
         $result = $query->row_array();
         return $result;

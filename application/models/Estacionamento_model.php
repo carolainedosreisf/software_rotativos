@@ -58,6 +58,7 @@ class Estacionamento_model extends CI_Model {
                         ,a.BairroEndereco
                         ,b.UrlLogo
                         ,a.NumeroVagas
+                        ,a.NumeroLimiteReserva
                         ,a.Sobre
                         ,a.NumeroTelefone1
                         ,a.NumeroTelefone2

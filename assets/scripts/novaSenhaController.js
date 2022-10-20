@@ -14,7 +14,7 @@ app.controller('novaSenhaController', ['$scope', '$http','$location','$window', 
                 $scope.carregando = false;
                 swal({
                     title: "Sucesso!",
-                    text: "Senha adastrada com sucesso..",
+                    text: "Senha redefinida com sucesso..",
                     type: "success",
                     timer: 2000,
                     showConfirmButton: false

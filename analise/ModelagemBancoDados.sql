@@ -527,15 +527,18 @@ BEGIN
 	DECLARE p_HorasTotais FLOAT;
 	DECLARE p_Final FLOAT;
 	DECLARE p_liberaPagarAdiantado CHAR(1);
+	DECLARE p_NomeEstacionamento VARCHAR(150);
 	
 	DECLARE p_tempoDesc VARCHAR(100);
 	SELECT 
 			IFNULL(PrecoHora,0)
 			,IFNULL(PrecoLivre,0)
 			,timestampdiff(MINUTE, p_Entrada, p_Saida)
+      ,NomeEstacionamento
 			INTO p_ValorHoraEstacioanemnto
 					,p_ValorLivreEstacioanemnto
 					,p_Minutos
+					,p_NomeEstacionamento
 		FROM Estacionamento 
 		WHERE EstacionamentoId = p_EstacionamentoId;
 		
@@ -559,7 +562,7 @@ BEGIN
    
    SET p_tempoDesc = CONCAT(p_Minutos DIV 60,'Hrs e ',p_Minutos MOD 60,' Min');
  
-   RETURN CONCAT('{"liberaPagarAdiantado": "',p_liberaPagarAdiantado,'", "minutos":',p_Minutos,',"valor":',p_Final,',"tempoDesc":"',p_tempoDesc,'"}');
+   RETURN CONCAT('{"liberaPagarAdiantado": "',p_liberaPagarAdiantado,'", "minutos":',p_Minutos,',"valor":',p_Final,',"tempoDesc":"',p_tempoDesc,'","NomeEstacionamento":"',p_NomeEstacionamento,'"}');
 
 
 END; //
@@ -570,3 +573,7 @@ DELIMITER ;
 -- -----------------------------------------------------
 -- EXEMPLO SELECT f_verificaCalculaValor(8,'2022-10-14 08:00:00','2022-10-14 09:25:00') AS json;
 -- -----------------------------------------------------
+
+
+ALTER TABLE Carteira ADD Descricao VARCHAR(150) AFTER Status;
+ALTER TABLE Estacionamento ADD NumeroLimiteReserva DECIMAL(5,0) NOT NULL DEFAULT 0 AFTER NumeroVagas;

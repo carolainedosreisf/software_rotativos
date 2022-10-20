@@ -10,7 +10,7 @@
             </a>
         </div>
     </div>
-    <div class="row form-group" ng-show="!disabled_">
+    <div class="row form-group" ng-show="!disabled_ && 2==1">
         <div class="col-sm-12">
             <br>
             <div class="alert alert-info" role="alert">

@@ -270,8 +270,8 @@ class FluxoVaga extends CI_Controller {
 
         $filtros = [
             'EstacionamentoId'=> $EstacionamentoId
-            ,'DataInicio'=> ""
-            ,'DataFim'=> ""
+            ,'DataInicio'=> $this->funcoes->get('DataEntrada')
+            ,'DataFim'=> $this->funcoes->get('DataEntrada')
             ,'CadastroId'=> ""
             ,'Reservado'=> ""
             ,'StatusFluxo'=> "E"
@@ -291,9 +291,9 @@ class FluxoVaga extends CI_Controller {
     {
         $alfabeto = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
         $EstacionamentoId = 8;
-        $data = "2022-10-15";
-        $gerar = 30;
-        $fechar = 1;
+        $data = "2022-10-19";
+        $gerar = 23;
+        $fechar = 0;
         $somente_fechar = 0;
         $Reserva = 0;
 

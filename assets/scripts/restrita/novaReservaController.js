@@ -9,7 +9,14 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
     $scope.ReservaId = ReservaId;
     $scope.disabled_ = 0;
     $scope.erro = 0;
-    
+    $scope.QtdLocacoes = '';
+
+    var now = new Date;
+    $scope.dataAtual = (((now.getDate()<10?'0':'')+now.getDate())+"/"+((now.getMonth()+1)<10?'0':'')+(now.getMonth()+1)+ "/" + now.getFullYear())
+
+    var msg_limite_reserva = 'Estacionamento já reservou o "Limite de vagas para reservar" nesse perído.';
+    var msg_lotacao = 'Estacionamento lotado nesse perído.';
+
     $scope.getEstacionamentos = function(){
         $scope.carregando = true;
         $http({
@@ -75,7 +82,6 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
         'Reserva.EstacionamentoId'
         ,'Reserva.DataEntrada'
         ,'Reserva.HoraEntrada'
-        ,'Reserva.DataSaida'
         ,'Reserva.HoraSaida'
         ], function(newValues, oldValues, scope) {
             
@@ -84,13 +90,15 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
                 if(!e){
                     invalido = 1;
                     if(i==0){
+                        $scope.NumeroLimiteReserva = '';
                         $scope.NumeroVagas = '';
                     }
                 }else{
                     if(i==0){
                         var index = getIndexEstacionamento();
+                        $scope.NumeroLimiteReserva = $scope.lista_estacionamentos[index].NumeroLimiteReserva;
                         $scope.NumeroVagas = $scope.lista_estacionamentos[index].NumeroVagas;
-                    }else if(i==2||i==4){
+                    }else if(i==2||i==3){
                         var coluna = i==2?'HoraEntrada':'HoraSaida';
                         var hr = $scope.Reserva[coluna].substr(0, 2);
                         var min = $scope.Reserva[coluna].substr(2, 2);
@@ -118,9 +126,12 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
                     }).then(function (retorno) {
                         $scope.carregando = false;
                         $scope.reservas_periodo = retorno.data.reservas_proximas;
-                        if($scope.reservas_periodo.length>=$scope.NumeroVagas){
+                        $scope.QtdLocacoes = retorno.data.QtdLocacoes;
+                        if($scope.reservas_periodo.length>=$scope.NumeroLimiteReserva){
                             $scope.erro = 0;
-                            $scope.mensagemLotacao();
+                            $scope.mensagemLotacao(msg_limite_reserva);
+                        }else if(($scope.reservas_periodo.length+$scope.QtdLocacoes)>=$scope.NumeroVagas){
+                            $scope.mensagemLotacao(msg_lotacao);
                         }else{
                             $scope.carregando = true;
                             $http({
@@ -130,7 +141,7 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
                                     EstacionamentoId:$scope.Reserva.EstacionamentoId,
                                     DataEntrada:$scope.Reserva.DataEntrada,
                                     HoraEntrada:$scope.Reserva.HoraEntrada,
-                                    DataSaida:$scope.Reserva.DataSaida,
+                                    DataSaida:$scope.Reserva.DataEntrada,
                                     HoraSaida:$scope.Reserva.HoraSaida,
                                 }
                             }).then(function (retorno) {
@@ -165,8 +176,13 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
     });
 
     $scope.setReserva= function(){
-        if($scope.form_reserva.$valid && $scope.reservas_periodo.length<$scope.NumeroVagas){
+        if(
+            $scope.form_reserva.$valid && 
+            $scope.reservas_periodo.length<$scope.NumeroLimiteReserva &&
+            ($scope.reservas_periodo.length+$scope.QtdLocacoes)<$scope.NumeroVagas
+            ){
             $scope.carregando = true;
+            $scope.Reserva.DataSaida = $scope.Reserva.DataEntrada;
             $http({
                 url: base_url+'/FluxoVaga/setFluxoVaga',
                 method: 'POST',
@@ -183,15 +199,17 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
             function (retorno) {
                 console.log('Error: '+retorno.status);
             });
-        }else if($scope.reservas_periodo.length>=$scope.NumeroVagas){
-            $scope.mensagemLotacao();
+        }else if($scope.reservas_periodo.length>=$scope.NumeroLimiteReserva){
+            $scope.mensagemLotacao(msg_limite_reserva);
+        }else if(($scope.reservas_periodo.length+$scope.QtdLocacoes)>=$scope.NumeroVagas){
+            $scope.mensagemLotacao(msg_lotacao);
         }
     }
 
-    $scope.mensagemLotacao = function() {
+    $scope.mensagemLotacao = function(text) {
         swal({
             title: "",
-            text: "Estacionamento lotado no período selecionado.",
+            text,
             type: "warning",
             showCancelButton: false,
             confirmButtonText: "Ok",

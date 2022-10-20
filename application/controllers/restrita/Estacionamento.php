@@ -71,6 +71,7 @@ class Estacionamento extends CI_Controller {
             'NumeroTelefone2' => isset($post['NumeroTelefone2'])?$post['NumeroTelefone2']:null,
             'Email' => $post['Email'],
             'NumeroVagas' => $post['NumeroVagas'],
+            'NumeroLimiteReserva' => $post['NumeroLimiteReserva'],
             'Sobre' => isset($post['Sobre'])?$post['Sobre']:null,
             'NomeEstacionamento' => $post['NomeEstacionamento'],
             'PrecoLivre' => $post['PrecoLivre'],

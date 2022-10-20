@@ -18,8 +18,12 @@
         <div class="col-sm-12">
             <br>
             <div class="alert alert-info" role="alert">
-                <span><b>Numero de vagas Total do Estacionamento: </b>{{NumeroVagas}}</span><br>
+                <span><b>Total de Vagas do Estacionamento: </b>{{NumeroVagas}}</span><br>
+                <span><b>Limite de vagas para reservar do Estacionamento: </b>{{NumeroLimiteReserva}}</span><br>
                 <span><b>Reservas no Período Selecionado: </b>{{reservas_periodo.length}}</span>
+                <span ng-show="dataAtual==Reserva.DataEntrada&&QtdLocacoes">
+                 <br><b>Locações em Andamento: </b>{{QtdLocacoes}}
+                </span>
             </div>
         </div>
     </div>
@@ -68,19 +72,15 @@
         </div>
 
         <div class="row form-group">
-            <div class="col-sm-3" ng-class="form_reserva.DataEntrada.$invalid && (form_reserva.$submitted || form_reserva.DataEntrada.$dirty)?'has-error':''">
-                <label for="DataEntrada">Data Entrada:</label>
+            <div class="col-sm-4" ng-class="form_reserva.DataEntrada.$invalid && (form_reserva.$submitted || form_reserva.DataEntrada.$dirty)?'has-error':''">
+                <label for="DataEntrada">Data:</label>
                 <input type="text" data-provide="datepicker" class="form-control" name="DataEntrada" data-date-format="dd/mm/yyyy" ng-model="Reserva.DataEntrada" ng-required="true" ng-disabled="disabled_">
             </div>
-            <div class="col-sm-3" ng-class="form_reserva.HoraEntrada.$invalid && (form_reserva.$submitted || form_reserva.HoraEntrada.$dirty)?'has-error':''">
+            <div class="col-sm-4" ng-class="form_reserva.HoraEntrada.$invalid && (form_reserva.$submitted || form_reserva.HoraEntrada.$dirty)?'has-error':''">
                 <label for="HoraEntrada">Hora Entrada:</label>
                 <input type="text" class="form-control" id="HoraEntrada" name="HoraEntrada" ng-model="Reserva.HoraEntrada" ui-mask="99:99" placeholder="__:__" ng-change="" ng-required="true" ng-disabled="disabled_">
             </div>
-            <div class="col-sm-3" ng-class="form_reserva.DataSaida.$invalid && (form_reserva.$submitted || form_reserva.DataSaida.$dirty)?'has-error':''">
-                <label for="DataSaida">Data Saída:</label>
-                <input type="text" class="form-control" id="DataSaida" name="DataSaida" ng-model="Reserva.DataSaida" data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-required="true" ng-disabled="disabled_">
-            </div>
-            <div class="col-sm-3"  ng-class="form_reserva.HoraSaida.$invalid && (form_reserva.$submitted || form_reserva.HoraSaida.$dirty)?'has-error':''">
+            <div class="col-sm-4"  ng-class="form_reserva.HoraSaida.$invalid && (form_reserva.$submitted || form_reserva.HoraSaida.$dirty)?'has-error':''">
                 <label for="HoraSaida">Hora Saída:</label>
                 <input type="text" class="form-control" id="HoraSaida" name="HoraSaida" ng-model="Reserva.HoraSaida" ui-mask="99:99" placeholder="__:__" ng-change="" ng-required="true" ng-disabled="disabled_">
             </div>

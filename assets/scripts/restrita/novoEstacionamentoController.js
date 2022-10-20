@@ -108,7 +108,12 @@ app.controller('novoEstacionamentoController', ['$scope', '$http','$filter','$lo
     }
 
     $scope.setEstacionamento = function(){
-        if($scope.form_estacionamento.$valid && $scope.erro_cep==false && ($scope.objEstacionamento.PrecoHora>0 || $scope.objEstacionamento.PrecoLivre>0)){
+        if(
+            $scope.form_estacionamento.$valid && 
+            $scope.erro_cep==false 
+            && ($scope.objEstacionamento.PrecoHora>0 || $scope.objEstacionamento.PrecoLivre>0) 
+            && $scope.objEstacionamento.NumeroVagas >= $scope.objEstacionamento.NumeroLimiteReserva
+            ){
             $scope.carregando = true;
             $http({
                 url: 'setEstacionamento',
@@ -157,3 +162,19 @@ app.directive('somentenumeros', function () {
       }
     };
 });
+
+app.directive('tooltip', function(){
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs){
+            element.hover(function(){
+                // on mouseenter
+                element.tooltip('show');
+            }, function(){
+                // on mouseleave
+                element.tooltip('hide');
+            });
+        }
+    };
+});
+

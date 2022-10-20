@@ -38,6 +38,9 @@
             <div class="alert alert-danger" role="alert" ng-show="erro_cep">
                 CEP Inválido!
             </div>
+            <div class="alert alert-danger" ng-show="objEstacionamento.NumeroVagas < objEstacionamento.NumeroLimiteReserva">
+                Limite de vagas para reservar não pode ser maior que Total de Vagas.
+            </div>
             <div class="alert alert-danger" role="alert" ng-repeat="erro in lista_erros">
                 {{erro}}
             </div>
@@ -52,43 +55,63 @@
                 </div>
             </div>
             <div class="row form-group">
-                <div class="col-sm-4">
+                <div class="col-sm-6">
                     <label for="Nome">Nome Empresa:</label>
                     <input type="text" name="Nome" id="Nome" class="form-control" ng-value="objEstacionamento.Nome" ng-disabled="true">
                 </div>
-                <div class="col-sm-4" ng-class="form_estacionamento.NomeEstacionamento.$invalid && (form_estacionamento.$submitted || form_estacionamento.NomeEstacionamento.$dirty)?'has-error':''">
+                <div class="col-sm-6" ng-class="form_estacionamento.NomeEstacionamento.$invalid && (form_estacionamento.$submitted || form_estacionamento.NomeEstacionamento.$dirty)?'has-error':''">
                     <label for="NomeEstacionamento">Nome Estacionamento:</label>
                     <input type="text" name="NomeEstacionamento" id="NomeEstacionamento" class="form-control" ng-model="objEstacionamento.NomeEstacionamento" maxlength="100" ng-required="true">
                 </div>
-                <div class="col-sm-4"  ng-class="form_estacionamento.DiasAtendimentoId.$invalid && (form_estacionamento.$submitted || form_estacionamento.DiasAtendimentoId.$dirty)?'has-error':''">
+
+            </div>
+
+            <div class="row form-group">
+                <div class="col-sm-3" ng-class="form_estacionamento.CpfCnpj.$invalid && (form_estacionamento.$submitted || form_estacionamento.CpfCnpj.$dirty)?'has-error':''">
+                    <label for="CpfCnpj">{{objEstacionamento.TipoEmpresa=='J'?'CNPJ':'CPF'}}:</label>
+                    <input type="text" name="CpfCnpj" id="CpfCnpj" class="form-control" ng-model="objEstacionamento.CpfCnpj" ui-br-cnpj-mask ng-disabled="EstacionamentoId" ng-if="objEstacionamento.TipoEmpresa=='J'" ng-required="true">
+                    <input type="text" name="CpfCnpj" id="CpfCnpj" class="form-control" ng-model="objEstacionamento.CpfCnpj" ui-br-cpf-mask ng-disabled="EstacionamentoId" ng-if="objEstacionamento.TipoEmpresa=='F'" ng-required="true">
+                </div>
+                <div class="col-sm-5"  ng-class="form_estacionamento.DiasAtendimentoId.$invalid && (form_estacionamento.$submitted || form_estacionamento.DiasAtendimentoId.$dirty)?'has-error':''">
                     <label for="DiasAtendimentoId">Dias Atendimento:</label>
                     <select type="text" name="DiasAtendimentoId" id="DiasAtendimentoId" class="form-control" ng-model="objEstacionamento.DiasAtendimentoId" ng-required="true">
                         <option value="">Selecione</option>
                         <option value="{{l.DiasAtendimentoId}}" ng-repeat="l in lista_dias_atendimento">{{l.Descricao}}</option>
                     </select>
                 </div>
-                
-            </div>
-            <div class="row form-group">
-                <div class="col-sm-4" ng-class="form_estacionamento.CpfCnpj.$invalid && (form_estacionamento.$submitted || form_estacionamento.CpfCnpj.$dirty)?'has-error':''">
-                    <label for="CpfCnpj">{{objEstacionamento.TipoEmpresa=='J'?'CNPJ':'CPF'}}:</label>
-                    <input type="text" name="CpfCnpj" id="CpfCnpj" class="form-control" ng-model="objEstacionamento.CpfCnpj" ui-br-cnpj-mask ng-disabled="EstacionamentoId" ng-if="objEstacionamento.TipoEmpresa=='J'" ng-required="true">
-                    <input type="text" name="CpfCnpj" id="CpfCnpj" class="form-control" ng-model="objEstacionamento.CpfCnpj" ui-br-cpf-mask ng-disabled="EstacionamentoId" ng-if="objEstacionamento.TipoEmpresa=='F'" ng-required="true">
-                </div>
-                <div class="col-sm-3" ng-class="form_estacionamento.PrecoLivre.$error.required && (form_estacionamento.$submitted || form_estacionamento.PrecoLivre.$dirty)?'has-error':''">
-                    <label for="PrecoLivre">Preço Livre</label>
+                <div class="col-sm-2" ng-class="form_estacionamento.PrecoLivre.$error.required && (form_estacionamento.$submitted || form_estacionamento.PrecoLivre.$dirty)?'has-error':''">
+                    <label for="PrecoLivre">Preço Livre:</label>
                     <input type="text" name="PrecoLivre" id="PrecoLivre" class="form-control" ng-model="objEstacionamento.PrecoLivre" ng-required="true" ui-number-mask="2">
                 </div>
-                <div class="col-sm-3" ng-class="form_estacionamento.PrecoHora.$invalid && (form_estacionamento.$submitted || form_estacionamento.PrecoHora.$dirty)?'has-error':''">
-                    <label for="PrecoHora">Preço Hora</label>
+                <div class="col-sm-2" ng-class="form_estacionamento.PrecoHora.$invalid && (form_estacionamento.$submitted || form_estacionamento.PrecoHora.$dirty)?'has-error':''">
+                    <label for="PrecoHora">Preço Hora:</label>
                     <input type="text" name="PrecoHora" id="PrecoHora" class="form-control" ng-model="objEstacionamento.PrecoHora" ng-required="true" ui-number-mask="2">
                 </div>
-                <div class="col-sm-2" ng-class="form_estacionamento.NumeroVagas.$invalid && (form_estacionamento.$submitted || form_estacionamento.NumeroVagas.$dirty)?'has-error':''">
-                    <label for="NumeroVagas">Qtd. Vagas</label>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-sm-4" ng-class="form_estacionamento.NumeroVagas.$invalid && (form_estacionamento.$submitted || form_estacionamento.NumeroVagas.$dirty)?'has-error':''">
+                    <label for="NumeroVagas">Total de Vagas:</label>
                     <input type="text" name="NumeroVagas" id="NumeroVagas" class="form-control" ng-model="objEstacionamento.NumeroVagas" ng-required="true" somentenumeros>
                 </div>
+                <div class="col-sm-4" ng-class="form_estacionamento.NumeroLimiteReserva.$invalid && (form_estacionamento.$submitted || form_estacionamento.NumeroLimiteReserva.$dirty)?'has-error':''">
+                    <label for="NumeroLimiteReserva">
+                        Limite de vagas para reservar:
+                        <i 
+                            style="color:#31708f" 
+                            class="glyphicon glyphicon-question-sign"
+                            data-html="true" 
+                            data-toggle="tooltip" 
+                            data-placement="top"
+                            data-original-title="Informe aqui o limite de vagas do Total de Vagas do estacionamento que poderão ser utilizadas para rerservas. <br><br> Recomenda-se não ultrapassar 70% do Total de Vagas.<br><br> Deixe o campo com valor 0 caso o estacionamento não permita realizar reservar."
+                            tooltip
+                        ></i>
+                    </label>
+                    <input type="text" name="NumeroLimiteReserva" id="NumeroLimiteReserva" class="form-control" ng-model="objEstacionamento.NumeroLimiteReserva" ng-required="true" somentenumeros>
+                </div>
             </div>
-        </div><br>
+        </div>
+        <br>
         <div class="callout callout-default">
             <h4 class="text-center">Endereço</h4>
             <div class="row form-group">
@@ -128,15 +151,15 @@
             <h4 class="text-center">Contato</h4>
             <div class="row form-group">
                 <div class="col-sm-4" ng-class="form_estacionamento.NumeroTelefone1.$invalid && (form_estacionamento.$submitted || form_estacionamento.NumeroTelefone1.$dirty)?'has-error':''">
-                    <label for="NumeroTelefone1">Celular</label>
+                    <label for="NumeroTelefone1">Celular:</label>
                     <input type="text" name="NumeroTelefone1" id="NumeroTelefone1" class="form-control" ng-model="objEstacionamento.NumeroTelefone1" ng-required="true" ui-br-phone-number-mask="areaCode">
                 </div>
                 <div class="col-sm-4" ng-class="form_estacionamento.NumeroTelefone2.$invalid && (form_estacionamento.$submitted || form_estacionamento.NumeroTelefone2.$dirty)?'has-error':''">
-                    <label for="NumeroTelefone2">Telefone</label>
+                    <label for="NumeroTelefone2">Telefone:</label>
                     <input type="text" name="NumeroTelefone2" id="NumeroTelefone2" class="form-control" ng-model="objEstacionamento.NumeroTelefone2" ui-br-phone-number-mask="areaCode">
                 </div>
                 <div class="col-sm-4" ng-class="form_estacionamento.Email.$invalid && (form_estacionamento.$submitted || form_estacionamento.Email.$dirty)?'has-error':''">
-                    <label for="Email">E-mail</label>
+                    <label for="Email">E-mail:</label>
                     <input type="email" name="Email" id="Email" class="form-control" ng-model="objEstacionamento.Email" ng-required="true">
                 </div>
             </div>

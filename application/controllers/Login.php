@@ -70,22 +70,24 @@ class Login extends CI_Controller {
 
 	public function gerarToken()
     {
-		$LoginId = $this->funcoes->get('LoginId');
-		$Login = $this->Login_model->getLogin($LoginId);
+		$Email = $this->funcoes->get('Email');
+		$Login = $this->Login_model->getLogin(0,$Email);
 
-		if(!isset($Login['PermissaoId'])){
+		if(!isset($Login['LoginId'])){
 			echo json_encode(['erro'=>1]);
+		}elseif($Login['Status']!='A'){
+			echo json_encode(['erro'=>2]);
 		}else{
 			$token = (bin2hex(random_bytes(12))).'_'.Date('Y-m-d-H-i');
 			$token_code =base64_encode($token);
 			$data = ['TokenEmail' => $token];
-			$this->Login_model->setLogin($data,$LoginId);
+			$this->Login_model->setLogin($data,$Login['LoginId']);
 	
 			echo json_encode([
 				'token_code'=>$token_code
 				,'PermissaoId'=>$Login['PermissaoId']
 				,'Email'=>$Login['Email']
-				,'LoginId'=>$LoginId
+				,'LoginId'=>$Login['LoginId']
 				,'NomeEstacionamento'=>$Login['NomeEstacionamento']
 				,'erro'=>0
 			]);
