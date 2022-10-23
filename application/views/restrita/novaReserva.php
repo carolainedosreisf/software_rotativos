@@ -187,7 +187,7 @@
                         </div>
                         <div class="row form-group">
                             <div class="col-sm-12" ng-class="form_cliente.NumeroTelefone.$invalid && (form_cliente.$submitted || form_cliente.NumeroTelefone.$dirty)?'has-error':''">
-                                <label for="NumeroTelefone">Telfone:</label>
+                                <label for="NumeroTelefone">Telefone:</label>
                                 <input type="text" class="form-control" name="NumeroTelefone" id="NumeroTelefone" ng-model="objCliente.NumeroTelefone" ng-required="true" ui-br-phone-number-mask="areaCode">
                             </div>
                         </div>

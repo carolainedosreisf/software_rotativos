@@ -134,7 +134,8 @@ class FluxoVaga extends CI_Controller {
             ,'HoraEntrada'=>$this->funcoes->formataHora($post['HoraEntrada'])
             ,'Observacao'=>isset($post['Observacao'])?$post['Observacao']:null
         ];
-
+        
+        $data['CadastroId'] = null;
         if(isset($post['CadastroId'])){
             if($post['CadastroId']){
                 $data['CadastroId'] = $post['CadastroId'];
@@ -291,9 +292,9 @@ class FluxoVaga extends CI_Controller {
     {
         $alfabeto = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
         $EstacionamentoId = 8;
-        $data = "2022-10-19";
-        $gerar = 23;
-        $fechar = 0;
+        $data = "2022-10-18";
+        $gerar = 132;
+        $fechar = 1;
         $somente_fechar = 0;
         $Reserva = 0;
 

@@ -1,3 +1,5 @@
+//const { data } = require("jquery");
+
 var app = angular.module('app', ['ui.utils.masks','ui.mask','angularUtils.directives.dirPagination']);
 app.controller('novaReservaController', ['$scope', '$http','$filter','$location', function($scope,$http,$filter,$location) {
     $scope.Reserva = {
@@ -14,8 +16,8 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
     var now = new Date;
     $scope.dataAtual = (((now.getDate()<10?'0':'')+now.getDate())+"/"+((now.getMonth()+1)<10?'0':'')+(now.getMonth()+1)+ "/" + now.getFullYear())
 
-    var msg_limite_reserva = 'Estacionamento já reservou o "Limite de vagas para reservar" nesse perído.';
-    var msg_lotacao = 'Estacionamento lotado nesse perído.';
+    var msg_limite_reserva = 'Não é possivel cadastrar a reserva, o estacionamento já reservou o "Limite de vagas para reservar" nesse período.';
+    var msg_lotacao = 'Não é possivel cadastrar a reserva, o estacionamento já  esta lotado nesse período.';
 
     $scope.getEstacionamentos = function(){
         $scope.carregando = true;
@@ -69,6 +71,13 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
         }).then(function (retorno) {
             $scope.Reserva = retorno.data;
             $scope.carregando = false;
+            if($scope.Reserva.CadastroId){
+                setTimeout(() => {
+                    var cadastro = $scope.lista_clientes[getIndexCadastro()];
+                    var newOption = new Option(cadastro.Nome+" - "+cadastro.CpfFormatado, cadastro.CadastroId, false, false);
+                    $('#CadastroId').append(newOption).trigger('change');
+                }, 777);
+            }
             if($scope.Reserva.Status!='B' || $scope.Reserva.StatusFluxo!='N'){
                 $scope.disabled_ = 1;
             }
@@ -244,6 +253,10 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
          return $scope.lista_estacionamentos.map((el) => el.EstacionamentoId).indexOf($scope.Reserva.EstacionamentoId);
     }
 
+    var getIndexCadastro = function() {
+        return $scope.lista_clientes.map((el) => el.CadastroId).indexOf($scope.Reserva.CadastroId);
+    }
+
     $scope.getEstacionamentos();
     $scope.getCadastros();
     $scope.getFormasPagamento();
@@ -264,3 +277,7 @@ app.directive('uppercase', function() {
         }
     };
 })
+
+$(document).ready(function() {
+    $('#CadastroId').select2();
+});

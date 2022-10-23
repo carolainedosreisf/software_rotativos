@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Empresa` (
   `CidadeId` INT NULL,
   `BairroEndereco` VARCHAR(80) NULL,
   `UrlLogo` VARCHAR(255) NULL,
-  `Sobre` VARCHAR(255) NULL,
+  `Sobre` LONGTEXT NULL,
   `NumeroTelefone1` VARCHAR(15) NULL,
   `NumeroTelefone2` VARCHAR(15) NULL,
   `Email` VARCHAR(80) NULL,
@@ -94,7 +94,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Empresa` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `mydb`.`DiasAtendimento`
@@ -120,6 +119,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Estacionamento` (
   `CidadeId` INT NULL,
   `BairroEndereco` VARCHAR(80) NULL,
   `NumeroVagas` DECIMAL(5,0) NOT NULL,
+  `NumeroLimiteReserva` DECIMAL(5,0) NOT NULL,
   `Sobre` VARCHAR(255) NULL,
   `NumeroTelefone1` VARCHAR(15) NULL,
   `NumeroTelefone2` VARCHAR(15) NULL,
@@ -153,6 +153,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `mydb`.`Login`
 -- -----------------------------------------------------
+    
 CREATE TABLE IF NOT EXISTS `mydb`.`Login` (
   `LoginId` INT NOT NULL AUTO_INCREMENT,
   `Email` VARCHAR(80) NULL,
@@ -160,6 +161,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Login` (
   `Senha` VARCHAR(255) NULL,
   `CadastroId` INT NULL,
   `EstacionamentoId` INT NULL,
+  `EmpresaId` INT NULL,
   `PermissaoId` INT NOT NULL,
   `TokenEmail` VARCHAR(255) NULL,
   `Status` CHAR(1) DEFAULT 'A' NOT NULL,
@@ -178,6 +180,11 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Login` (
   CONSTRAINT `FK16`
     FOREIGN KEY (`EstacionamentoId`)
     REFERENCES `mydb`.`Estacionamento` (`EstacionamentoId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+ CONSTRAINT `id_EmpresaId_Login`
+    FOREIGN KEY (`EmpresaId`)
+    REFERENCES `mydb`.`Empresa` (`EmpresaId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `FK21`
@@ -228,6 +235,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Carteira` (
   `DataExpiracaoCartao` CHAR(6) NULL,
   `CodigoSegurancaoCartao` CHAR(3) NULL,
   `CodigoPix` VARCHAR(255) NULL,
+  `Descricao` VARCHAR(150) NULL,
   `Status` ENUM('A','I') NOT NULL DEFAULT 'A' COMMENT 'A => Ativo, I => Inativo que seria também excluido, pois não será excluido nada dessa tabela',
   PRIMARY KEY (`CarteiraId`),
   INDEX `FK27_idx` (`CadastroId` ASC) ,
@@ -262,6 +270,11 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Reserva` (
   CONSTRAINT `FK31`
     FOREIGN KEY (`EstacionamentoId`)
     REFERENCES `mydb`.`Estacionamento` (`EstacionamentoId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+ CONSTRAINT `FK_Cadastro_Reserva`
+    FOREIGN KEY (`CadastroId`)
+    REFERENCES `mydb`.`Cadastro` (`CadastroId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -307,7 +320,6 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `mydb`.`Receber` (
   `ReceberId` INT NOT NULL AUTO_INCREMENT,
   `FormaPagamentoId` INT NOT NULL,
-  `CadastroId` INT NULL,
   `FluxoVagaId` INT NULL,
   `ReservaId` INT NULL,
   `CarteiraId` INT NULL,
@@ -315,18 +327,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Receber` (
   `Status` ENUM('A','P','R','F') NOT NULL COMMENT 'A=>Aguardando Pagamento,P=>Processando Pagamento,R=>Recusado,F=>Finalizado',
   PRIMARY KEY (`ReceberId`),
   INDEX `FK13_idx` (`FormaPagamentoId` ASC) ,
-  INDEX `FK22_idx` (`CadastroId` ASC),
   INDEX `FK35_idx` (`FluxoVagaId` ASC),
   INDEX `FK36_idx` (`ReservaId` ASC),
   INDEX `FK37_idx` (`CarteiraId` ASC),
   CONSTRAINT `FK13`
     FOREIGN KEY (`FormaPagamentoId`)
     REFERENCES `mydb`.`FormaPagamento` (`FormaPagamentoId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `FK22`
-    FOREIGN KEY (`CadastroId`)
-    REFERENCES `mydb`.`Cadastro` (`CadastroId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `FK35`
@@ -422,16 +428,6 @@ SELECT
          LIMIT 1) AS VencUltPagamentoBr
      ,DATE_FORMAT(NOW(), '%m/%Y') AS CompetenciaAtual
 FROM Empresa AS a;
-
-
-SHOW DATABASES;
-USE mydb;
-
-ALTER TABLE Login ADD EmpresaId int(11) AFTER CadastroId;
-ALTER TABLE Login ADD CONSTRAINT id_EmpresaId_Login FOREIGN KEY(EmpresaId) REFERENCES Empresa (EmpresaId);
-
-ALTER TABLE `empresa`
-	CHANGE COLUMN `Sobre` `Sobre` LONGTEXT NULL COLLATE 'utf8_general_ci' AFTER `UrlLogo`;
 
 -- -----------------------------------------------------
 -- FUNCTION `mydb`.`f_SituacaoEmpresa`
@@ -573,7 +569,3 @@ DELIMITER ;
 -- -----------------------------------------------------
 -- EXEMPLO SELECT f_verificaCalculaValor(8,'2022-10-14 08:00:00','2022-10-14 09:25:00') AS json;
 -- -----------------------------------------------------
-
-
-ALTER TABLE Carteira ADD Descricao VARCHAR(150) AFTER Status;
-ALTER TABLE Estacionamento ADD NumeroLimiteReserva DECIMAL(5,0) NOT NULL DEFAULT 0 AFTER NumeroVagas;

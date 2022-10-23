@@ -10,48 +10,15 @@
             </a>
         </div>
     </div>
-    <div class="row form-group" ng-show="!disabled_ && 2==1">
+    <div class="row form-group" ng-show="!disabled_">
         <div class="col-sm-12">
             <br>
             <div class="alert alert-info" role="alert">
                 <div class="row form-group">
                     <div class="col-sm-12">
-                        <span><b>Numero de vagas Total do Estacionamento: </b>{{NumeroVagas}}</span><br>
-                        <span><b>Locações em Andamento: </b>{{QtdLocacoes}}</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <table class="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th class="text-center" colspan="3">Reservas Próximas: {{(reservas_proximas.length)}}</th>
-                            </tr>
-                                <tr>
-                                    <th class="text-center">#</th>
-                                    <th class="text-center">Hora Entrada</th>
-                                    <th class="text-center">Hora Saída</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-show="reservas_proximas.length <=0">
-                                    <td class="text-center" colspan="3">Nenhum resgistro encontrado.</td>
-                                </tr>
-                                <tr pagination-id="pg_lista" dir-paginate="l in reservas_proximas| filter:filtrar | itemsPerPage:20">
-                                    <td class="text-center">{{l.ReservaId}}</td>
-                                    <td class="text-center">{{l.HoraEntradaBr}}</td>
-                                    <td class="text-center">{{l.HoraSaidaBr}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="pull-right">
-                            <dir-pagination-controls 
-                                max-size="7" 
-                                direction-links="true" 
-                                boundary-links="true" 
-                                pagination-id="pg_lista">  
-                            </dir-pagination-controls>  
-                        </div>
+                        <span><b>Total de Vagas do Estacionamento: </b>{{NumeroVagas}}</span><br>
+                        <span><b>Locações em Andamento: </b>{{QtdLocacoes}}</span><br>
+                        <span><b>Reservas Próximas: </b>{{reservas_proximas.length}}</span>
                     </div>
                 </div>
             </div>

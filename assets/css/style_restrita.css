@@ -353,3 +353,6 @@ th,td{
 .btn-pocessando-pagamento:hover{
     color:white;
 }
+.select2-container{
+    width: 100% !important;
+}

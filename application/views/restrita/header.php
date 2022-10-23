@@ -12,6 +12,7 @@
         <link href="<?php echo base_url('assets/css/style_restrita.css'); ?>" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/datepicker.css'); ?>">
         <link rel="stylesheet" href="<?php echo base_url('assets/css/sweetalert.css'); ?>"/>
+        <link rel="stylesheet" href="<?php echo base_url('assets/css/select2.min.css'); ?>"/>
 
 
         <script src="<?php echo base_url('assets/js/jquery.min.js'); ?>"></script>
@@ -30,6 +31,7 @@
         <script src="<?php echo base_url('assets/js/angular-sanitize.min.js'); ?>"></script>
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	    <script src="<?php echo base_url('assets/js/angular-input-masks-standalone.min.js'); ?>"></script>
+	    <script src="<?php echo base_url('assets/js/select2.min.js'); ?>"></script>
         <script src="<?php echo base_url("assets/scripts/restrita/{$controller}"); ?>"></script>
 
     </head>

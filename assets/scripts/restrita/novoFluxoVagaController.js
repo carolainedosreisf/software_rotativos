@@ -61,7 +61,15 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
             params:{FluxoVagaId}
         }).then(function (retorno) {
             $scope.FluxoVaga = retorno.data;
+            $scope.FluxoVaga.Tipo = 'F';
             $scope.carregando = false;
+            if($scope.FluxoVaga.CadastroId){
+                setTimeout(() => {
+                    var cadastro = $scope.lista_clientes[getIndexCadastro()];
+                    var newOption = new Option(cadastro.Nome+" - "+cadastro.CpfFormatado, cadastro.CadastroId, false, false);
+                    $('#CadastroId').append(newOption).trigger('change');
+                }, 777);
+            }
             if($scope.FluxoVaga.StatusFluxo!='E'){
                 $scope.disabled_ = 1;
             }
@@ -114,6 +122,9 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
                         $scope.carregando = false;
                         $scope.QtdLocacoes = retorno.data.QtdLocacoes;
                         $scope.reservas_proximas = retorno.data.reservas_proximas;
+                        if(($scope.reservas_proximas.length+$scope.QtdLocacoes)>=$scope.NumeroVagas){
+                            $scope.mensagemLotacao();
+                        }
                     },
                     function (retorno) {
                         console.log('Error: '+retorno.status);
@@ -123,7 +134,7 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
     });
 
     $scope.validaHora = function(coluna){
-        if(typeof $scope.FluxoVaga[coluna] != undefined){
+        if(typeof $scope.FluxoVaga[coluna] != 'undefined'){
             if($scope.FluxoVaga[coluna] != ""){
                 var hr = $scope.FluxoVaga[coluna].substr(0, 2);
                 var min = $scope.FluxoVaga[coluna].substr(2, 2);
@@ -135,7 +146,7 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
     }
 
     $scope.setFluxoVaga = function(){
-        if($scope.form_fluxo_vaga.$valid){
+        if($scope.form_fluxo_vaga.$valid && ($scope.reservas_proximas.length+$scope.QtdLocacoes)<$scope.NumeroVagas){
             $scope.carregando = true;
             $http({
                 url: base_url+'/FluxoVaga/setFluxoVaga',
@@ -148,6 +159,8 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
             function (retorno) {
                 console.log('Error: '+retorno.status);
             });
+        }else if($scope.form_fluxo_vaga.$valid && ($scope.reservas_proximas.length+$scope.QtdLocacoes)>=$scope.NumeroVagas){
+            $scope.mensagemLotacao();
         }
     }
 
@@ -172,9 +185,26 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
         
     }
 
+    $scope.mensagemLotacao = function() {
+        swal({
+            title: "",
+            text:'Não é possivel cadastrar a locação, o estacionamento já  esta lotado nesse período.',
+            type: "warning",
+            showCancelButton: false,
+            confirmButtonText: "Ok",
+            },
+            function(){
+            
+        });
+    }
+
     var getIndexEstacionamento = function() {
         return $scope.lista_estacionamentos.map((el) => el.EstacionamentoId).indexOf($scope.FluxoVaga.EstacionamentoId);
-   }
+    }
+
+    var getIndexCadastro = function() {
+        return $scope.lista_clientes.map((el) => el.CadastroId).indexOf($scope.FluxoVaga.CadastroId);
+    }
 
 
     $scope.getEstacionamentos();
@@ -200,6 +230,6 @@ app.directive('uppercase', function() {
     };
 })
 
-$(document).ready(function(){
-    //$("#PlacaVeiculo").inputmask({mask: 'aaa-9*99'});
+$(document).ready(function() {
+    $('#CadastroId').select2();
 });
