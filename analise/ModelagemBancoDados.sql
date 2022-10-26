@@ -569,3 +569,161 @@ DELIMITER ;
 -- -----------------------------------------------------
 -- EXEMPLO SELECT f_verificaCalculaValor(8,'2022-10-14 08:00:00','2022-10-14 09:25:00') AS json;
 -- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- FUNCTION `mydb`.`f_vagasLocacao`
+-- -----------------------------------------------------
+
+
+DELIMITER //
+
+CREATE FUNCTION f_vagasLocacao(p_EstacionamentoId INT,p_Entrada DATETIME,p_Rertornar CHAR(1))
+RETURNS INT
+
+BEGIN
+
+	DECLARE p_NumeroVagas INT;
+	DECLARE p_ProximasReservas INT;
+	DECLARE p_QtdLocacoes INT;
+	DECLARE p_Lotacao INT;
+
+	SELECT 
+			NumeroVagas
+			INTO p_NumeroVagas
+		FROM Estacionamento 
+		WHERE EstacionamentoId = p_EstacionamentoId;
+  
+  IF p_NumeroVagas <=0 AND p_Rertornar = 'D' THEN
+    RETURN 0;
+  END IF;
+  
+  SELECT 
+			count(*)
+			INTO p_ProximasReservas
+		FROM reserva AS a
+    LEFT JOIN FluxoVaga b ON a.ReservaId = b.ReservaId 
+		WHERE a.EstacionamentoId = p_EstacionamentoId
+		AND b.FluxoVagaId IS NULL
+    	AND a.DataEntrada = DATE_FORMAT(p_Entrada, '%Y-%m-%d')
+    	AND a.HoraEntrada >= DATE_FORMAT(p_Entrada, '%H:%i:%s');
+
+  IF p_Rertornar = 'R' THEN
+    RETURN p_ProximasReservas;
+  END IF;
+  
+  SELECT 
+			count(*)
+			INTO p_QtdLocacoes
+		FROM FluxoVaga AS a
+		WHERE a.EstacionamentoId = p_EstacionamentoId
+    AND a.Status = 'E';
+
+  IF p_Rertornar = 'L' THEN
+    RETURN p_QtdLocacoes;
+  END IF;
+
+  IF p_Rertornar = 'D' THEN
+
+    SET p_Lotacao = (p_ProximasReservas + p_QtdLocacoes);
+    IF p_Lotacao < p_NumeroVagas THEN
+      RETURN p_NumeroVagas - p_Lotacao;
+    ELSE
+      RETURN 0;
+    END IF;
+
+  END IF;
+
+END //
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- EXEMPLO SELECT f_vagasLocacao(8,NOW(),'D') AS QtdVagasDisponiveisLocacao
+-- EXEMPLO SELECT f_vagasLocacao(8,NOW(),'L') AS QtdLocacoes
+-- EXEMPLO SELECT f_vagasLocacao(8,NOW(),'R') AS QtdReservas
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- FUNCTION `mydb`.`f_vagasLocacao`
+-- -----------------------------------------------------
+
+
+DELIMITER //
+
+CREATE FUNCTION f_vagasReserva(p_EstacionamentoId INT,p_Entrada DATETIME,p_Saida DATETIME,p_Rertornar CHAR(1))
+RETURNS INT
+
+BEGIN
+
+	DECLARE p_NumeroVagas INT;
+	DECLARE p_NumeroLimiteReserva INT;
+	DECLARE p_ProximasReservas INT;
+	DECLARE p_QtdLocacoes INT;
+	DECLARE p_Lotacao INT;
+	DECLARE p_DataAgora DATE;
+
+	SELECT 
+			NumeroVagas
+      ,NumeroLimiteReserva
+      ,DATE_FORMAT(NOW(), '%Y-%m-%d')
+			INTO p_NumeroVagas
+      ,p_NumeroLimiteReserva
+      ,p_DataAgora
+		FROM Estacionamento 
+		WHERE EstacionamentoId = p_EstacionamentoId;
+  
+  IF p_NumeroLimiteReserva <=0 AND p_Rertornar = 'D' THEN
+    RETURN 0;
+  END IF;
+  
+  SELECT 
+			count(*)
+			INTO p_ProximasReservas
+		FROM reserva AS a
+    LEFT JOIN FluxoVaga b ON a.ReservaId = b.ReservaId 
+		WHERE a.EstacionamentoId = p_EstacionamentoId
+		AND b.FluxoVagaId IS NULL
+    	AND a.DataEntrada = DATE_FORMAT(p_Entrada, '%Y-%m-%d')
+      AND ((a.HoraEntrada >= DATE_FORMAT(p_Entrada, '%H:%i:%s') AND a.HoraEntrada <= DATE_FORMAT(p_Saida, '%H:%i:%s')) 
+              OR (a.HoraSaida >= DATE_FORMAT(p_Entrada, '%H:%i:%s') AND a.HoraEntrada <= DATE_FORMAT(p_Saida, '%H:%i:%s')));
+
+  IF p_Rertornar = 'R' THEN
+    RETURN p_ProximasReservas;
+  END IF;
+  
+  IF p_DataAgora = DATE_FORMAT(p_Entrada, '%Y-%m-%d') THEN
+      SELECT 
+          count(*)
+          INTO p_QtdLocacoes
+        FROM FluxoVaga AS a
+        WHERE a.EstacionamentoId = p_EstacionamentoId
+        AND a.Status = 'E';
+  ELSE
+    SET p_QtdLocacoes = 0;
+  END IF;
+  
+  IF p_Rertornar = 'L' THEN
+    RETURN p_QtdLocacoes;
+  END IF;
+
+  IF p_Rertornar = 'D' THEN
+
+    SET p_Lotacao = (p_ProximasReservas + p_QtdLocacoes);
+
+    IF p_Lotacao < p_NumeroVagas  AND p_ProximasReservas < p_NumeroLimiteReserva THEN
+      RETURN p_NumeroLimiteReserva - p_ProximasReservas;
+    ELSE
+      RETURN 0;
+    END IF;
+
+  END IF;
+
+END //
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- EXEMPLO SELECT f_vagasReserva(8,'2022-11-03 08:00:00','2022-11-03 12:00:00','D') AS QtdVagasDisponiveisReservar
+-- EXEMPLO SELECT f_vagasReserva(8,'2022-11-03 08:00:00','2022-11-03 12:00:00','L') AS QtdLocacoes
+-- EXEMPLO SELECT f_vagasReserva(8,'2022-11-03 08:00:00','2022-11-03 12:00:00','R') AS QtdReservas
+-- -----------------------------------------------------

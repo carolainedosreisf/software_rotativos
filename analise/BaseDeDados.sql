@@ -1,9 +1,11 @@
+use mydb;
+
 -- phpMyAdmin SQL Dump
 -- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Tempo de geração: 23-Out-2022 às 04:14
+-- Tempo de geração: 26-Out-2022 às 02:01
 -- Versão do servidor: 5.7.31
 -- versão do PHP: 7.3.21
 
@@ -368,13 +370,13 @@ INSERT INTO `empresa` (`EmpresaId`, `Nome`, `RazaoSocial`, `CpfCnpj`, `TipoEmpre
 --
 
 INSERT INTO `estacionamento` (`EstacionamentoId`, `NomeEstacionamento`, `CpfCnpj`, `Endereco`, `NumeroEndereco`, `Complemento`, `NumeroCep`, `CidadeId`, `BairroEndereco`, `NumeroVagas`, `NumeroLimiteReserva`, `Sobre`, `NumeroTelefone1`, `NumeroTelefone2`, `Email`, `DiasAtendimentoId`, `precoLivre`, `PrecoHora`, `EmpresaId`, `DataCadastro`) VALUES
-(1, 'Rotativos João (Cruzeiro do Sul)', '67318259000156', 'Rua Hercílio Luz', '100', NULL, '88811092', 70, 'Cruzeiro do Sul', '100', '0', NULL, '48565456456', '48554456456', 'rotativos.joao@teste.com', NULL, '0.00', '0.00', 1, '2022-09-10 12:10:54'),
-(2, 'Aguiar Estacionamentos', '74522886000170', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '50', '0', NULL, '48999985557', '48755585757', 'aguiar.estacionamentos@teste.com', NULL, '10.00', '5.00', 2, '2022-09-15 22:55:04'),
-(3, 'Rotativos João (Santa Bárbara)', '58409749000177', 'Rua Jerônimo Coelho', '100', NULL, '88804340', 70, 'Santa Bárbara', '100', '0', NULL, '48455454545', NULL, 'rotativos.joao@teste.com', NULL, '10.00', '5.00', 1, '2022-09-22 12:18:29'),
+(1, 'Rotativos João (Cruzeiro do Sul)', '67318259000156', 'Rua Hercílio Luz', '100', NULL, '88811092', 70, 'Cruzeiro do Sul', '100', '70', NULL, '48565456456', '48554456456', 'rotativos.joao@teste.com', 2, '12.00', '5.00', 1, '2022-09-10 12:10:54'),
+(2, 'Aguiar Estacionamentos', '74522886000170', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '50', '35', NULL, '48999985557', '48755585757', 'aguiar.estacionamentos@teste.com', 3, '10.00', '5.00', 2, '2022-09-15 22:55:04'),
+(3, 'Rotativos João (Santa Bárbara)', '58409749000177', 'Rua Jerônimo Coelho', '100', NULL, '88804340', 70, 'Santa Bárbara', '100', '75', NULL, '48455454545', NULL, 'rotativos.joao@teste.com', 5, '10.00', '5.00', 1, '2022-09-22 12:18:29'),
 (7, 'Zé Rotativos (Centro)', '90914664000159', 'Rua Coronel Marcos Rovaris', '100', NULL, '88801100', 70, 'Centro', '200', '150', NULL, '4899775757', NULL, 'ze.rotativos@gmail.com', 3, '0.00', '5.00', 4, '2022-09-22 12:33:39'),
 (8, 'Zé Rotativos (Próspera)', '90914664000159', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '150', '100', NULL, '48775557575', NULL, 'ze.rotativos@gmail.com', 3, '8.00', '4.00', 4, '2022-09-22 12:38:41'),
-(9, 'Maria Rotativos', '41077828000125', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '0', '0', NULL, '48877878786', NULL, 'maria.rotativos@teste.com', NULL, NULL, NULL, 5, '2022-09-30 17:07:29'),
-(10, 'Luiz Rotativos', '19587477000143', 'Rua São Miguel do Oeste', '100', NULL, '88815100', 70, 'Ceará', '0', '0', NULL, '48555454545', '487878687', 'luiz.rotativos@gmail.com', 2, '12.00', '0.00', 6, '2022-09-10 00:58:11');
+(9, 'Maria Rotativos', '41077828000125', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '120', '90', NULL, '48877878786', NULL, 'maria.rotativos@teste.com', 5, '9.00', '0.00', 5, '2022-09-30 17:07:29'),
+(10, 'Luiz Rotativos', '19587477000143', 'Rua São Miguel do Oeste', '100', NULL, '88815100', 70, 'Ceará', '170', '120', NULL, '48555454545', '487878687', 'luiz.rotativos@gmail.com', 2, '12.00', '5.00', 6, '2022-09-10 00:58:11');
 
 --
 -- Extraindo dados da tabela `reserva`
@@ -391,27 +393,28 @@ INSERT INTO `reserva` (`ReservaId`, `DataEntrada`, `DataSaida`, `HoraEntrada`, `
 (12, '2022-09-30', '2022-09-30', '09:00:00', '12:00:00', 2, NULL, 8),
 (13, '2022-10-01', '2022-10-01', '09:00:00', '11:00:00', 1, NULL, 8),
 (14, '2022-10-03', '2022-10-03', '10:00:00', '12:00:00', 1, NULL, 8),
-(15, '2022-10-25', '2022-10-25', '08:45:00', '09:45:00', 5, NULL, 8),
-(16, '2022-10-25', '2022-10-25', '11:30:00', '16:30:00', 6, NULL, 8),
-(17, '2022-10-25', '2022-10-25', '08:45:00', '09:45:00', 7, NULL, 8),
-(18, '2022-10-25', '2022-10-25', '18:45:00', '20:30:00', 13, 'teste...', 8),
-(19, '2022-10-25', '2022-10-25', '11:45:00', '19:45:00', 2, NULL, 8),
-(20, '2022-10-25', '2022-10-25', '16:45:00', '18:45:00', 1, NULL, 8),
-(21, '2022-10-25', '2022-10-25', '10:45:00', '13:30:00', 1, NULL, 8),
-(22, '2022-10-25', '2022-10-25', '09:45:00', '13:30:00', 7, NULL, 8),
-(23, '2022-10-25', '2022-10-25', '10:45:00', '13:45:00', 7, NULL, 8),
-(24, '2022-10-25', '2022-10-25', '16:30:00', '20:30:00', 18, NULL, 8),
-(25, '2022-10-25', '2022-10-25', '09:45:00', '13:00:00', 14, NULL, 8),
-(26, '2022-10-25', '2022-10-25', '17:45:00', '19:45:00', 10, NULL, 8),
-(27, '2022-10-25', '2022-10-25', '13:00:00', '21:00:00', 1, NULL, 8),
-(28, '2022-10-25', '2022-10-25', '16:00:00', '17:45:00', 4, NULL, 8),
-(29, '2022-10-25', '2022-10-25', '14:00:00', '19:00:00', 16, NULL, 8),
-(30, '2022-10-25', '2022-10-25', '08:45:00', '18:30:00', 9, NULL, 8),
-(31, '2022-10-25', '2022-10-25', '16:30:00', '19:45:00', 18, NULL, 8),
-(32, '2022-10-25', '2022-10-25', '08:00:00', '12:00:00', 16, NULL, 8),
-(33, '2022-10-25', '2022-10-25', '08:00:00', '10:00:00', 16, NULL, 8),
-(34, '2022-10-25', '2022-10-25', '08:00:00', '12:00:00', 11, NULL, 7),
-(35, '2022-10-26', '2022-10-26', '08:00:00', '12:00:00', 12, NULL, 8);
+(15, '2022-11-03', '2022-11-03', '08:45:00', '09:45:00', 5, NULL, 8),
+(16, '2022-11-03', '2022-11-03', '11:30:00', '16:30:00', 6, NULL, 8),
+(17, '2022-11-03', '2022-11-03', '08:45:00', '09:45:00', 7, NULL, 8),
+(18, '2022-11-03', '2022-11-03', '18:45:00', '20:30:00', 13, 'teste...', 8),
+(19, '2022-11-03', '2022-11-03', '11:45:00', '19:45:00', 2, NULL, 8),
+(20, '2022-11-03', '2022-11-03', '16:45:00', '18:45:00', 1, NULL, 8),
+(21, '2022-11-03', '2022-11-03', '10:45:00', '13:30:00', 1, NULL, 8),
+(22, '2022-11-03', '2022-11-03', '09:45:00', '13:30:00', 7, NULL, 8),
+(23, '2022-11-03', '2022-11-03', '10:45:00', '13:45:00', 7, NULL, 8),
+(24, '2022-11-03', '2022-11-03', '16:30:00', '20:30:00', 18, NULL, 8),
+(25, '2022-11-03', '2022-11-03', '09:45:00', '13:00:00', 14, NULL, 8),
+(26, '2022-11-03', '2022-11-03', '17:45:00', '19:45:00', 10, NULL, 8),
+(27, '2022-11-03', '2022-11-03', '13:00:00', '21:00:00', 1, NULL, 8),
+(28, '2022-11-03', '2022-11-03', '16:00:00', '17:45:00', 4, NULL, 8),
+(29, '2022-11-03', '2022-11-03', '14:00:00', '19:00:00', 16, NULL, 8),
+(30, '2022-11-03', '2022-11-03', '08:45:00', '18:30:00', 9, NULL, 8),
+(31, '2022-11-03', '2022-11-03', '16:30:00', '19:45:00', 18, NULL, 8),
+(32, '2022-11-03', '2022-11-03', '08:00:00', '12:00:00', 16, NULL, 8),
+(33, '2022-11-03', '2022-11-03', '08:00:00', '10:00:00', 16, NULL, 8),
+(34, '2022-11-03', '2022-11-03', '08:00:00', '12:00:00', 11, NULL, 7),
+(35, '2022-11-03', '2022-11-03', '08:00:00', '12:00:00', 12, NULL, 8);
+COMMIT;
 
 --
 -- Extraindo dados da tabela `fluxovaga`
@@ -4233,14 +4236,14 @@ INSERT INTO `permissao` (`PermissaoId`, `Descricao`) VALUES
 -- Extraindo dados da tabela `login`
 --
 
-INSERT INTO `login` (`LoginId`, `Email`, `NomeUsuario`, `Senha`, `CadastroId`, `EmpresaId`, `EstacionamentoId`, `PermissaoId`, `TokenEmail`, `Status`) VALUES
-(1, 'rotativos.joao@teste.com', 'rotativos.joao', '25d55ad283aa400af464c76d713c07ad', NULL, NULL, 1, 2, '5eed737b10af9f6d20ce419b_2022-10-20-02-32', 'A'),
-(12, 'aguiar.estacionamentos@teste.com', 'aguiar.estacionamentos', '25d55ad283aa400af464c76d713c07ad', NULL, NULL, 2, 2, NULL, 'A'),
-(15, 'ze.rotativos@gmail.com', 'ze.rotativos', '25d55ad283aa400af464c76d713c07ad', NULL, NULL, 7, 2, NULL, 'A'),
-(16, 'caroldosreis97@gmail.com', 'carolaine.zerotativos', '25d55ad283aa400af464c76d713c07ad', NULL, NULL, 7, 3, 'c469bab6d858bcc43e5f87d0_2022-10-20-02-29', 'I'),
-(17, 'adm.software.rotativos@gmail.com', 'adm.software', '25d55ad283aa400af464c76d713c07ad', NULL, 7, NULL, 1, 'e62d89bc0f353e5fe11149bf_2022-10-16-02-55', 'A'),
-(18, 'maria.rotativos@teste.com', 'maria.rotativos', '25d55ad283aa400af464c76d713c07ad', NULL, NULL, 9, 2, NULL, 'A'),
-(19, 'luiz.rotativos@gmail.com', 'luiz.rotativos', '25d55ad283aa400af464c76d713c07ad', NULL, NULL, 10, 2, NULL, 'A');
+INSERT INTO `login` (`LoginId`, `Email`, `NomeUsuario`, `Senha`, `CadastroId`, `EstacionamentoId`, `EmpresaId`, `PermissaoId`, `TokenEmail`, `Status`) VALUES
+(1, 'rotativos.joao@teste.com', 'rotativos.joao', '25d55ad283aa400af464c76d713c07ad', NULL, 1, NULL, 2, '5eed737b10af9f6d20ce419b_2022-10-20-02-32', 'A'),
+(12, 'aguiar.estacionamentos@teste.com', 'aguiar.estacionamentos', '25d55ad283aa400af464c76d713c07ad', NULL, 2, NULL, 2, NULL, 'A'),
+(15, 'ze.rotativos@gmail.com', 'ze.rotativos', '25d55ad283aa400af464c76d713c07ad', NULL, 7, NULL, 2, NULL, 'A'),
+(16, 'caroldosreis97@gmail.com', 'carolaine.zerotativos', '25d55ad283aa400af464c76d713c07ad', NULL, 7, NULL, 3, 'c469bab6d858bcc43e5f87d0_2022-10-20-02-29', 'I'),
+(17, 'adm.software.rotativos@gmail.com', 'adm.software', '25d55ad283aa400af464c76d713c07ad', NULL, NULL, 7, 1, 'e62d89bc0f353e5fe11149bf_2022-10-16-02-55', 'A'),
+(18, 'maria.rotativos@teste.com', 'maria.rotativos', '25d55ad283aa400af464c76d713c07ad', NULL, 9, NULL, 2, NULL, 'A'),
+(19, 'luiz.rotativos@gmail.com', 'luiz.rotativos', '25d55ad283aa400af464c76d713c07ad', NULL, 10, NULL, 2, NULL, 'A');
 
 --
 -- Extraindo dados da tabela `receber`
@@ -8032,8 +8035,6 @@ INSERT INTO `receberempresa` (`ReceberEmpresaId`, `FormaPagamentoId`, `EmpresaId
 (4, 3, 4, NULL, '25.00', '2022-10-09', '2022-11-09', 'F'),
 (5, 1, 1, NULL, '25.00', '2022-10-12', '2022-11-12', 'F'),
 (6, 1, 6, NULL, '25.00', '2022-10-14', '2022-11-14', 'F');
-
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
