@@ -20,7 +20,7 @@
             <div class="alert alert-info" role="alert">
                 <span><b>Total de Vagas do Estacionamento: </b>{{NumeroVagas}}</span><br>
                 <span><b>Limite de vagas para reservar do Estacionamento: </b>{{NumeroLimiteReserva}}</span><br>
-                <span><b>Reservas no Período Selecionado: </b>{{reservas_periodo.length}}</span>
+                <span><b>Reservas no Período Selecionado: </b>{{QtdReservas}}</span>
                 <span ng-show="dataAtual==Reserva.DataEntrada&&QtdLocacoes">
                  <br><b>Locações em Andamento: </b>{{QtdLocacoes}}
                 </span>
@@ -41,8 +41,8 @@
                 <div class="alert alert-danger" role="alert">
                     {{
                         erro==2?
-                        'A saída não pode ser menor que a entrada, preencha a Data e Hora de saída maior que a Data e Hora de entrada.':
-                        'Data Entrada e Hora Entrada devem ser maiores que a Data e Hora atual.'
+                        'A Hora Entrada não pode ser menor que a Hora Saída, preencha a Hora Entrada maior que a Hora Saída.':
+                        'Data e Hora Entrada devem ser maiores que a Data e Hora atual.'
                     }}
                 </div>
             </div>

@@ -111,7 +111,7 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
                 if(invalido==0&&$scope.disabled_==0){
                     $scope.carregando = true;
                     $http({
-                        url: base_url+'/FluxoVaga/getInfoLotacao',
+                        url: base_url+'/FluxoVaga/getInfoLotacaoLocacao',
                         method: 'GET',
                         params: {
                             EstacionamentoId:$scope.FluxoVaga.EstacionamentoId
@@ -121,8 +121,9 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
                     }).then(function (retorno) {
                         $scope.carregando = false;
                         $scope.QtdLocacoes = retorno.data.QtdLocacoes;
-                        $scope.reservas_proximas = retorno.data.reservas_proximas;
-                        if(($scope.reservas_proximas.length+$scope.QtdLocacoes)>=$scope.NumeroVagas){
+                        $scope.QtdReservas = retorno.data.QtdReservas;
+                        $scope.QtdVagasDisponiveisLocacao = retorno.data.QtdVagasDisponiveisLocacao
+                        if($scope.QtdVagasDisponiveisLocacao<=0){
                             $scope.mensagemLotacao();
                         }
                     },
@@ -146,7 +147,7 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
     }
 
     $scope.setFluxoVaga = function(){
-        if($scope.form_fluxo_vaga.$valid && ($scope.reservas_proximas.length+$scope.QtdLocacoes)<$scope.NumeroVagas){
+        if($scope.form_fluxo_vaga.$valid && $scope.QtdVagasDisponiveisLocacao > 0 ){
             $scope.carregando = true;
             $http({
                 url: base_url+'/FluxoVaga/setFluxoVaga',
@@ -159,7 +160,7 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
             function (retorno) {
                 console.log('Error: '+retorno.status);
             });
-        }else if($scope.form_fluxo_vaga.$valid && ($scope.reservas_proximas.length+$scope.QtdLocacoes)>=$scope.NumeroVagas){
+        }else if($scope.form_fluxo_vaga.$valid && $scope.QtdVagasDisponiveisLocacao <= 0){
             $scope.mensagemLotacao();
         }
     }

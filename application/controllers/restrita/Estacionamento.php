@@ -39,6 +39,8 @@ class Estacionamento extends CI_Controller {
     {
         $EstacionamentoId = $this->funcoes->get('EstacionamentoId');
         $obj = $this->Estacionamento_model->getEstacionamento($EstacionamentoId);
+        $obj['NumeroVagas'] = (int) ($obj['NumeroVagas']);
+        $obj['NumeroLimiteReserva'] = (int) ($obj['NumeroLimiteReserva']);
         echo json_encode($obj);
     }
 

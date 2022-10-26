@@ -16,9 +16,6 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
     var now = new Date;
     $scope.dataAtual = (((now.getDate()<10?'0':'')+now.getDate())+"/"+((now.getMonth()+1)<10?'0':'')+(now.getMonth()+1)+ "/" + now.getFullYear())
 
-    var msg_limite_reserva = 'Não é possivel cadastrar a reserva, o estacionamento já reservou o "Limite de vagas para reservar" nesse período.';
-    var msg_lotacao = 'Não é possivel cadastrar a reserva, o estacionamento já  esta lotado nesse período.';
-
     $scope.getEstacionamentos = function(){
         $scope.carregando = true;
         $http({
@@ -124,7 +121,7 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
 
                     $scope.carregando = true;
                     $http({
-                        url: base_url+'/FluxoVaga/getInfoLotacao',
+                        url: base_url+'/FluxoVaga/getInfoLotacaoReserva',
                         method: 'GET',
                         params: {
                             EstacionamentoId:$scope.Reserva.EstacionamentoId
@@ -134,13 +131,16 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
                         } 
                     }).then(function (retorno) {
                         $scope.carregando = false;
-                        $scope.reservas_periodo = retorno.data.reservas_proximas;
+                        $scope.QtdReservas = retorno.data.QtdReservas;
                         $scope.QtdLocacoes = retorno.data.QtdLocacoes;
-                        if($scope.reservas_periodo.length>=$scope.NumeroLimiteReserva){
+                        $scope.QtdVagasDisponiveisReservar = retorno.data.QtdVagasDisponiveisReservar
+
+                        if($scope.QtdVagasDisponiveisReservar<=0){
+                            $scope.liberaPagamento = 'N';
+                            $scope.Reserva.PagarAgora = 'N';
+                            $scope.Reserva.FormaPagamentoId = '';
                             $scope.erro = 0;
-                            $scope.mensagemLotacao(msg_limite_reserva);
-                        }else if(($scope.reservas_periodo.length+$scope.QtdLocacoes)>=$scope.NumeroVagas){
-                            $scope.mensagemLotacao(msg_lotacao);
+                            $scope.mensagemLotacao();
                         }else{
                             $scope.carregando = true;
                             $http({
@@ -185,11 +185,7 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
     });
 
     $scope.setReserva= function(){
-        if(
-            $scope.form_reserva.$valid && 
-            $scope.reservas_periodo.length<$scope.NumeroLimiteReserva &&
-            ($scope.reservas_periodo.length+$scope.QtdLocacoes)<$scope.NumeroVagas
-            ){
+        if($scope.form_reserva.$valid && $scope.QtdVagasDisponiveisReservar>0){
             $scope.carregando = true;
             $scope.Reserva.DataSaida = $scope.Reserva.DataEntrada;
             $http({
@@ -208,17 +204,15 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
             function (retorno) {
                 console.log('Error: '+retorno.status);
             });
-        }else if($scope.reservas_periodo.length>=$scope.NumeroLimiteReserva){
-            $scope.mensagemLotacao(msg_limite_reserva);
-        }else if(($scope.reservas_periodo.length+$scope.QtdLocacoes)>=$scope.NumeroVagas){
-            $scope.mensagemLotacao(msg_lotacao);
+        }else if($scope.form_reserva.$valid && $scope.QtdVagasDisponiveisReservar<=0){
+            $scope.mensagemLotacao();
         }
     }
 
     $scope.mensagemLotacao = function(text) {
         swal({
             title: "",
-            text,
+            text:'Não é possivel cadastrar a reserva, o estacionamento já reservou o "Limite de vagas para reservar" nesse período, ou então o estacionamento já  esta lotado nesse período',
             type: "warning",
             showCancelButton: false,
             confirmButtonText: "Ok",

@@ -372,6 +372,26 @@ class FluxoVaga_model extends CI_Model {
         return $result;
     }
 
+    public function getInfoLotacaoLocacao($EstacionamentoId,$Entrada)
+    {
+        $sql = "SELECT f_vagasLocacao({$EstacionamentoId},'{$Entrada}','D') AS QtdVagasDisponiveisLocacao
+                        , f_vagasLocacao({$EstacionamentoId},'{$Entrada}','L') AS QtdLocacoes
+                        , f_vagasLocacao({$EstacionamentoId},'{$Entrada}','R') AS QtdReservas;";
+        $query = $this->db->query($sql);
+        $result = $query->row_array();
+        return $result;
+    }
+
+    public function getInfoLotacaoReserva($EstacionamentoId,$Entrada,$Saida)
+    {
+        $sql = "SELECT f_vagasReserva({$EstacionamentoId},'{$Entrada}','{$Saida}','D') AS QtdVagasDisponiveisReservar
+                        , f_vagasReserva({$EstacionamentoId},'{$Entrada}','{$Saida}','L') AS QtdLocacoes
+                        , f_vagasReserva({$EstacionamentoId},'{$Entrada}','{$Saida}','R') AS QtdReservas;";
+        $query = $this->db->query($sql);
+        $result = $query->row_array();
+        return $result;
+    }
+
 }
 
 

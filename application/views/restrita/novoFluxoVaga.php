@@ -18,7 +18,7 @@
                     <div class="col-sm-12">
                         <span><b>Total de Vagas do Estacionamento: </b>{{NumeroVagas}}</span><br>
                         <span><b>Locações em Andamento: </b>{{QtdLocacoes}}</span><br>
-                        <span><b>Reservas Próximas: </b>{{reservas_proximas.length}}</span>
+                        <span><b>Reservas Próximas: </b>{{QtdReservas}}</span>
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                 </select>
             </div>
         </div>
-        <div class="row form-group">
+        <div class="row form-group" ng-show="(FluxoVagaId && FluxoVaga.ReservaId) || !FluxoVagaId">
             <div class="col-sm-12">
                 <label for="ReservaId">Reseva:</label>
                 <input type="text" class="form-control" ng-value="FluxoVaga.DataEntradaReserva+' '+FluxoVaga.HoraEntradaReserva+' - '+FluxoVaga.DataSaidaReserva+' '+FluxoVaga.HoraSaidaReserva" ng-show="FluxoVagaId && FluxoVaga.ReservaId" ng-disabled="true">

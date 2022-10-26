@@ -262,39 +262,30 @@ class FluxoVaga extends CI_Controller {
         echo json_encode($obj);
     }
 
-    public function getInfoLotacao()
+    public function getInfoLotacaoLocacao()
     {
         $EstacionamentoId = $this->funcoes->get('EstacionamentoId');
-        $DataEntrada = $this->funcoes->formataData($this->funcoes->get('DataEntrada'));
-        $HoraEntrada = $this->funcoes->formataHora($this->funcoes->get('HoraEntrada'));
-        $HoraSaida = $this->funcoes->formataHora($this->funcoes->get('HoraSaida'));
+        $Entrada = $this->funcoes->formataData($this->funcoes->get('DataEntrada')).' '.$this->funcoes->formataHora($this->funcoes->get('HoraEntrada'));
+        $infoLotacao = $this->FluxoVaga_model->getInfoLotacaoLocacao($EstacionamentoId,$Entrada);
+        echo json_encode($infoLotacao);
+    }
 
-        $filtros = [
-            'EstacionamentoId'=> $EstacionamentoId
-            ,'DataInicio'=> $this->funcoes->get('DataEntrada')
-            ,'DataFim'=> $this->funcoes->get('DataEntrada')
-            ,'CadastroId'=> ""
-            ,'Reservado'=> ""
-            ,'StatusFluxo'=> "E"
-            ,'FormaPagamentoId'=> ""
-            ,'StatusPagamento'=> ""
-        ];
-        $locacoes = $this->FluxoVaga_model->getFluxoVagas($filtros);
-        $reservas_proximas = $this->FluxoVaga_model->getReservasProximas($EstacionamentoId,$DataEntrada,$HoraEntrada,$HoraSaida);
-
-        echo json_encode([
-                'QtdLocacoes'=> count($locacoes)
-                ,'reservas_proximas'=> $reservas_proximas
-            ]);
+    public function getInfoLotacaoReserva()
+    {
+        $EstacionamentoId = $this->funcoes->get('EstacionamentoId');
+        $Entrada = $this->funcoes->formataData($this->funcoes->get('DataEntrada')).' '.$this->funcoes->formataHora($this->funcoes->get('HoraEntrada'));
+        $Saida = $this->funcoes->formataData($this->funcoes->get('DataEntrada')).' '.$this->funcoes->formataHora($this->funcoes->get('HoraSaida'));
+        $infoLotacao = $this->FluxoVaga_model->getInfoLotacaoReserva($EstacionamentoId,$Entrada,$Saida);
+        echo json_encode($infoLotacao);
     }
 
     public function gerarFluxos()
     {
         $alfabeto = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
         $EstacionamentoId = 8;
-        $data = "2022-10-18";
-        $gerar = 132;
-        $fechar = 1;
+        $data = "2022-11-03";
+        $gerar = 12;
+        $fechar = 0;
         $somente_fechar = 0;
         $Reserva = 0;
 
