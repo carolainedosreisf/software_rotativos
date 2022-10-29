@@ -53,8 +53,24 @@ class Generico extends CI_Controller {
 
     public function getDiasAtendimento()
 	{
-        $this->load->model('DiasAtendimento_model');
-		$lista = $this->DiasAtendimento_model->getDiasAtendimento();
+        $EstacionamentoId = $this->funcoes->get('EstacionamentoId');
+        if($EstacionamentoId){
+            $this->load->model('DiasAtendimento_model');
+            $lista = $this->DiasAtendimento_model->getDiasAtendimento($EstacionamentoId);
+        }else{
+            $dias = $this->funcoes->getDiasSemana();
+            $lista = [];
+            foreach ($dias as $key => $dia) {
+                $lista[] = [
+                    'DiasAtendimentoId'=>0
+                    ,'HoraEntrada'=>''
+                    ,'HoraSaida'=>''
+                    ,'Aberto'=>'N'
+                    ,'Dia'=>$key
+                    ,'DiaDesc'=>$dia
+                ];
+            }
+        }
 		echo json_encode($lista);
 	}
 

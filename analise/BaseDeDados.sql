@@ -1,11 +1,11 @@
-use mydb;
+USE mydb;
 
 -- phpMyAdmin SQL Dump
 -- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Tempo de geração: 26-Out-2022 às 02:01
+-- Tempo de geração: 29-Out-2022 às 04:06
 -- Versão do servidor: 5.7.31
 -- versão do PHP: 7.3.21
 
@@ -342,18 +342,6 @@ INSERT INTO `cidade` (`CidadeId`, `NomeCidade`, `Estado`) VALUES
 (288, 'Zortéa', 'SC');
 
 --
--- Extraindo dados da tabela `diasatendimento`
---
-
-INSERT INTO `diasatendimento` (`DiasAtendimentoId`, `DescricaoDiasAtendimento`) VALUES
-(1, 'Segunda à Sexta'),
-(2, 'Segunda à Sábado'),
-(3, 'Segunda à Domingo'),
-(4, 'Finais d e semana e Feriados'),
-(5, 'Segunda à Sábado exceto feriado.'),
-(6, 'Segunda à Sexta exceto feriado.');
-
---
 -- Extraindo dados da tabela `empresa`
 --
 
@@ -369,14 +357,80 @@ INSERT INTO `empresa` (`EmpresaId`, `Nome`, `RazaoSocial`, `CpfCnpj`, `TipoEmpre
 -- Extraindo dados da tabela `estacionamento`
 --
 
-INSERT INTO `estacionamento` (`EstacionamentoId`, `NomeEstacionamento`, `CpfCnpj`, `Endereco`, `NumeroEndereco`, `Complemento`, `NumeroCep`, `CidadeId`, `BairroEndereco`, `NumeroVagas`, `NumeroLimiteReserva`, `Sobre`, `NumeroTelefone1`, `NumeroTelefone2`, `Email`, `DiasAtendimentoId`, `precoLivre`, `PrecoHora`, `EmpresaId`, `DataCadastro`) VALUES
-(1, 'Rotativos João (Cruzeiro do Sul)', '67318259000156', 'Rua Hercílio Luz', '100', NULL, '88811092', 70, 'Cruzeiro do Sul', '100', '70', NULL, '48565456456', '48554456456', 'rotativos.joao@teste.com', 2, '12.00', '5.00', 1, '2022-09-10 12:10:54'),
-(2, 'Aguiar Estacionamentos', '74522886000170', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '50', '35', NULL, '48999985557', '48755585757', 'aguiar.estacionamentos@teste.com', 3, '10.00', '5.00', 2, '2022-09-15 22:55:04'),
-(3, 'Rotativos João (Santa Bárbara)', '58409749000177', 'Rua Jerônimo Coelho', '100', NULL, '88804340', 70, 'Santa Bárbara', '100', '75', NULL, '48455454545', NULL, 'rotativos.joao@teste.com', 5, '10.00', '5.00', 1, '2022-09-22 12:18:29'),
-(7, 'Zé Rotativos (Centro)', '90914664000159', 'Rua Coronel Marcos Rovaris', '100', NULL, '88801100', 70, 'Centro', '200', '150', NULL, '4899775757', NULL, 'ze.rotativos@gmail.com', 3, '0.00', '5.00', 4, '2022-09-22 12:33:39'),
-(8, 'Zé Rotativos (Próspera)', '90914664000159', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '150', '100', NULL, '48775557575', NULL, 'ze.rotativos@gmail.com', 3, '8.00', '4.00', 4, '2022-09-22 12:38:41'),
-(9, 'Maria Rotativos', '41077828000125', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '120', '90', NULL, '48877878786', NULL, 'maria.rotativos@teste.com', 5, '9.00', '0.00', 5, '2022-09-30 17:07:29'),
-(10, 'Luiz Rotativos', '19587477000143', 'Rua São Miguel do Oeste', '100', NULL, '88815100', 70, 'Ceará', '170', '120', NULL, '48555454545', '487878687', 'luiz.rotativos@gmail.com', 2, '12.00', '5.00', 6, '2022-09-10 00:58:11');
+INSERT INTO `estacionamento` (`EstacionamentoId`, `NomeEstacionamento`, `CpfCnpj`, `Endereco`, `NumeroEndereco`, `Complemento`, `NumeroCep`, `CidadeId`, `BairroEndereco`, `NumeroVagas`, `NumeroLimiteReserva`, `Sobre`, `NumeroTelefone1`, `NumeroTelefone2`, `Email`, `precoLivre`, `PrecoHora`, `EmpresaId`, `DataCadastro`, `TipoChavePix`, `ChavePix`) VALUES
+(1, 'Rotativos João (Cruzeiro do Sul)', '67318259000156', 'Rua Hercílio Luz', '100', NULL, '88811092', 70, 'Cruzeiro do Sul', '100', '70', NULL, '48565456456', '48554456456', 'rotativos.joao@teste.com', '12.00', '5.00', 1, '2022-09-10 12:10:54', 1, '67318259000156'),
+(2, 'Aguiar Estacionamentos', '74522886000170', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '50', '35', NULL, '48999985557', '48755585757', 'aguiar.estacionamentos@teste.com', '10.00', '5.00', 2, '2022-09-15 22:55:04', 1, '74522886000170'),
+(3, 'Rotativos João (Santa Bárbara)', '58409749000177', 'Rua Jerônimo Coelho', '100', NULL, '88804340', 70, 'Santa Bárbara', '100', '75', NULL, '48455454545', NULL, 'rotativos.joao@teste.com', '10.00', '5.00', 1, '2022-09-22 12:18:29', 1, '58409749000177'),
+(7, 'Zé Rotativos (Centro)', '90914664000159', 'Rua Coronel Marcos Rovaris', '100', NULL, '88801100', 70, 'Centro', '200', '150', NULL, '4899775757', NULL, 'ze.rotativos@gmail.com', '0.00', '5.00', 4, '2022-09-22 12:33:39', 1, '90914664000159'),
+(8, 'Zé Rotativos (Próspera)', '90914664000159', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '150', '100', NULL, '48775557575', NULL, 'ze.rotativos@gmail.com', '8.00', '4.00', 4, '2022-09-22 12:38:41', 1, '90914664000159'),
+(9, 'Maria Rotativos', '41077828000125', 'Avenida Centenário', '100', NULL, '88815000', 70, 'Próspera', '120', '90', NULL, '48877878786', NULL, 'maria.rotativos@teste.com', '9.00', '0.00', 5, '2022-09-30 17:07:29', 1, '41077828000125'),
+(10, 'Luiz Rotativos', '19587477000143', 'Rua São Miguel do Oeste', '100', NULL, '88815100', 70, 'Ceará', '170', '120', NULL, '48555454545', '487878687', 'luiz.rotativos@gmail.com', '12.00', '5.00', 6, '2022-09-10 00:58:11', 1, '19587477000143'),
+(12, 'Zé Rotativos (Pinheirinho)', '90914664000159', 'Rua Pascoal Meller', '100', NULL, '88805380', 70, 'Universitário', '70', '50', NULL, '4875522577', NULL, 'ze.rotativos@gmail.com', '8.00', '5.00', 4, '2022-10-29 03:04:50', 1, '90914664000159');
+
+
+
+--
+-- Extraindo dados da tabela `diasatendimento`
+--
+
+INSERT INTO `diasatendimento` (`DiasAtendimentoId`, `EstacionamentoId`, `HoraEntrada`, `HoraSaida`, `Dia`, `DiaDesc`, `Aberto`) VALUES
+(1, 1, '08:00:00', '18:00:00', 1, 'Segunda-feira', 'S'),
+(2, 1, '08:00:00', '18:00:00', 2, 'Terça-feira', 'S'),
+(3, 1, '08:00:00', '18:00:00', 3, 'Quarta-feira', 'S'),
+(4, 1, '08:00:00', '18:00:00', 4, 'Quinta-feira', 'S'),
+(5, 1, '08:00:00', '18:00:00', 5, 'Sexta-feira', 'S'),
+(6, 1, '08:00:00', '12:00:00', 6, 'Sábado', 'S'),
+(7, 1, NULL, NULL, 7, 'Domingo', 'N'),
+(8, 2, '08:00:00', '18:00:00', 1, 'Segunda-feira', 'S'),
+(9, 2, '08:00:00', '18:00:00', 2, 'Terça-feira', 'S'),
+(10, 2, '08:00:00', '18:00:00', 3, 'Quarta-feira', 'S'),
+(11, 2, '08:00:00', '18:00:00', 4, 'Quinta-feira', 'S'),
+(12, 2, '08:00:00', '18:00:00', 5, 'Sexta-feira', 'S'),
+(13, 2, '08:00:00', '12:00:00', 6, 'Sábado', 'S'),
+(14, 2, NULL, NULL, 7, 'Domingo', 'N'),
+(15, 3, '08:00:00', '18:00:00', 1, 'Segunda-feira', 'S'),
+(16, 3, '08:00:00', '18:00:00', 2, 'Terça-feira', 'S'),
+(17, 3, '08:00:00', '18:00:00', 3, 'Quarta-feira', 'S'),
+(18, 3, '08:00:00', '18:00:00', 4, 'Quinta-feira', 'S'),
+(19, 3, '08:00:00', '18:00:00', 5, 'Sexta-feira', 'S'),
+(20, 3, '08:00:00', '12:00:00', 6, 'Sábado', 'S'),
+(21, 3, NULL, NULL, 7, 'Domingo', 'N'),
+(22, 7, '08:00:00', '18:00:00', 1, 'Segunda-feira', 'S'),
+(23, 7, '08:00:00', '18:00:00', 2, 'Terça-feira', 'S'),
+(24, 7, '08:00:00', '18:00:00', 3, 'Quarta-feira', 'S'),
+(25, 7, '08:00:00', '18:00:00', 4, 'Quinta-feira', 'S'),
+(26, 7, '08:00:00', '18:00:00', 5, 'Sexta-feira', 'S'),
+(27, 7, '08:00:00', '12:00:00', 6, 'Sábado', 'S'),
+(28, 7, NULL, NULL, 7, 'Domingo', 'N'),
+(29, 8, '08:00:00', '19:00:00', 1, 'Segunda-feira', 'S'),
+(30, 8, '08:00:00', '19:00:00', 2, 'Terça-feira', 'S'),
+(31, 8, '08:00:00', '19:00:00', 3, 'Quarta-feira', 'S'),
+(32, 8, '08:00:00', '19:00:00', 4, 'Quinta-feira', 'S'),
+(33, 8, '08:00:00', '19:00:00', 5, 'Sexta-feira', 'S'),
+(34, 8, '08:00:00', '12:30:00', 6, 'Sábado', 'S'),
+(35, 8, NULL, NULL, 7, 'Domingo', 'N'),
+(36, 9, '08:00:00', '18:00:00', 1, 'Segunda-feira', 'S'),
+(37, 9, '08:00:00', '18:00:00', 2, 'Terça-feira', 'S'),
+(38, 9, '08:00:00', '18:00:00', 3, 'Quarta-feira', 'S'),
+(39, 9, '08:00:00', '18:00:00', 4, 'Quinta-feira', 'S'),
+(40, 9, '08:00:00', '18:00:00', 5, 'Sexta-feira', 'S'),
+(41, 9, '08:00:00', '12:00:00', 6, 'Sábado', 'S'),
+(42, 9, NULL, NULL, 7, 'Domingo', 'N'),
+(43, 10, '08:00:00', '18:00:00', 1, 'Segunda-feira', 'S'),
+(44, 10, '08:00:00', '18:00:00', 2, 'Terça-feira', 'S'),
+(45, 10, '08:00:00', '18:00:00', 3, 'Quarta-feira', 'S'),
+(46, 10, '08:00:00', '18:00:00', 4, 'Quinta-feira', 'S'),
+(47, 10, '08:00:00', '18:00:00', 5, 'Sexta-feira', 'S'),
+(48, 10, '08:00:00', '12:00:00', 6, 'Sábado', 'S'),
+(49, 10, NULL, NULL, 7, 'Domingo', 'N'),
+(58, 12, '09:00:00', '19:00:00', 1, 'Segunda-feira', 'S'),
+(59, 12, '09:00:00', '19:00:00', 2, 'Terça-feira', 'S'),
+(60, 12, '09:00:00', '19:00:00', 3, 'Quarta-feira', 'S'),
+(61, 12, '09:00:00', '19:00:00', 4, 'Quinta-feira', 'S'),
+(62, 12, '09:00:00', '19:00:00', 5, 'Sexta-feira', 'S'),
+(63, 12, NULL, NULL, 6, 'Sábado', 'N'),
+(64, 12, NULL, NULL, 7, 'Domingo', 'N');
+
 
 --
 -- Extraindo dados da tabela `reserva`
@@ -413,9 +467,8 @@ INSERT INTO `reserva` (`ReservaId`, `DataEntrada`, `DataSaida`, `HoraEntrada`, `
 (32, '2022-11-03', '2022-11-03', '08:00:00', '12:00:00', 16, NULL, 8),
 (33, '2022-11-03', '2022-11-03', '08:00:00', '10:00:00', 16, NULL, 8),
 (34, '2022-11-03', '2022-11-03', '08:00:00', '12:00:00', 11, NULL, 7),
-(35, '2022-11-03', '2022-11-03', '08:00:00', '12:00:00', 12, NULL, 8);
-COMMIT;
-
+(35, '2022-11-03', '2022-11-03', '08:00:00', '12:00:00', 12, NULL, 8),
+(36, '2022-11-03', '2022-11-03', '08:00:00', '09:00:00', 11, NULL, 8);
 --
 -- Extraindo dados da tabela `fluxovaga`
 --
@@ -4221,7 +4274,8 @@ INSERT INTO `fotoestacionamento` (`FotoEstacionamentoId`, `EstacionamentoId`, `U
 (13, 1, '/estacionamentos/177512164840148336202210122228.jpg'),
 (15, 3, '/estacionamentos/660121618955361000202210122230.jpg'),
 (16, 9, '/estacionamentos/1179740254869119612202210122232.jpg'),
-(17, 10, '/estacionamentos/1455789700830310895202210122234.PNG');
+(17, 10, '/estacionamentos/1455789700830310895202210122234.PNG'),
+(18, 12, '/estacionamentos/1608241789624772892202210290311.jpg');
 
 --
 -- Extraindo dados da tabela `permissao`
@@ -4232,6 +4286,7 @@ INSERT INTO `permissao` (`PermissaoId`, `Descricao`) VALUES
 (2, 'Empresas de Rotativos (Permissão Total)'),
 (3, 'Empresas de Rotativos (Permissão Restringida)'),
 (4, 'Clientes de Empresas de Rotativos');
+
 --
 -- Extraindo dados da tabela `login`
 --
@@ -8035,6 +8090,9 @@ INSERT INTO `receberempresa` (`ReceberEmpresaId`, `FormaPagamentoId`, `EmpresaId
 (4, 3, 4, NULL, '25.00', '2022-10-09', '2022-11-09', 'F'),
 (5, 1, 1, NULL, '25.00', '2022-10-12', '2022-11-12', 'F'),
 (6, 1, 6, NULL, '25.00', '2022-10-14', '2022-11-14', 'F');
+
+
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

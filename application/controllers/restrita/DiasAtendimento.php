@@ -9,7 +9,7 @@ class DiasAtendimento extends CI_Controller {
         $this->load->model('Login_model');
 		$this->Login_model->verificaSessao();
 
-		if($this->session->userdata('PermissaoId')!=1){
+		if($this->session->userdata('PermissaoId')!=2){
             $link = base_url('index.php/Restrita/Home');
 			echo "<script>window.location.href = '$link'</script>";
         }
@@ -17,22 +17,32 @@ class DiasAtendimento extends CI_Controller {
         $this->load->model('DiasAtendimento_model');
     }
 
-	public function index()
-	{
-		$data['controller'] = "diasAtendimentoController";
-		$this->load->view('restrita/header',$data);
-		$this->load->view('restrita/diasAtendimento');
-		$this->load->view('restrita/footer');
-	}
-
 	public function setDiasAtendimento()
 	{
 		$post = $this->funcoes->getPostAngular();
 
-		$DiasAtendimentoId = isset($post['DiasAtendimentoId'])?$post['DiasAtendimentoId']:0;
-		$data = ['DescricaoDiasAtendimento' => $post['Descricao']];
+		$lista = $post['lista'];
+		$EstacionamentoId = $post['EstacionamentoId'];
 
-		$this->DiasAtendimento_model->setDiasAtendimento($data,$DiasAtendimentoId);
+		foreach ($lista as $a) {
+			$DiasAtendimentoId = $a['DiasAtendimentoId'];
+			$data = [
+				'Aberto'=>$a['Aberto']
+				,'HoraEntrada'=>$a['HoraEntrada']?$this->funcoes->formataHora($a['HoraEntrada']):null
+				,'HoraSaida'=>$a['HoraSaida']?$this->funcoes->formataHora($a['HoraSaida']):null
+			];
+
+			if($DiasAtendimentoId==0){
+				$data += [
+					'Dia'=>$a['Dia']
+					,'DiaDesc'=>$a['DiaDesc']
+					,'EstacionamentoId'=>(int) $EstacionamentoId
+				];
+			}
+
+			$this->DiasAtendimento_model->setDiasAtendimento($data,$DiasAtendimentoId);
+			
+		}
 		
 	}
 }

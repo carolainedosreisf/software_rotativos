@@ -30,6 +30,7 @@ class Estacionamento extends CI_Controller {
     {
 		$data['controller'] = "novoEstacionamentoController";
         $data['EstacionamentoId'] = base64_decode($this->funcoes->get('i'));
+        $data['lista_tipos_pix'] = $this->funcoes->getTiposCahves();
 		$this->load->view('restrita/header',$data);
 		$this->load->view('restrita/novoEstacionamento');
 		$this->load->view('restrita/footer');
@@ -41,6 +42,7 @@ class Estacionamento extends CI_Controller {
         $obj = $this->Estacionamento_model->getEstacionamento($EstacionamentoId);
         $obj['NumeroVagas'] = (int) ($obj['NumeroVagas']);
         $obj['NumeroLimiteReserva'] = (int) ($obj['NumeroLimiteReserva']);
+        $obj['TipoChavePix'] = ($obj['TipoChavePix'])."";
         echo json_encode($obj);
     }
 
@@ -62,6 +64,15 @@ class Estacionamento extends CI_Controller {
 		$post = $this->funcoes->getPostAngular();
         $EstacionamentoId = isset($post['EstacionamentoId'])?$post['EstacionamentoId']:0;
 
+        $TipoChavePix = 0;
+        $ChavePix = null;
+        if(isset($post['TipoChavePix'])){
+            if($post['TipoChavePix']>0){
+                $TipoChavePix = $post['TipoChavePix'];
+                $ChavePix = $post['ChavePix'];
+            }
+        }
+
         $data = [
             'Endereco' => $post['Endereco'],
             'NumeroEndereco' => $post['NumeroEndereco'],
@@ -78,8 +89,10 @@ class Estacionamento extends CI_Controller {
             'NomeEstacionamento' => $post['NomeEstacionamento'],
             'PrecoLivre' => $post['PrecoLivre'],
             'PrecoHora' => $post['PrecoHora'],
-            'DiasAtendimentoId' => $post['DiasAtendimentoId']
+            'TipoChavePix' => $TipoChavePix,
+            'ChavePix' => $ChavePix,
         ];
+        
 
         if(!$EstacionamentoId){
             $data += [
@@ -88,7 +101,7 @@ class Estacionamento extends CI_Controller {
             ];
         }
 
-        $this->Estacionamento_model->setEstacionamento($data,$EstacionamentoId);
+        echo $this->Estacionamento_model->setEstacionamento($data,$EstacionamentoId);
 
     }
 

@@ -65,7 +65,6 @@
                     <?php if($this->session->userdata('PermissaoId')==1){ ?>
                     <li><a href="<?php echo base_url('index.php/restrita/PerfilEmpresa'); ?>">Perfil Empresa</a></li>
                     <li><a href="<?php echo base_url('index.php/restrita/FormaPagamento'); ?>">Formas de Pagamento</a></li>
-                    <li><a href="<?php echo base_url('index.php/restrita/DiasAtendimento'); ?>">Dias de Atendimento</a></li>
                     <li><a href="<?php echo base_url('index.php/restrita/Clientes'); ?>">Clientes</a></li>
                     <?php } ?>
 

@@ -96,18 +96,9 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Empresa` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `mydb`.`DiasAtendimento`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`DiasAtendimento` (
-  `DiasAtendimentoId` INT NOT NULL AUTO_INCREMENT,
-  `DescricaoDiasAtendimento` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`DiasAtendimentoId`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `mydb`.`Estacionamento`
 -- -----------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS `mydb`.`Estacionamento` (
   `EstacionamentoId` INT NOT NULL AUTO_INCREMENT,
   `NomeEstacionamento` VARCHAR(100) NULL,
@@ -124,20 +115,15 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Estacionamento` (
   `NumeroTelefone1` VARCHAR(15) NULL,
   `NumeroTelefone2` VARCHAR(15) NULL,
   `Email` VARCHAR(80) NULL,
-  `DiasAtendimentoId` INT NULL,
   `precoLivre` DECIMAL(18,2) NULL,
   `PrecoHora` DECIMAL(18,2) NULL,
   `EmpresaId` INT NOT NULL,
+  `TipoChavePix` INT NOT NULL DEFAULT 0 COMMENT '0=> Chave Pix Não Cadastrada,1=> CNPJ,2=> CPF,3=> E-mail,4=> Telefone,5=> Aleatória',
+  `ChavePix` VARCHAR(500),
   `DataCadastro` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`EstacionamentoId`),
-  INDEX `FK14_idx` (`DiasAtendimentoId` ASC),
   INDEX `FK23_idx` (`EmpresaId` ASC),
   INDEX `FK30_idx` (`CidadeId` ASC),
-  CONSTRAINT `FK14`
-    FOREIGN KEY (`DiasAtendimentoId`)
-    REFERENCES `mydb`.`DiasAtendimento` (`DiasAtendimentoId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `FK23`
     FOREIGN KEY (`EmpresaId`)
     REFERENCES `mydb`.`Empresa` (`EmpresaId`)
@@ -149,6 +135,27 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Estacionamento` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`DiasAtendimento`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`DiasAtendimento` (
+  `DiasAtendimentoId` INT NOT NULL AUTO_INCREMENT,
+  `EstacionamentoId` INT NOT NULL,
+  `HoraEntrada` TIME,
+  `HoraSaida` TIME,
+  `Dia` INT NOT NULL,
+  `DiaDesc` VARCHAR(50) NOT NULL,
+  `Aberto` ENUM('S','N') NOT NULL DEFAULT 'N' COMMENT 'S=>Sim,N=>Não',
+  PRIMARY KEY (`DiasAtendimentoId`),
+  INDEX `EstacionamentoId_DiasAtendimento_indx` (`EstacionamentoId` ASC) ,
+  CONSTRAINT `FKEstacionamentoId_DiasAtendimento`
+    FOREIGN KEY (`EstacionamentoId`)
+    REFERENCES `mydb`.`Estacionamento` (`EstacionamentoId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 
 -- -----------------------------------------------------
 -- Table `mydb`.`Login`
@@ -727,3 +734,46 @@ DELIMITER ;
 -- EXEMPLO SELECT f_vagasReserva(8,'2022-11-03 08:00:00','2022-11-03 12:00:00','L') AS QtdLocacoes
 -- EXEMPLO SELECT f_vagasReserva(8,'2022-11-03 08:00:00','2022-11-03 12:00:00','R') AS QtdReservas
 -- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- FUNCTION `mydb`.`f_diaSemana`
+-- -----------------------------------------------------
+
+
+DELIMITER //
+
+CREATE FUNCTION f_diaSemana(p_Data DATE)
+RETURNS INT
+
+BEGIN
+
+	DECLARE p_diaTxt VARCHAR(50);
+	DECLARE p_Rertorno INT;
+
+	SELECT 
+			DAYNAME(p_Data)
+			INTO p_diaTxt;
+  
+   
+   case p_diaTxt 
+      WHEN 'Monday' THEN SET p_Rertorno = 1;
+      WHEN 'Tuesday' THEN SET p_Rertorno = 2;
+      WHEN 'Wednesday' THEN SET p_Rertorno = 3;
+      WHEN 'Thursday' THEN SET p_Rertorno = 4;
+      WHEN 'Friday' THEN SET p_Rertorno = 5;
+      WHEN 'Saturday' THEN SET p_Rertorno = 6;
+      WHEN 'Sunday' THEN SET p_Rertorno = 7;
+      ELSE SET p_Rertorno = 0;
+    end case;
+    
+    RETURN p_Rertorno;
+
+END //
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- EXEMPLO Select  f_diaSemana('2022-10-30') AS dia;
+
+-- -----------------------------------------------------
+

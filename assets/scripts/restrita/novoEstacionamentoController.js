@@ -4,6 +4,7 @@ app.controller('novoEstacionamentoController', ['$scope', '$http','$filter','$lo
     $scope.EstacionamentoId = EstacionamentoId;
     $scope.lista_cidades = [];
     $scope.erro_cep = false;
+    $scope.lista_tipos_pix = lista_tipos_pix;
 
     $scope.getCidades = function(desc=''){
         $scope.carregando = true;
@@ -45,9 +46,10 @@ app.controller('novoEstacionamentoController', ['$scope', '$http','$filter','$lo
         $scope.carregando = true;
         $http({
             url: base_url+'/Generico/getDiasAtendimento',
-            method: 'GET'
+            method: 'GET',
+            params: {EstacionamentoId}
         }).then(function (retorno) {
-            $scope.lista_dias_atendimento = retorno.data;
+            $scope.lista_dias = retorno.data;
             $scope.carregando = false;
         },
         function (retorno) {
@@ -121,7 +123,11 @@ app.controller('novoEstacionamentoController', ['$scope', '$http','$filter','$lo
                 data: $scope.objEstacionamento
             }).then(function (retorno) {
                 $scope.carregando = false;
-                window.location = "index";
+                if(!EstacionamentoId){
+                    $scope.setDiasAtendimento(retorno.data,1)
+                }else{
+                    window.location = "index";
+                }
             },
             function (retorno) {
                 console.log('Error: '+retorno.status);
@@ -129,6 +135,38 @@ app.controller('novoEstacionamentoController', ['$scope', '$http','$filter','$lo
         }else{
             $location.hash("mensagens");
             $anchorScroll();
+        }
+    }
+
+    $scope.setDiasAtendimento = function(id,redirect=0){
+        $('#modalDias').modal('hide');
+        if(id){
+            $scope.carregando = true;
+            $http({
+                url: base_url+'/DiasAtendimento/setDiasAtendimento',
+                method: 'POST',
+                data: {lista:$scope.lista_dias,EstacionamentoId:id}
+            }).then(function (retorno) {
+                $scope.carregando = false;
+                if(redirect){
+                    window.location = "index";
+                }
+            },
+            function (retorno) {
+                console.log('Error: '+retorno.status);
+            });
+        }
+    }
+
+    $scope.validaHora = function(coluna,index){
+        if(typeof $scope.lista_dias[index][coluna] != 'undefined'){
+            if($scope.lista_dias[index][coluna]!= ""){
+                var hr = $scope.lista_dias[index][coluna].substr(0, 2);
+                var min = $scope.lista_dias[index][coluna].substr(2, 2);
+                if(hr > 23 || min > 59){
+                    $scope.lista_dias[index][coluna] = "";
+                }
+            }
         }
     }
 

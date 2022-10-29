@@ -7,6 +7,7 @@ class Estacionamento_model extends CI_Model {
         if($EstacionamentoId){
             $this->db->where('EstacionamentoId', $EstacionamentoId);
             $this->db->update('Estacionamento',$data);
+            return $EstacionamentoId;
         }else{
             $this->db->insert('Estacionamento',$data);
             $last_id = $this->db->insert_id();
@@ -63,11 +64,12 @@ class Estacionamento_model extends CI_Model {
                         ,a.NumeroTelefone1
                         ,a.NumeroTelefone2
                         ,a.Email
-                        ,a.DiasAtendimentoId
                         ,IFNULL(a.PrecoLivre,0) AS PrecoLivre
                         ,IFNULL(a.PrecoHora,0) AS PrecoHora
                         ,a.EmpresaId
                         ,a.DataCadastro
+                        ,a.TipoChavePix
+                        ,a.ChavePix
                         ,(SELECT COUNT(*) FROM FotoEstacionamento AS d WHERE a.EstacionamentoId = d.EstacionamentoId) AS QtdFotos
                         ,(SELECT COUNT(*) FROM Login AS d WHERE a.EstacionamentoId = d.EstacionamentoId AND d.PermissaoId = 3) AS QtdAtendentes
                 FROM Estacionamento AS a

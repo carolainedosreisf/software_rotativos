@@ -67,17 +67,10 @@
             </div>
 
             <div class="row form-group">
-                <div class="col-sm-3" ng-class="form_estacionamento.CpfCnpj.$invalid && (form_estacionamento.$submitted || form_estacionamento.CpfCnpj.$dirty)?'has-error':''">
+                <div class="col-sm-5" ng-class="form_estacionamento.CpfCnpj.$invalid && (form_estacionamento.$submitted || form_estacionamento.CpfCnpj.$dirty)?'has-error':''">
                     <label for="CpfCnpj">{{objEstacionamento.TipoEmpresa=='J'?'CNPJ':'CPF'}}:</label>
                     <input type="text" name="CpfCnpj" id="CpfCnpj" class="form-control" ng-model="objEstacionamento.CpfCnpj" ui-br-cnpj-mask ng-disabled="EstacionamentoId" ng-if="objEstacionamento.TipoEmpresa=='J'" ng-required="true">
                     <input type="text" name="CpfCnpj" id="CpfCnpj" class="form-control" ng-model="objEstacionamento.CpfCnpj" ui-br-cpf-mask ng-disabled="EstacionamentoId" ng-if="objEstacionamento.TipoEmpresa=='F'" ng-required="true">
-                </div>
-                <div class="col-sm-5"  ng-class="form_estacionamento.DiasAtendimentoId.$invalid && (form_estacionamento.$submitted || form_estacionamento.DiasAtendimentoId.$dirty)?'has-error':''">
-                    <label for="DiasAtendimentoId">Dias Atendimento:</label>
-                    <select type="text" name="DiasAtendimentoId" id="DiasAtendimentoId" class="form-control" ng-model="objEstacionamento.DiasAtendimentoId" ng-required="true">
-                        <option value="">Selecione</option>
-                        <option value="{{l.DiasAtendimentoId}}" ng-repeat="l in lista_dias_atendimento">{{l.Descricao}}</option>
-                    </select>
                 </div>
                 <div class="col-sm-2" ng-class="form_estacionamento.PrecoLivre.$error.required && (form_estacionamento.$submitted || form_estacionamento.PrecoLivre.$dirty)?'has-error':''">
                     <label for="PrecoLivre">Preço Livre:</label>
@@ -87,13 +80,13 @@
                     <label for="PrecoHora">Preço Hora:</label>
                     <input type="text" name="PrecoHora" id="PrecoHora" class="form-control" ng-model="objEstacionamento.PrecoHora" ng-required="true" ui-number-mask="2">
                 </div>
-            </div>
-
-            <div class="row form-group">
-                <div class="col-sm-4" ng-class="form_estacionamento.NumeroVagas.$invalid && (form_estacionamento.$submitted || form_estacionamento.NumeroVagas.$dirty)?'has-error':''">
+                <div class="col-sm-3" ng-class="form_estacionamento.NumeroVagas.$invalid && (form_estacionamento.$submitted || form_estacionamento.NumeroVagas.$dirty)?'has-error':''">
                     <label for="NumeroVagas">Total de Vagas:</label>
                     <input type="text" name="NumeroVagas" id="NumeroVagas" class="form-control" ng-model="objEstacionamento.NumeroVagas" ng-required="true" somentenumeros>
                 </div>
+            </div>
+
+            <div class="row form-group">
                 <div class="col-sm-4" ng-class="form_estacionamento.NumeroLimiteReserva.$invalid && (form_estacionamento.$submitted || form_estacionamento.NumeroLimiteReserva.$dirty)?'has-error':''">
                     <label for="NumeroLimiteReserva">
                         Limite de vagas para reservar:
@@ -108,6 +101,32 @@
                         ></i>
                     </label>
                     <input type="text" name="NumeroLimiteReserva" id="NumeroLimiteReserva" class="form-control" ng-model="objEstacionamento.NumeroLimiteReserva" ng-required="true" somentenumeros>
+                </div>
+                <div class="col-sm-3">
+                    <label for="TipoChavePix">Tipo Chave Pix:</label>
+                    <select name="TipoChavePix" id="TipoChavePix" ng-model="objEstacionamento.TipoChavePix" class="form-control" ng-change="objEstacionamento.ChavePix=''">
+                        <option value="{{key}}" ng-repeat="(key,tipo) in lista_tipos_pix">{{tipo}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-5" ng-show="objEstacionamento.TipoChavePix>0" ng-class="form_estacionamento.ChavePix.$invalid && (form_estacionamento.$submitted || form_estacionamento.ChavePix.$dirty)?'has-error':''">
+                    <label for="ChavePix">Chave Pix:</label>
+                    <input type="text" ng-if="objEstacionamento.TipoChavePix==1" name="ChavePix" id="ChavePix" class="form-control" ng-model="objEstacionamento.ChavePix" ui-br-cnpj-mask ng-required="objEstacionamento.TipoChavePix==1">
+
+                    <input type="text" ng-if="objEstacionamento.TipoChavePix==2" name="ChavePix" id="ChavePix" class="form-control" ng-model="objEstacionamento.ChavePix" ui-br-cpf-mask ng-required="objEstacionamento.TipoChavePix==2">
+
+                    <input type="email" ng-if="objEstacionamento.TipoChavePix==3" name="ChavePix" id="ChavePix" class="form-control" ng-model="objEstacionamento.ChavePix" ng-required="objEstacionamento.TipoChavePix==3">
+
+                    <input type="text" ng-if="objEstacionamento.TipoChavePix==4" name="ChavePix" id="ChavePix" class="form-control" ng-model="objEstacionamento.ChavePix" ng-required="objEstacionamento.TipoChavePix==4" ui-br-phone-number-mask="areaCode">
+
+                    <input type="text" ng-if="objEstacionamento.TipoChavePix==5" name="ChavePix" id="ChavePix" class="form-control" ng-model="objEstacionamento.ChavePix" ng-required="objEstacionamento.TipoChavePix==5">
+
+                </div>
+                <div class="col-sm-3">
+                    <label for="" style="display:block">&ensp;</label>
+                    <button type="button" class="btn-sm btn btn-warning" data-toggle="modal" data-target="#modalDias">
+                        <i class="glyphicon glyphicon-pencil"></i>
+                        Dias e Horários de Atendimento
+                    </button>
                 </div>
             </div>
         </div>
@@ -169,10 +188,62 @@
             <button type="submit" form="form_estacionamento" class="btn btn-success form-control" style="width:250px;">Salvar</button>
         </div>
     </form>
+
+    <div id="modalDias" class="modal fade" role="dialog" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Dias e Horários de Atendimento</h4>
+                </div>
+                <div class="modal-body">
+                    
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th width="30%">Dia</th>
+                                    <th class="text-center">Aberto</th>
+                                    <th class="text-center">Horário Abertura</th>
+                                    <th class="text-center">Horário Fechamento</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(key,l) in lista_dias">
+                                    <td>{{l.DiaDesc}}</td>
+                                    <td class="text-center">
+                                        <label class="switch">
+                                            <input type="checkbox" name="Aberto_{{key}}" id="Aberto_{{key}}" ng-model="lista_dias[key].Aberto" ng-true-value="'S'" ng-false-value="'N'" ng-change="lista_dias[key].HoraEntrada='';lista_dias[key].HoraSaida='';">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="text" name="HoraEntrada_{{key}}"  id="HoraEntrada_{{key}}" class="form-control text-center" ui-mask="99:99" ng-model="lista_dias[key].HoraEntrada" placeholder="__:__" autocomplete="off" ng-disabled="lista_dias[key].Aberto=='N'" ng-change="validaHora('HoraEntrada',key)">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="text" name="HoraSaida_{{key}}"  id="HoraSaida_{{key}}" class="form-control text-center" ui-mask="99:99" ng-model="lista_dias[key].HoraSaida" placeholder="__:__" autocomplete="off" ng-disabled="lista_dias[key].Aberto=='N'" ng-change="validaHora('HoraEntrada',key)">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-success" ng-click="setDiasAtendimento(EstacionamentoId)">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     
     <script>
         var base_url_externo = "<?php echo base_url().'index.php/'; ?>";
         var EstacionamentoId = "<?php echo $EstacionamentoId; ?>";
+        var lista_tipos_pix = <?php echo json_encode($lista_tipos_pix); ?>;
     </script>
 </div>
 
