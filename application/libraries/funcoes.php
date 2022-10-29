@@ -225,13 +225,13 @@ class Funcoes {
     public function getDiasSemana()
     {
         return  [
-                '1'=> 'Segunda-feira',
-                '2'=> 'Terça-feira',
-                '3'=> 'Quarta-feira',
-                '4'=> 'Quinta-feira',
-                '5'=> 'Sexta-feira',
-                '6'=> 'Sábado',
-                '7'=> 'Domingo',
+                '0'=> 'Segunda-feira',
+                '1'=> 'Terça-feira',
+                '2'=> 'Quarta-feira',
+                '3'=> 'Quinta-feira',
+                '4'=> 'Sexta-feira',
+                '5'=> 'Sábado',
+                '6'=> 'Domingo',
             ];
     }
 

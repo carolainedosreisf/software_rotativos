@@ -740,37 +740,37 @@ DELIMITER ;
 -- -----------------------------------------------------
 
 
-DELIMITER //
+-- DELIMITER //
 
-CREATE FUNCTION f_diaSemana(p_Data DATE)
-RETURNS INT
+-- CREATE FUNCTION f_diaSemana(p_Data DATE)
+-- RETURNS INT
 
-BEGIN
+-- BEGIN
 
-	DECLARE p_diaTxt VARCHAR(50);
-	DECLARE p_Rertorno INT;
+-- 	DECLARE p_diaTxt VARCHAR(50);
+-- 	DECLARE p_Rertorno INT;
 
-	SELECT 
-			DAYNAME(p_Data)
-			INTO p_diaTxt;
+-- 	SELECT 
+-- 			DAYNAME(p_Data)
+-- 			INTO p_diaTxt;
   
    
-   case p_diaTxt 
-      WHEN 'Monday' THEN SET p_Rertorno = 1;
-      WHEN 'Tuesday' THEN SET p_Rertorno = 2;
-      WHEN 'Wednesday' THEN SET p_Rertorno = 3;
-      WHEN 'Thursday' THEN SET p_Rertorno = 4;
-      WHEN 'Friday' THEN SET p_Rertorno = 5;
-      WHEN 'Saturday' THEN SET p_Rertorno = 6;
-      WHEN 'Sunday' THEN SET p_Rertorno = 7;
-      ELSE SET p_Rertorno = 0;
-    end case;
+--    case p_diaTxt 
+--       WHEN 'Monday' THEN SET p_Rertorno = 1;
+--       WHEN 'Tuesday' THEN SET p_Rertorno = 2;
+--       WHEN 'Wednesday' THEN SET p_Rertorno = 3;
+--       WHEN 'Thursday' THEN SET p_Rertorno = 4;
+--       WHEN 'Friday' THEN SET p_Rertorno = 5;
+--       WHEN 'Saturday' THEN SET p_Rertorno = 6;
+--       WHEN 'Sunday' THEN SET p_Rertorno = 7;
+--       ELSE SET p_Rertorno = 0;
+--     end case;
     
-    RETURN p_Rertorno;
+--     RETURN p_Rertorno;
 
-END //
+-- END //
 
-DELIMITER ;
+-- DELIMITER ;
 
 -- -----------------------------------------------------
 -- EXEMPLO Select  f_diaSemana('2022-10-30') AS dia;

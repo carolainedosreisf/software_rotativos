@@ -6,6 +6,10 @@ app.controller('novoEstacionamentoController', ['$scope', '$http','$filter','$lo
     $scope.erro_cep = false;
     $scope.lista_tipos_pix = lista_tipos_pix;
 
+    if(!EstacionamentoId){
+        $scope.objEstacionamento.TipoChavePix = '0';
+    }
+
     $scope.getCidades = function(desc=''){
         $scope.carregando = true;
         $http({

@@ -380,7 +380,7 @@ class FluxoVaga_model extends CI_Model {
                         ,(EXISTS(SELECT *	
                                 FROM diasatendimento AS b
                                 WHERE b.EstacionamentoId = {$EstacionamentoId}
-                                AND f_diaSemana(DATE_FORMAT('{$Entrada}', '%Y-%m-%d'))  = Dia
+                                AND WEEKDAY(DATE_FORMAT('{$Entrada}', '%Y-%m-%d'))  = Dia
                                 AND HoraEntrada <= DATE_FORMAT('{$Entrada}', '%H:%i:%s')  
                                 AND HoraSaida > DATE_FORMAT('{$Entrada}', '%H:%i:%s')
                                 AND Aberto = 'S')
@@ -398,7 +398,7 @@ class FluxoVaga_model extends CI_Model {
                         ,(EXISTS(SELECT *	
                             FROM diasatendimento AS b
                             WHERE b.EstacionamentoId = {$EstacionamentoId}
-                            AND f_diaSemana(DATE_FORMAT('{$Entrada}', '%Y-%m-%d')) = Dia
+                            AND WEEKDAY(DATE_FORMAT('{$Entrada}', '%Y-%m-%d')) = Dia
                             AND HoraEntrada <= DATE_FORMAT('{$Entrada}', '%H:%i:%s') 
                             AND HoraSaida > DATE_FORMAT('{$Entrada}', '%H:%i:%s')
                             AND HoraSaida >= DATE_FORMAT('{$Saida}', '%H:%i:%s') 

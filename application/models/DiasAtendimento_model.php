@@ -15,7 +15,7 @@ class DiasAtendimento_model extends CI_Model {
                         ,Aberto
                 FROM DiasAtendimento
                 WHERE EstacionamentoId = $EstacionamentoId
-                ORDER BY DiasAtendimentoId ASC";
+                ORDER BY Dia ASC";
         $query = $this->db->query($sql);
         $result = $query->result_array();
         return $result;
