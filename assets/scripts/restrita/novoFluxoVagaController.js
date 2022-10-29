@@ -120,10 +120,11 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
                         } 
                     }).then(function (retorno) {
                         $scope.carregando = false;
+                        $scope.AbertoAgora = retorno.data.AbertoAgora;
                         $scope.QtdLocacoes = retorno.data.QtdLocacoes;
                         $scope.QtdReservas = retorno.data.QtdReservas;
                         $scope.QtdVagasDisponiveisLocacao = retorno.data.QtdVagasDisponiveisLocacao
-                        if($scope.QtdVagasDisponiveisLocacao<=0){
+                        if($scope.QtdVagasDisponiveisLocacao<=0 || $scope.AbertoAgora==0){
                             $scope.mensagemLotacao();
                         }
                     },
@@ -147,7 +148,7 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
     }
 
     $scope.setFluxoVaga = function(){
-        if($scope.form_fluxo_vaga.$valid && $scope.QtdVagasDisponiveisLocacao > 0 ){
+        if($scope.form_fluxo_vaga.$valid && $scope.QtdVagasDisponiveisLocacao > 0 && $scope.AbertoAgora==1){
             $scope.carregando = true;
             $http({
                 url: base_url+'/FluxoVaga/setFluxoVaga',
@@ -160,7 +161,7 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
             function (retorno) {
                 console.log('Error: '+retorno.status);
             });
-        }else if($scope.form_fluxo_vaga.$valid && $scope.QtdVagasDisponiveisLocacao <= 0){
+        }else if($scope.form_fluxo_vaga.$valid && ($scope.QtdVagasDisponiveisLocacao <= 0 || $scope.AbertoAgora==0)){
             $scope.mensagemLotacao();
         }
     }
@@ -187,9 +188,14 @@ app.controller('novoFluxoVagaController', ['$scope', '$http','$filter','$locatio
     }
 
     $scope.mensagemLotacao = function() {
+        if($scope.QtdVagasDisponiveisLocacao <= 0){
+            var text = 'Não é possivel cadastrar a locação, o estacionamento já  esta lotado nesse período.';
+        }else{
+            var text = "Estacionamento fechado nesse dia/horário.";
+        }
         swal({
             title: "",
-            text:'Não é possivel cadastrar a locação, o estacionamento já  esta lotado nesse período.',
+            text,
             type: "warning",
             showCancelButton: false,
             confirmButtonText: "Ok",

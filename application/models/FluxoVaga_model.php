@@ -376,7 +376,15 @@ class FluxoVaga_model extends CI_Model {
     {
         $sql = "SELECT f_vagasLocacao({$EstacionamentoId},'{$Entrada}','D') AS QtdVagasDisponiveisLocacao
                         , f_vagasLocacao({$EstacionamentoId},'{$Entrada}','L') AS QtdLocacoes
-                        , f_vagasLocacao({$EstacionamentoId},'{$Entrada}','R') AS QtdReservas;";
+                        , f_vagasLocacao({$EstacionamentoId},'{$Entrada}','R') AS QtdReservas
+                        ,(EXISTS(SELECT *	
+                                FROM diasatendimento AS b
+                                WHERE b.EstacionamentoId = {$EstacionamentoId}
+                                AND f_diaSemana(DATE_FORMAT('{$Entrada}', '%Y-%m-%d'))  = Dia
+                                AND HoraEntrada <= DATE_FORMAT('{$Entrada}', '%H:%i:%s')  
+                                AND HoraSaida > DATE_FORMAT('{$Entrada}', '%H:%i:%s')
+                                AND Aberto = 'S')
+                        ) AS AbertoAgora";
         $query = $this->db->query($sql);
         $result = $query->row_array();
         return $result;
@@ -386,7 +394,16 @@ class FluxoVaga_model extends CI_Model {
     {
         $sql = "SELECT f_vagasReserva({$EstacionamentoId},'{$Entrada}','{$Saida}','D') AS QtdVagasDisponiveisReservar
                         , f_vagasReserva({$EstacionamentoId},'{$Entrada}','{$Saida}','L') AS QtdLocacoes
-                        , f_vagasReserva({$EstacionamentoId},'{$Entrada}','{$Saida}','R') AS QtdReservas;";
+                        , f_vagasReserva({$EstacionamentoId},'{$Entrada}','{$Saida}','R') AS QtdReservas
+                        ,(EXISTS(SELECT *	
+                            FROM diasatendimento AS b
+                            WHERE b.EstacionamentoId = {$EstacionamentoId}
+                            AND f_diaSemana(DATE_FORMAT('{$Entrada}', '%Y-%m-%d')) = Dia
+                            AND HoraEntrada <= DATE_FORMAT('{$Entrada}', '%H:%i:%s') 
+                            AND HoraSaida > DATE_FORMAT('{$Entrada}', '%H:%i:%s')
+                            AND HoraSaida >= DATE_FORMAT('{$Saida}', '%H:%i:%s') 
+                            AND Aberto = 'S')
+                        ) AS Aberto";
         $query = $this->db->query($sql);
         $result = $query->row_array();
         return $result;

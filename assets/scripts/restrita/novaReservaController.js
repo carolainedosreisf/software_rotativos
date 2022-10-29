@@ -131,11 +131,12 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
                         } 
                     }).then(function (retorno) {
                         $scope.carregando = false;
+                        $scope.Aberto = retorno.data.Aberto;
                         $scope.QtdReservas = retorno.data.QtdReservas;
                         $scope.QtdLocacoes = retorno.data.QtdLocacoes;
                         $scope.QtdVagasDisponiveisReservar = retorno.data.QtdVagasDisponiveisReservar
 
-                        if($scope.QtdVagasDisponiveisReservar<=0){
+                        if($scope.QtdVagasDisponiveisReservar<=0 || $scope.Aberto==0){
                             $scope.liberaPagamento = 'N';
                             $scope.Reserva.PagarAgora = 'N';
                             $scope.Reserva.FormaPagamentoId = '';
@@ -185,7 +186,7 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
     });
 
     $scope.setReserva= function(){
-        if($scope.form_reserva.$valid && $scope.QtdVagasDisponiveisReservar>0){
+        if($scope.form_reserva.$valid && $scope.QtdVagasDisponiveisReservar>0 && $scope.Aberto==1){
             $scope.carregando = true;
             $scope.Reserva.DataSaida = $scope.Reserva.DataEntrada;
             $http({
@@ -204,15 +205,20 @@ app.controller('novaReservaController', ['$scope', '$http','$filter','$location'
             function (retorno) {
                 console.log('Error: '+retorno.status);
             });
-        }else if($scope.form_reserva.$valid && $scope.QtdVagasDisponiveisReservar<=0){
+        }else if($scope.form_reserva.$valid && ($scope.QtdVagasDisponiveisReservar<=0 || $scope.Aberto==0)){
             $scope.mensagemLotacao();
         }
     }
 
-    $scope.mensagemLotacao = function(text) {
+    $scope.mensagemLotacao = function() {
+        if($scope.QtdVagasDisponiveisReservar<=0){
+            var text = 'Não é possivel cadastrar a reserva, o estacionamento já reservou o "Limite de vagas para reservar" nesse período, ou então o estacionamento já  esta lotado nesse período';
+        }else{
+            var text = "Estacionamento fechado nesse dia/horário.";
+        }
         swal({
             title: "",
-            text:'Não é possivel cadastrar a reserva, o estacionamento já reservou o "Limite de vagas para reservar" nesse período, ou então o estacionamento já  esta lotado nesse período',
+            text,
             type: "warning",
             showCancelButton: false,
             confirmButtonText: "Ok",

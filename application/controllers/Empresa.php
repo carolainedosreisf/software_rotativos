@@ -83,6 +83,20 @@ class Empresa extends CI_Controller {
 
         $EstacionamentoId = $this->Estacionamento_model->setEstacionamento($data_estacionamento);
 
+        $dias_semana = $this->funcoes->getDiasSemana();
+        $this->load->model('DiasAtendimento_model');
+
+        foreach ($dias_semana as $key => $dia) {
+            $data_dias = [
+                'Dia'=> $key
+                ,'DiaDesc'=> $dia
+                ,'EstacionamentoId'=>(int) $EstacionamentoId
+                ,'Aberto'=>'N'
+            ];
+            $this->DiasAtendimento_model->setDiasAtendimento($data_dias,0);
+        }
+       
+
         $data_login = [
             'Email' => $post['Email'],
             'NomeUsuario' => $post['NomeUsuario'],
