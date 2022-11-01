@@ -12,8 +12,7 @@
     </div>
     <div class="row form-group" ng-show="!disabled_">
         <div class="col-sm-12">
-            <br>
-            <div class="alert alert-info" role="alert">
+            <div class="callout callout-default">
                 <div class="row form-group">
                     <div class="col-sm-12">
                         <span><b>Total de Vagas do Estacionamento: </b>{{NumeroVagas}}</span><br>

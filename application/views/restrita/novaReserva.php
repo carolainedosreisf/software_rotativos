@@ -16,8 +16,7 @@
 
     <div class="row form-group" ng-show="!disabled_">
         <div class="col-sm-12">
-            <br>
-            <div class="alert alert-info" role="alert">
+            <div class="callout callout-default">
                 <span><b>Total de Vagas do Estacionamento: </b>{{NumeroVagas}}</span><br>
                 <span><b>Limite de vagas para reservar do Estacionamento: </b>{{NumeroLimiteReserva}}</span><br>
                 <span><b>Reservas no Período Selecionado: </b>{{QtdReservas}}</span>
