@@ -91,6 +91,7 @@ class Estacionamento extends CI_Controller {
             'PrecoHora' => $post['PrecoHora'],
             'TipoChavePix' => $TipoChavePix,
             'ChavePix' => $ChavePix,
+            'LinkMaps' => isset($post['LinkMaps'])?$post['LinkMaps']:null,
         ];
         
 

@@ -777,3 +777,4 @@ DELIMITER ;
 
 -- -----------------------------------------------------
 
+ALTER TABLE `mydb`.`Estacionamento` ADD LinkMaps VARCHAR(255);

@@ -164,6 +164,23 @@
                     <input type="text" name="Complemento" id="Complemento" class="form-control" ng-model="objEstacionamento.Complemento" maxlength="45">
                 </div>
             </div>
+            <div class="row form-group">
+                <div class="col-sm-12">
+                    <label for="LinkMaps">
+                    Link de Compatilhamento do Google Maps:
+                    <i 
+                        style="color:#31708f" 
+                        class="glyphicon glyphicon-question-sign"
+                        data-html="true" 
+                        data-toggle="tooltip" 
+                        data-placement="top"
+                        data-original-title="Esse link é importante para redirecionar seus clientes para a localização do seu estacionemento.<br><br>Para obter o link acesse no aplicativo Google Maps com o endereço da sua empresa, clique em compartilhar, copie o link e cole nesse campo."
+                        tooltip
+                    ></i>
+                    </label>
+                    <input type="text" name="LinkMaps" id="LinkMaps" class="form-control" ng-model="objEstacionamento.LinkMaps" maxlength="255">
+                </div>
+            </div>
         </div><br>
 
         <div class="callout callout-default">
