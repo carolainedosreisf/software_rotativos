@@ -357,16 +357,16 @@ INSERT INTO `empresa` (`EmpresaId`, `Nome`, `RazaoSocial`, `CpfCnpj`, `TipoEmpre
 -- Extraindo dados da tabela `estacionamento`
 --
 
-INSERT INTO `estacionamento` (`EstacionamentoId`, `NomeEstacionamento`, `CpfCnpj`, `Endereco`, `NumeroEndereco`, `Complemento`, `NumeroCep`, `CidadeId`, `BairroEndereco`, `NumeroVagas`, `NumeroLimiteReserva`, `Sobre`, `NumeroTelefone1`, `NumeroTelefone2`, `Email`, `precoLivre`, `PrecoHora`, `EmpresaId`, `TipoChavePix`, `ChavePix`, `DataCadastro`) VALUES
-(1, 'Rotativos João (Nossa Senhora da Salete)', '67318259000156', 'Avenida Jorge Elias de Lucca', '599', NULL, '88813390', 70, 'Nossa Senhora da Salete', '100', '70', NULL, '48565456456', '48554456456', 'rotativos.joao@teste.com', '12.00', '5.00', 1, 1, '67318259000156', '2022-09-10 12:10:54'),
-(2, 'Aguiar Estacionamentos', '74522886000170', 'Rua Dolário dos Santos', '218', NULL, '88802080', 70, 'Centro', '50', '35', NULL, '48999985557', '48755585757', 'aguiar.estacionamentos@teste.com', '10.00', '5.00', 2, 1, '74522886000170', '2022-09-15 22:55:04'),
-(3, 'Rotativos João (Centro)', '58409749000177', 'Rua Henrique Lage', '177', NULL, '88801010', 70, 'Centro', '100', '75', NULL, '48455454545', NULL, 'rotativos.joao@teste.com', '10.00', '5.00', 1, 1, '58409749000177', '2022-09-22 12:18:29'),
-(7, 'Zé Rotativos (Centro)', '90914664000159', 'Rua Marechal Floriano Peixoto', '290', NULL, '88801040', 70, 'Centro', '200', '150', NULL, '4899775757', NULL, 'ze.rotativos@gmail.com', '0.00', '5.00', 4, 1, '90914664000159', '2022-09-22 12:33:39'),
-(8, 'Zé Rotativos (Próspera)', '90914664000159', 'Avenida Estevão Emílio de Souza', '1455', NULL, '88815055', 70, 'Próspera', '150', '100', NULL, '48775557575', NULL, 'ze.rotativos@gmail.com', '8.00', '4.00', 4, 1, '90914664000159', '2022-09-22 12:38:41'),
-(9, 'Maria Rotativos', '41077828000125', 'Rua São José', '191', NULL, '88811070', 70, 'Cruzeiro do Sul', '120', '90', NULL, '48877878786', NULL, 'maria.rotativos@teste.com', '9.00', '0.00', 5, 1, '41077828000125', '2022-09-30 17:07:29'),
-(10, 'Luiz Rotativos', '19587477000143', 'Avenida Getúlio Vargas', '60', NULL, '88801500', 70, 'Centro', '170', '120', NULL, '48555454545', '487878687', 'luiz.rotativos@gmail.com', '12.00', '5.00', 6, 1, '19587477000143', '2022-09-10 00:58:11'),
-(12, 'Zé Rotativos (Pinheirinho)', '90914664000159', 'Rua Padre Paulo Petruzzellis', '45', NULL, '88804610', 70, 'Pinheirinho', '70', '50', NULL, '4875522577', NULL, 'ze.rotativos@gmail.com', '8.00', '5.00', 4, 1, '90914664000159', '2022-10-29 03:04:50');
-COMMIT;
+INSERT INTO `estacionamento` (`EstacionamentoId`, `NomeEstacionamento`, `CpfCnpj`, `Endereco`, `NumeroEndereco`, `Complemento`, `NumeroCep`, `CidadeId`, `BairroEndereco`, `NumeroVagas`, `NumeroLimiteReserva`, `Sobre`, `NumeroTelefone1`, `NumeroTelefone2`, `Email`, `precoLivre`, `PrecoHora`, `EmpresaId`, `TipoChavePix`, `ChavePix`, `DataCadastro`, `LinkMaps`) VALUES
+(1, 'Rotativos João (Nossa Senhora da Salete)', '67318259000156', 'Avenida Jorge Elias de Lucca', '599', NULL, '88813390', 70, 'Nossa Senhora da Salete', '100', '70', NULL, '48565456456', '48554456456', 'rotativos.joao@teste.com', '12.00', '5.00', 1, 1, '67318259000156', '2022-09-10 12:10:54', 'https://goo.gl/maps/zUZDVBG1qHDFsdWy9'),
+(2, 'Aguiar Estacionamentos', '74522886000170', 'Rua Dolário dos Santos', '218', NULL, '88802080', 70, 'Centro', '50', '35', NULL, '48999985557', '48755585757', 'aguiar.estacionamentos@teste.com', '10.00', '5.00', 2, 1, '74522886000170', '2022-09-15 22:55:04', 'https://goo.gl/maps/RZBon75caXP1MYCy5'),
+(3, 'Rotativos João (Centro)', '58409749000177', 'Rua Henrique Lage', '177', NULL, '88801010', 70, 'Centro', '100', '75', NULL, '48455454545', NULL, 'rotativos.joao@teste.com', '10.00', '5.00', 1, 1, '58409749000177', '2022-09-22 12:18:29', 'https://goo.gl/maps/pnu7my9Dc4quTpUW8'),
+(7, 'Zé Rotativos (Centro)', '90914664000159', 'Rua Marechal Floriano Peixoto', '290', NULL, '88801040', 70, 'Centro', '200', '150', NULL, '4899775757', NULL, 'ze.rotativos@gmail.com', '0.00', '5.00', 4, 1, '90914664000159', '2022-09-22 12:33:39', 'https://goo.gl/maps/mFA6qVn8hsNWHHmu7'),
+(8, 'Zé Rotativos (Próspera)', '90914664000159', 'Avenida Estevão Emílio de Souza', '1455', NULL, '88815055', 70, 'Próspera', '150', '100', NULL, '48775557575', NULL, 'ze.rotativos@gmail.com', '8.00', '4.00', 4, 1, '90914664000159', '2022-09-22 12:38:41', 'https://goo.gl/maps/GyP3E4R6ygz9piFP6'),
+(9, 'Maria Rotativos', '41077828000125', 'Rua São José', '191', NULL, '88811070', 70, 'Cruzeiro do Sul', '120', '90', NULL, '48877878786', NULL, 'maria.rotativos@teste.com', '9.00', '0.00', 5, 1, '41077828000125', '2022-09-30 17:07:29', 'https://goo.gl/maps/qfMzJYusSUFcZFum8'),
+(10, 'Luiz Rotativos', '19587477000143', 'Avenida Getúlio Vargas', '60', NULL, '88801500', 70, 'Centro', '170', '120', NULL, '48555454545', '487878687', 'luiz.rotativos@gmail.com', '12.00', '5.00', 6, 1, '19587477000143', '2022-09-10 00:58:11', 'https://goo.gl/maps/z5oVzN97sCsB2gqKA'),
+(12, 'Zé Rotativos (Pinheirinho)', '90914664000159', 'Rua Padre Paulo Petruzzellis', '45', NULL, '88804610', 70, 'Pinheirinho', '70', '50', NULL, '4875522577', NULL, 'ze.rotativos@gmail.com', '8.00', '5.00', 4, 1, '90914664000159', '2022-10-29 03:04:50', 'https://goo.gl/maps/61pyPADBTmYgSkMy6');
+
 
 --
 -- Extraindo dados da tabela `diasatendimento`
