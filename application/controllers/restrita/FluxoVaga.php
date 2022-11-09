@@ -188,6 +188,8 @@ class FluxoVaga extends CI_Controller {
         if($this->session->userdata('PermissaoId')!=2||$this->funcoes->verificaSituacaoEmpresa()>2){ 
             exit;
         }
+        ini_set("pcre.backtrack_limit", "5000000");
+        ini_set('memory_limit', '-1');
         $params = json_decode(base64_decode($this->funcoes->get('p')),true);
         $lista = $this->FluxoVaga_model->getFluxoVagas($params,2);
 
@@ -283,8 +285,8 @@ class FluxoVaga extends CI_Controller {
     {
         $alfabeto = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
         $EstacionamentoId = 8;
-        $data = "2022-11-03";
-        $gerar = 12;
+        $data = "2022-11-09";
+        $gerar = 5;
         $fechar = 0;
         $somente_fechar = 0;
         $Reserva = 0;
@@ -362,11 +364,11 @@ class FluxoVaga extends CI_Controller {
                 }
                 $possiveis_minutos = [15,30,45,00];
 
-                $HoraEntrada = rand(8,19);
+                $HoraEntrada = rand(16,17);
                 $MinEntrada = $Reserva==0?rand(1,59):$possiveis_minutos[rand(1,3)];
 
                 if($fechar==1||$Reserva==1){
-                    $HoraSaida = rand(($HoraEntrada+1),21);
+                    $HoraSaida = rand(($HoraEntrada+1),17);
                     $MinSaida = $Reserva==0?rand(1,59):$possiveis_minutos[rand(1,3)];
                 }
                 

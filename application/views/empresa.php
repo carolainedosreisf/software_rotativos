@@ -2,7 +2,7 @@
     <div class="container toparea">
         <div class="underlined-title">
             <div class="editContent">
-                <h1 class="text-center latestitems">Casdastro</h1>
+                <h1 class="text-center latestitems">Cadastro</h1>
             </div>
             <div class="wow-hr type_short">
                 <span class="wow-hr-h">
