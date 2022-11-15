@@ -111,7 +111,7 @@ class Empresa_model extends CI_Model {
                             ELSE ''
                         END) AS ClassSituacao
                 FROM Empresa AS a
-                WHERE 1=1
+                WHERE EmpresaId <> 7
                 {$filtro}
                 ORDER BY Nome ASC";
         $query = $this->db->query($sql);

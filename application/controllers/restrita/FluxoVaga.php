@@ -283,11 +283,12 @@ class FluxoVaga extends CI_Controller {
 
     public function gerarFluxos()
     {
+        exit;
         $alfabeto = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
         $EstacionamentoId = 8;
-        $data = "2022-11-09";
-        $gerar = 5;
-        $fechar = 0;
+        $data = "2022-11-14";
+        $gerar = 123;
+        $fechar = 1;
         $somente_fechar = 0;
         $Reserva = 0;
 
@@ -364,11 +365,11 @@ class FluxoVaga extends CI_Controller {
                 }
                 $possiveis_minutos = [15,30,45,00];
 
-                $HoraEntrada = rand(16,17);
+                $HoraEntrada = rand(8,16);
                 $MinEntrada = $Reserva==0?rand(1,59):$possiveis_minutos[rand(1,3)];
 
                 if($fechar==1||$Reserva==1){
-                    $HoraSaida = rand(($HoraEntrada+1),17);
+                    $HoraSaida = rand(($HoraEntrada+1),18);
                     $MinSaida = $Reserva==0?rand(1,59):$possiveis_minutos[rand(1,3)];
                 }
                 
